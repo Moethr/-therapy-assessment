@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#26386d">
+<meta name="application-name" content="Therapy Assessments">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Therapy Assessments">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>Therapy Assessment Workbook — V8</title>
+<style>
+:root{
+  --bg:#f5f6f8;--panel:#ffffff;--ink:#16181d;--muted:#68707c;--line:#dfe3e8;
+  --accent:#3157d5;--accent2:#273f9c;--soft:#eef2ff;--ok:#19734b;--oksoft:#eaf7f0;
+  --warn:#8b5b00;--warnsoft:#fff7df;--risk:#9b2525;--risksoft:#fff0f0;
+  --shadow:0 10px 32px rgba(20,28,45,.07);--radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+.shell{max-width:1120px;margin:auto;padding:18px 14px 80px}
+.hero{background:linear-gradient(135deg,#171d2d,#26386d);color:#fff;padding:28px;border-radius:26px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(29px,5vw,46px);line-height:1.05;margin:0 0 9px}
+.hero p{max-width:820px;margin:0;color:#dce4ff}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.badge{background:rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;font-size:13px}
+.notice{margin:14px 0;padding:13px 15px;border:1px solid #e8d49a;background:var(--warnsoft);border-radius:14px;color:#5d480c}
+.risknotice{margin:12px 0;padding:14px 15px;border:1px solid #e7bcbc;background:var(--risksoft);border-radius:14px;color:#6f1c1c}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:10px 13px;border-radius:12px;font-weight:700}
+.btn:hover{border-color:#b7bfca}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:white}
+.btn.primary:hover{background:var(--accent2)}
+.btn.small{padding:7px 10px;font-size:13px}
+.btn.danger{color:#9c2222}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.view{display:none}
+.view.active{display:block}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 2px 10px rgba(10,20,40,.025)}
+.profile{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.field,.textarea,.search{width:100%;border:1px solid #cdd2d9;background:white;color:var(--ink);border-radius:12px;padding:11px 12px}
+.textarea{min-height:120px;resize:vertical}
+.searchrow{display:grid;grid-template-columns:minmax(200px,1fr) auto;gap:10px;align-items:center;margin:14px 0 10px}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}
+.filter{border:1px solid var(--line);background:white;padding:7px 10px;border-radius:999px;font-size:13px}
+.filter.active{background:var(--ink);border-color:var(--ink);color:white}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:14px}
+.stat strong{display:block;font-size:22px}
+.stat span{font-size:12px;color:var(--muted)}
+.progressbox{background:white;border:1px solid var(--line);padding:14px;border-radius:15px;margin:12px 0}
+.progressline{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:8px}
+.track{height:9px;background:#eaedf1;border-radius:999px;overflow:hidden}
+.fill{height:100%;background:var(--accent);width:0;transition:.2s}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+.card{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;min-height:230px;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(10,20,40,.025)}
+.cardtop{display:flex;justify-content:space-between;gap:10px}
+.card h2{font-size:19px;margin:0 0 3px;line-height:1.2}
+.sub{color:var(--muted);font-size:13px}
+.pill{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;height:max-content;white-space:nowrap}
+.pill.included{background:var(--oksoft);color:var(--ok)}
+.pill.import{background:var(--warnsoft);color:var(--warn)}
+.pill.assigned{background:var(--soft);color:var(--accent)}
+.meta{margin:13px 0 8px;font-size:13px;color:var(--muted)}
+.minitrack{height:7px;background:#eceff3;border-radius:999px;overflow:hidden;margin:8px 0}
+.minifill{height:100%;background:var(--accent)}
+.cardbuttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.cardbuttons .btn{flex:1}
+.star{border:0;background:transparent;font-size:22px;padding:0 2px;color:#a2a8b1}
+.star.on{color:#d69416}
+.empty{color:var(--muted);font-style:italic}
+.testhead{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:11px}
+.testhead h2{font-size:27px;margin:6px 0 6px}
+.kicker{text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-size:12px;font-weight:850}
+.rights{font-size:12px;color:var(--muted);margin-top:9px}
+.qpanel{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.qnum{font-size:13px;color:var(--muted);font-weight:800}
+.qlead{font-size:13px;color:var(--accent);font-weight:800;margin:12px 0 -5px}
+.qtext{font-size:clamp(20px,4vw,29px);font-weight:750;line-height:1.25;margin:13px 0 18px}
+.options{display:grid;gap:9px}
+.option{width:100%;text-align:left;border:1px solid #d5dae1;background:white;padding:13px 14px;border-radius:13px}
+.option:hover{background:#f8f9ff;border-color:#a7b3e9}
+.option.selected{border:2px solid var(--accent);background:var(--soft);padding:12px 13px}
+.option.screenzone:not(.selected){box-shadow:inset 4px 0 0 #b6c2ef}
+.screenhint{font-size:11px;color:var(--muted);margin-top:8px}
+.qtools{display:grid;gap:9px;border-top:1px solid var(--line);padding-top:14px;margin-top:15px}
+.checkrow{display:flex;align-items:center;gap:8px;font-weight:650}
+.note{min-height:74px}
+.nav{display:flex;gap:10px;margin-top:14px;align-items:center}.nav .btn{flex:0 0 auto}.tap-hint{flex:1;text-align:center;color:var(--muted);font-size:13px;font-weight:650}
+.jump{display:flex;gap:5px;overflow:auto;padding:12px 0 1px}
+.dot{min-width:34px;height:34px;border:1px solid var(--line);background:white;border-radius:9px;font-size:12px}
+.dot.done{background:#eef2ff;border-color:#c4cdf3}
+.dot.flagged{box-shadow:inset 0 0 0 2px #d79922}
+.dot.unclear::after{content:"?";font-size:9px;vertical-align:top;margin-left:1px}
+.dot.current{background:var(--accent);color:white;border-color:var(--accent)}
+.importbox{background:white;border:1px solid var(--line);border-radius:18px;padding:17px}
+.importhelp{background:var(--warnsoft);border:1px solid #ecdca6;border-radius:13px;padding:12px;margin-bottom:12px;color:#5e4a13}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+.sample{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f4f5f7;padding:9px;border-radius:9px;font-size:12px;overflow:auto}
+.report{background:white;border:1px solid var(--line);border-radius:18px;padding:20px}
+.report h2,.report h3{margin-top:0}
+.reporttest{border-top:1px solid var(--line);padding:15px 0}
+.scorechips{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}
+.scorechip{background:#f1f3f6;border-radius:9px;padding:6px 8px;font-size:13px}
+.flagitem{background:#fff8e5;border-radius:11px;padding:10px 11px;margin:7px 0;font-size:14px}
+.riskitem{background:var(--risksoft);border-radius:11px;padding:10px 11px;margin:7px 0;font-size:14px}
+.rightscard{border-top:1px solid var(--line);padding:13px 0}
+.rightscard:first-child{border-top:0}
+.tabsnote{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:25px}
+.v8-options.dense-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.v8-options.dense-options .v8-option{text-align:center;min-height:34px;padding:6px 8px;font-size:12px}
+@media(max-width:700px){
+  .shell{padding:10px 10px 70px}.hero{padding:23px 18px;border-radius:20px}
+  .profile,.two,.stats{grid-template-columns:1fr}.searchrow{grid-template-columns:1fr}
+  .toolbar .btn{flex:1 1 45%}.qpanel{padding:15px}
+}
+@media print{
+  body{background:white}.shell{max-width:none;padding:0}.hero,.toolbar,#dashboardView,#testView,#rightsView,.footer,.no-print{display:none!important}
+  #reportView{display:block!important}.report{border:0;padding:0}.reporttest{break-inside:avoid}
+}
+
+/* PWA install/update helpers */
+.pwa-toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,520px);background:#171d2d;color:#fff;border-radius:14px;padding:11px 13px;box-shadow:0 12px 34px rgba(0,0,0,.22);display:flex;align-items:center;gap:10px;font-size:13px}.pwa-toast .btn{margin-left:auto;background:#fff;border-color:#fff}.pwa-offline{position:fixed;top:8px;right:8px;z-index:9998;background:#fff7df;color:#6b5000;border:1px solid #e8d49a;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}.standalone-badge{display:none}@media(display-mode:standalone){.standalone-badge{display:inline-block}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="hero">
+    <h1>Therapy Assessment Workbook</h1>
+    <p>Verified local workbook for completing psychometric questionnaires, keeping clinician-supplied restricted items private, and exporting one clean record for therapy.</p>
+    <div class="badges">
+      <span class="badge">🔒 Answers stay on this device</span>
+      <span class="badge">💾 Autosave</span>
+      <span class="badge">⭐ Mark your therapist’s tests</span>
+      <span class="badge">⬇ JSON · Excel · Text · clinician report</span>
+      <span class="badge standalone-badge">📱 Installed app</span>
+    </div>
+  </section>
+
+  <div class="notice"><strong>Clinical note:</strong> These are screening/formulation instruments, not diagnoses. Automatic output below is limited to published raw/subscale scoring; it deliberately avoids diagnostic conclusions. Discuss the results with your clinician.</div>
+
+  <div class="toolbar no-print">
+    <button class="btn primary" onclick="showDashboard()">Assessments</button>
+    <button class="btn hidden" id="installAppBtn" onclick="installPWA()">Install app</button>
+    <button class="btn" onclick="showReport()">Clinician report</button>
+    <button class="btn" onclick="showRights()">Sources & rights</button>
+    <button class="btn" onclick="downloadJSON()">Export JSON</button>
+    <button class="btn" onclick="downloadExcel()">Export Excel</button>
+    <button class="btn" onclick="downloadText()">Export Text</button>
+    <button class="btn" onclick="downloadReportHTML()">Export report</button>
+    <button class="btn" onclick="copySummary()">Copy summary</button>
+    <button class="btn" onclick="document.getElementById('backupInput').click()">Import backup</button>
+    <input id="backupInput" type="file" accept=".json,application/json" class="hidden" onchange="importBackup(event)">
+  </div>
+
+  <main id="dashboardView" class="view active"></main>
+  <main id="testView" class="view"></main>
+  <main id="reportView" class="view"></main>
+  <main id="rightsView" class="view"></main>
+
+  <div class="footer">V8 build: 16 August 2026 · No external scripts, trackers, accounts, or network calls are used by this HTML file.</div>
+</div>
+
+<script>
+const TESTS = [{"id":"asrs6","name":"ASRS v1.1 6-Question Screener","short":"ASRS-6","category":"ADHD","mode":"included","count":6,"questions":["How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?","How often do you have difficulty getting things in order when you have to do a task that requires organization?","How often do you have problems remembering appointments or obligations?","When you have a task that requires a lot of thought, how often do you avoid or delay getting started?","How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?","How often do you feel overly active and compelled to do things, like you were driven by a motor?"],"options":["Never","Rarely","Sometimes","Often","Very Often"],"instructions":"Over the past 6 months, choose how often each statement has applied to you.","rights":"Free electronic reproduction with attribution; instrument must not be altered.","rightsClass":"permitted","source":"https://license.tov.med.nyu.edu/product/asrs6Qscreener","attribution":"© New York University and the President and Fellows of Harvard College.","scoreType":"asrs6","riskItems":[]},{"id":"wurs25","name":"Wender Utah Rating Scale — 25 item","short":"WURS-25","category":"ADHD","mode":"included","count":25,"questions":["concentration problems, easily distracted","anxious, worrying","nervous, fidgety","inattentive, daydreaming","hot- or short-tempered, low boiling point","temper outbursts, tantrums","trouble with stick-to-it-tiveness, not following through, failing to finish things started","stubborn, strong-willed","sad or blue, depressed, unhappy","disobedient with parents, rebellious, sassy","low opinion of myself","irritable","moody, ups and downs","angry","acting without thinking, impulsive","tendency to be immature","guilty feelings, regretful","losing control of myself","tendency to be or act irrational","unpopular with other children, didn't keep friends for long, didn't get along with other children","trouble seeing things from someone else's point of view","trouble with authorities, trouble with school, visits to principal's office","overall a poor student, slow learner","trouble with mathematics or numbers","not achieving up to potential"],"options":["0 — Not at all or very slightly","1 — Mildly","2 — Moderately","3 — Quite a bit","4 — Very much"],"instructions":"Rate how well each description fits how you were as a child. Items 23–25 specifically refer to school.","rights":"Published without restrictions; handbook describes open reuse.","rightsClass":"permitted","source":"https://www.drworthen.net/wender-utah-rating-scale-handbook.html","attribution":"Ward, Wender & Reimherr; WURS-25.","scoreType":"sumIndex","scoreLabel":"Total","questionLead":{"0-21":"As a child I was (or had):","22-24":"As a child in school I was (or had):"},"riskItems":[]},{"id":"raads","name":"Ritvo Autism Asperger Diagnostic Scale–Revised","short":"RAADS-R","category":"Autism","mode":"included","count":80,"questions":["I am a sympathetic person.","I often use words and phrases from movies and television in conversations.","I am often surprised when others tell me I have been rude.","Sometimes I talk too loudly or too softly and I am not aware of it.","I often don't know how to act in social situations.","I can \"put myself in other people's shoes.\"","I have a hard time figuring out what some phrases mean, like \"you are the apple of my eye\".","I only like to talk to people who share my special interests.","I focus on details rather than the overall idea.","I always notice how food feels in my mouth. This is more important to me than how it tastes.","I miss my best friends or family when we are apart for a long time.","Sometimes I offend others by saying what I am thinking, even if I don't mean to.","I only like to think and talk about a few things that interest me.","I'd rather go out to eat in a restaurant by myself than with someone I know.","I cannot imagine what it would be like to be someone else.","I have been told that I am clumsy or uncoordinated.","Others consider me odd or different.","I understand when friends need to be comforted.","I am very sensitive to the way my clothes feel when I touch them. How they feel is more important to me than how they look.","I like to copy the way certain people speak and act. It helps me appear more normal.","It can be very intimidating for me to talk to more than one person at a time.","I have to \"act normal\" to please other people and make them like me.","Meeting new people is usually easy for me.","I get highly confused when someone interrupts me when I am talking about something I am very interested in.","It is difficult for me to understand how other people are feeling when we are talking.","I like having a conversation with several people, for instance around a dinner table, at school or at work.","I take things too literally, so often I miss what people are trying to say.","It is very difficult for me to understand when someone is embarrassed or jealous.","Some ordinary textures that do not bother others feel very offensive when they touch my skin.","I get extremely upset when the way I like to do things is suddenly changed.","I have never wanted or needed to have what other people call an \"intimate relationship\".","It is difficult for me to start and stop a conversation. I need to keep going until I am finished.","I speak with a normal rhythm.","The same sound, color or texture can suddenly change from very sensitive to very dull.","The phrase \"I've got you under my skin\" makes me very uncomfortable.","Sometimes the sound of a word or high-pitched noise can be painful to my ears.","I am an understanding type of person.","I do not connect with characters in movies and cannot feel what they feel.","I cannot tell when someone is flirting with me.","I can see in my mind in exact detail things that I am interested in.","I keep lists of things that interest me, even when they have no practical use (for example sports statistics, train schedules, calendar dates, historical facts and dates).","When I feel overwhelmed by my senses, I have to isolate myself to shut them down.","I like to talk things over with my friends.","I cannot tell if someone is interested or bored with what I am saying.","It can be very hard to read someone's face, hand and body movements when they are talking.","The same thing (like clothes or temperature) can feel very different to me at different times.","I feel very comfortable with dating or being in social situations with others.","I try to be as helpful as I can when other people tell me their personal problems.","I have been told that I have an unusual voice (for example flat, monotone, childish, or high-pitched).","Sometimes a thought or a subject gets stuck in my mind and I have to talk about it even if no one is interested.","I do certain things with my hands over and over again (like flapping, twirling sticks or strings, waving things by my eyes).","I have never been interested in what most of the people I know consider interesting.","I am considered a compassionate type of person.","I get along with other people by following a set of specific rules that help me look normal.","It is very difficult for me to work and function in groups.","When I am talking to someone, it is hard to change the subject. If the other person does so, I can get very upset and confused.","Sometimes I have to cover my ears to block out painful noises (like vacuum cleaners or people talking too much or too loudly).","I can chat and make small talk with people.","Sometimes things that should feel painful are not (for instance when I hurt myself or burn my hand on a stove).","When talking to someone, I have a hard time telling when it is my turn to talk or listen.","I am considered a loner by those who know me best.","I usually speak in a normal tone.","I like things to be exactly the same day after day and even small changes in my routines upset me.","How to make friends and socialize is a mystery to me.","It calms me to spin around or to rock in a chair when I am feeling stressed.","The phrase, \"He wears his heart on his sleeve.\" does not make sense to me.","If I am in a place where there are many smells, textures to feel, noises or bright lights, I feel anxious or frightened.","I can tell when someone says one thing but means something else.","I like to be by myself as much as I can.","I keep my thoughts stacked in my memory like they are on filing cards, and I pick out the ones I need by looking through the stack and finding the right one (or another unique way).","The same sound sometimes seems very loud or very soft, even though I know it has not changed.","I enjoy spending time eating and talking with my family and friends.","I can't tolerate things I dislike (like smells, textures, sounds or colors).","I don't like to be hugged or held.","When I go somewhere, I have to follow a familiar route or I can get very confused and upset.","It is difficult to figure out what other people expect of me.","I like to have close friends.","People tell me that I give too much detail.","I am often told that I ask embarrassing questions.","I tend to point out other people's mistakes."],"options":["True now and when I was young","True only now","True only when I was younger than 16","Never true"],"instructions":"Choose the response that best describes whether each statement is true now and/or was true before age 16.","rights":"Original validation article is open access under a Creative Commons Attribution-NonCommercial licence.","rightsClass":"cc","source":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3134766/","attribution":"Ritvo et al. RAADS-R. Non-commercial use with attribution.","scoreType":"raads","riskItems":[]},{"id":"aq","name":"Autism Spectrum Quotient — Adult","short":"AQ-50","category":"Autism","mode":"included","count":50,"questions":["I prefer to do things with others rather than on my own.","I prefer to do things the same way over and over again.","If I try to imagine something, I find it very easy to create a picture in my mind.","I frequently get so strongly absorbed in one thing that I lose sight of other things.","I often notice small sounds when others do not.","I usually notice car number plates or similar strings of information.","Other people frequently tell me that what I’ve said is impolite, even though I think it is polite.","When I’m reading a story, I can easily imagine what the characters might look like.","I am fascinated by dates.","In a social group, I can easily keep track of several different people’s conversations.","I find social situations easy.","I tend to notice details that others do not.","I would rather go to a library than a party.","I find making up stories easy.","I find myself drawn more strongly to people than to things.","I tend to have very strong interests which I get upset about if I can’t pursue.","I enjoy social chit-chat.","When I talk, it isn’t always easy for others to get a word in edgeways.","I am fascinated by numbers.","When I’m reading a story, I find it difficult to work out the characters’ intentions.","I don’t particularly enjoy reading fiction.","I find it hard to make new friends.","I notice patterns in things all the time.","I would rather go to the theatre than a museum.","It does not upset me if my daily routine is disturbed.","I frequently find that I don’t know how to keep a conversation going.","I find it easy to “read between the lines” when someone is talking to me.","I usually concentrate more on the whole picture, rather than the small details.","I am not very good at remembering phone numbers.","I don’t usually notice small changes in a situation, or a person’s appearance.","I know how to tell if someone listening to me is getting bored.","I find it easy to do more than one thing at once.","When I talk on the phone, I’m not sure when it’s my turn to speak.","I enjoy doing things spontaneously.","I am often the last to understand the point of a joke.","I find it easy to work out what someone is thinking or feeling just by looking at their face.","If there is an interruption, I can switch back to what I was doing very quickly.","I am good at social chit-chat.","People often tell me that I keep going on and on about the same thing.","When I was young, I used to enjoy playing games involving pretending with other children.","I like to collect information about categories of things (e.g. types of car, types of bird, types of train, types of plant, etc.).","I find it difficult to imagine what it would be like to be someone else.","I like to plan any activities I participate in carefully.","I enjoy social occasions.","I find it difficult to work out people’s intentions.","New situations make me anxious.","I enjoy meeting new people.","I am a good diplomat.","I am not very good at remembering people’s date of birth.","I find it very easy to play games with children that involve pretending."],"options":["Definitely agree","Slightly agree","Slightly disagree","Definitely disagree"],"instructions":"Choose the response that best describes you.","rights":"ARC permits non-commercial clinical/research use with acknowledgement; items must not be adapted.","rightsClass":"permitted","source":"https://www.autismresearchcentre.com/tests/autism-spectrum-quotient-aq-adult/","attribution":"Autism Research Centre, University of Cambridge; Baron-Cohen et al. (2001).","scoreType":"aq","riskItems":[]},{"id":"catq","name":"Camouflaging Autistic Traits Questionnaire","short":"CAT-Q","category":"Autism","mode":"included","count":25,"questions":["When I am interacting with someone, I deliberately copy their body language or facial expressions.","I learn how people use their bodies and faces to interact by watching television or films, or by reading fiction.","I have tried to improve my understanding of social skills by watching other people.","I will repeat phrases that I have heard others say in the exact same way that I first heard them.","I practice my facial expressions and body language to make sure they look natural.","I have spent time learning social skills from television shows and films, and try to use these in my interactions.","In my own social interactions, I use behaviours that I have learned from watching other people interacting.","I have researched the rules of social interactions (for example, by studying psychology or reading books on human behaviour) to improve my own social skills.","I have developed a script to follow in social situations (for example, a list of questions or topics of conversation).","I monitor my body language or facial expressions so that I appear relaxed.","I adjust my body language or facial expressions so that I appear relaxed.","I monitor my body language or facial expressions so that I appear interested by the person I am interacting with.","I adjust my body language or facial expressions so that I appear interested by the person I am interacting with.","I don't feel the need to make eye contact with other people if I don't want to.","In social interactions, I do not pay attention to what my face or body are doing.","I always think about the impression I make on other people.","I am always aware of the impression I make on other people.","I rarely feel the need to put on an act in order to get through a social situation.","When talking to other people, I feel like the conversation flows naturally.","When in social situations, I try to find ways to avoid interacting with others.","In social situations, I feel like I'm 'performing' rather than being myself.","I have to force myself to interact with people when I am in social situations.","In social situations, I feel like I am pretending to be 'normal'.","I need the support of other people in order to socialise.","I feel free to be myself when I am with other people."],"options":["Strongly disagree","Disagree","Somewhat disagree","Neither agree nor disagree","Somewhat agree","Agree","Strongly agree"],"instructions":"Choose how strongly you agree or disagree with each statement.","rights":"Published in an open-access article; reproduced here for non-commercial clinical use.","rightsClass":"cc","source":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6394586/","attribution":"Hull et al. (2019), Camouflaging Autistic Traits Questionnaire.","scoreType":"catq","riskItems":[]},{"id":"eq40","name":"Empathy Quotient — Adult","short":"EQ-40","category":"Autism","mode":"included","count":40,"questions":["I can easily tell if someone else wants to enter a conversation.","I find it difficult to explain to others things that I understand easily, when they don’t understand it first time.","I really enjoy caring for other people.","I find it hard to know what to do in a social situation.","People often tell me that I went too far in driving my point home in a discussion.","It doesn’t bother me too much if I am late meeting a friend.","Friendships and relationships are just too difficult, so I tend not to bother with them.","I often find it difficult to judge if something is rude or polite.","In a conversation, I tend to focus on my own thoughts rather than on what my listener might be thinking.","When I was a child, I enjoyed cutting up worms to see what would happen.","I can pick up quickly if someone says one thing but means another.","It is hard for me to see why some things upset people so much.","I find it easy to put myself in somebody else’s shoes.","I am good at predicting how someone will feel.","I am quick to spot when someone in a group is feeling awkward or uncomfortable.","If I say something that someone else is offended by, I think that that’s their problem, not mine.","If anyone asked me if I like their haircut, I would reply truthfully, even if I didn’t like it.","I can’t always see why someone should have felt offended by a remark.","Seeing people cry doesn’t really upset me.","I am very blunt, which some people take to be rudeness, even though this is unintentional.","I don’t tend to find social situations confusing.","Other people tell me I am good at understanding how they are feeling and what they are thinking.","When I talk to people, I tend to talk about their experiences rather than my own.","It upsets me to see animals in pain.","I am able to make decisions without being influenced by people’s feelings.","I can easily tell if someone else is interested or bored with what I am saying.","I get upset if I see people suffering on news programmes.","Friends usually talk to me about their problems as they say I am very understanding.","I can sense if I am intruding, even if the other person doesn’t tell me.","People sometimes tell me that I have gone too far with teasing.","Other people often say that I am insensitive, though I don’t always see why.","If I see a stranger in a group, I think that it is up to them to make an effort to join in.","I usually stay emotionally detached when watching a film.","I can tune into how someone else feels rapidly and intuitively.","I can easily work out what another person might want to talk about.","I can tell if someone is masking their true emotion.","I don’t consciously work out the rules of social situations.","I am good at predicting what someone will do.","I tend to get emotionally involved with a friend’s problems.","I can usually appreciate the other person’s viewpoint, even if I don’t agree with it."],"options":["Strongly agree","Slightly agree","Slightly disagree","Strongly disagree"],"instructions":"Choose how strongly you agree or disagree with each statement.","rights":"ARC permits non-commercial clinical/research use with acknowledgement; items must not be adapted.","rightsClass":"permitted","source":"https://www.autismresearchcentre.com/tests/empathy-quotient-eq-for-adults/","attribution":"Autism Research Centre, University of Cambridge; Baron-Cohen & Wheelwright (2004).","scoreType":"eq40","riskItems":[]},{"id":"phq9","name":"Patient Health Questionnaire — 9","short":"PHQ-9","category":"Mood & anxiety","mode":"included","count":9,"questions":["Little interest or pleasure in doing things","Feeling down, depressed, or hopeless","Trouble falling or staying asleep, or sleeping too much","Feeling tired or having little energy","Poor appetite or overeating","Feeling bad about yourself — or that you are a failure or have let yourself or your family down","Trouble concentrating on things, such as reading the newspaper or watching television","Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual","Thoughts that you would be better off dead or of hurting yourself in some way"],"options":["0 — Not at all","1 — Several days","2 — More than half the days","3 — Nearly every day"],"instructions":"Over the last 2 weeks, how often have you been bothered by any of the following problems?","rights":"Made available without copyright restriction and at no charge.","rightsClass":"public","source":"https://www.pfizer.com/news/press-release/press-release-detail/pfizer_to_offer_free_public_access_to_mental_health_assessment_tools_to_improve_diagnosis_and_patient_care","attribution":"Patient Health Questionnaire (PHQ-9).","scoreType":"sumIndex","scoreLabel":"Total (0–27)","extra":{"key":"difficulty","label":"If you checked any problems, how difficult have they made work, home tasks, or getting along with people?","options":["Not difficult at all","Somewhat difficult","Very difficult","Extremely difficult"]},"riskItems":[9]},{"id":"gad7","name":"Generalized Anxiety Disorder — 7","short":"GAD-7","category":"Mood & anxiety","mode":"included","count":7,"questions":["Feeling nervous, anxious, or on edge","Not being able to stop or control worrying","Worrying too much about different things","Trouble relaxing","Being so restless that it is hard to sit still","Becoming easily annoyed or irritable","Feeling afraid as if something awful might happen"],"options":["0 — Not at all","1 — Several days","2 — More than half the days","3 — Nearly every day"],"instructions":"Over the last 2 weeks, how often have you been bothered by the following problems?","rights":"Made available without copyright restriction and at no charge.","rightsClass":"public","source":"https://www.pfizer.com/news/press-release/press-release-detail/pfizer_to_offer_free_public_access_to_mental_health_assessment_tools_to_improve_diagnosis_and_patient_care","attribution":"Generalized Anxiety Disorder questionnaire (GAD-7).","scoreType":"sumIndex","scoreLabel":"Total (0–21)","extra":{"key":"difficulty","label":"If you checked any problems, how difficult have they made work, home tasks, or getting along with people?","options":["Not difficult at all","Somewhat difficult","Very difficult","Extremely difficult"]},"riskItems":[]},{"id":"dass","name":"Depression Anxiety Stress Scales — 21","short":"DASS-21","category":"Mood & anxiety","mode":"included","count":21,"questions":["I found it hard to wind down.","I was aware of dryness of my mouth.","I couldn't seem to experience any positive feeling at all.","I experienced breathing difficulty (eg, excessively rapid breathing, breathlessness in the absence of physical exertion).","I found it difficult to work up the initiative to do things.","I tended to over-react to situations.","I experienced trembling (eg, in the hands).","I felt that I was using a lot of nervous energy.","I was worried about situations in which I might panic and make a fool of myself.","I felt that I had nothing to look forward to.","I found myself getting agitated.","I found it difficult to relax.","I felt down-hearted and blue.","I was intolerant of anything that kept me from getting on with what I was doing.","I felt I was close to panic.","I was unable to become enthusiastic about anything.","I felt I wasn't worth much as a person.","I felt that I was rather touchy.","I was aware of the action of my heart in the absence of physical exertion (eg, sense of heart rate increase, heart missing a beat).","I felt scared without any good reason.","I felt that life was meaningless."],"options":["0 — Did not apply to me at all","1 — Applied to me to some degree, or some of the time","2 — Applied to me to a considerable degree, or a good part of time","3 — Applied to me very much, or most of the time"],"instructions":"Indicate how much each statement applied to you over the past week.","rights":"Public domain. Forms and scoring key may be copied without restriction; the scale must not be modified or sold for profit.","rightsClass":"public","source":"https://dass.psy.unsw.edu.au/","attribution":"Lovibond & Lovibond, Depression Anxiety Stress Scales.","scoreType":"dass21","riskItems":[]},{"id":"k10","name":"Kessler Psychological Distress Scale","short":"K10","category":"Mood & anxiety","mode":"included","count":10,"questions":["About how often did you feel tired out for no good reason?","About how often did you feel nervous?","About how often did you feel so nervous that nothing could calm you down?","About how often did you feel hopeless?","About how often did you feel restless or fidgety?","About how often did you feel so restless you could not sit still?","About how often did you feel depressed?","About how often did you feel that everything was an effort?","About how often did you feel so sad that nothing could cheer you up?","About how often did you feel worthless?"],"options":["1 — None of the time","2 — A little of the time","3 — Some of the time","4 — Most of the time","5 — All of the time"],"instructions":"For the past 30 days, choose the answer that best describes how often you felt each way.","rights":"Free to use without formal permission; attribution and copyright notice requested.","rightsClass":"permitted","source":"https://www.hcp.med.harvard.edu/ncs/k6_scales.php","attribution":"Kessler et al. (2003). Copyright © Ronald C. Kessler, PhD.","scoreType":"sum1","scoreLabel":"K10 total (10–50)","riskItems":[]},{"id":"pswq","name":"Penn State Worry Questionnaire","short":"PSWQ","category":"Mood & anxiety","mode":"included","count":16,"questions":["If I do not have enough time to do everything, I do not worry about it.","My worries overwhelm me.","I do not tend to worry about things.","Many situations make me worry.","I know I should not worry about things, but I just cannot help it.","When I am under pressure I worry a lot.","I am always worrying about something.","I find it easy to dismiss worrying thoughts.","As soon as I finish one task, I start to worry about everything else I have to do.","I never worry about anything.","When there is nothing more I can do about a concern, I do not worry about it anymore.","I have been a worrier all my life.","I notice that I have been worrying about things.","Once I start worrying, I cannot stop.","I worry all the time.","I worry about projects until they are all done."],"options":["1 — Not at all typical of me","2 — Rarely typical of me","3 — Somewhat typical of me","4 — Often typical of me","5 — Very typical of me"],"instructions":"Rate how typical each statement is of you.","rights":"Reported by the original author as public domain.","rightsClass":"public","source":"https://eprovide.mapi-trust.org/instruments/penn-state-worry-questionnaire","attribution":"Meyer, Miller, Metzger & Borkovec (1990).","scoreType":"pswq","riskItems":[]},{"id":"pcl","name":"PTSD Checklist for DSM-5","short":"PCL-5","category":"Trauma & dissociation","mode":"included","count":20,"questions":["Repeated, disturbing, and unwanted memories of the stressful experience?","Repeated, disturbing dreams of the stressful experience?","Suddenly feeling or acting as if the stressful experience were actually happening again (as if you were actually back there reliving it)?","Feeling very upset when something reminded you of the stressful experience?","Having strong physical reactions when something reminded you of the stressful experience (for example, heart pounding, trouble breathing, sweating)?","Avoiding memories, thoughts, or feelings related to the stressful experience?","Avoiding external reminders of the stressful experience (for example, people, places, conversations, activities, objects, or situations)?","Trouble remembering important parts of the stressful experience?","Having strong negative beliefs about yourself, other people, or the world (for example, having thoughts such as: I am bad, there is something seriously wrong with me, no one can be trusted, the world is completely dangerous)?","Blaming yourself or someone else for the stressful experience or what happened after it?","Having strong negative feelings such as fear, horror, anger, guilt, or shame?","Loss of interest in activities that you used to enjoy?","Feeling distant or cut off from other people?","Trouble experiencing positive feelings (for example, being unable to feel happiness or have loving feelings for people close to you)?","Irritable behavior, angry outbursts, or acting aggressively?","Taking too many risks or doing things that could cause you harm?","Being “superalert” or watchful or on guard?","Feeling jumpy or easily startled?","Having difficulty concentrating?","Trouble falling or staying asleep?"],"options":["0 — Not at all","1 — A little bit","2 — Moderately","3 — Quite a bit","4 — Extremely"],"instructions":"Keeping your worst stressful experience in mind, indicate how much you have been bothered by each problem in the past month.","rights":"Public domain and not copyrighted according to the U.S. National Center for PTSD.","rightsClass":"public","source":"https://www.ptsd.va.gov/professional/assessment/adult-sr/ptsd-checklist.asp","attribution":"PTSD Checklist for DSM-5 (PCL-5), National Center for PTSD.","scoreType":"pcl5","extra":{"key":"event","label":"Worst stressful experience (optional — keep this brief or leave blank)","type":"text"},"riskItems":[]},{"id":"ace","name":"Adverse Childhood Experiences — 10 categories","short":"ACE-10","category":"Trauma & dissociation","mode":"included","count":10,"questions":["Did a parent or other adult in the household often or very often… Swear at you, insult you, put you down, or humiliate you? Or act in a way that made you afraid that you might be physically hurt?","Did a parent or other adult in the household often or very often… Push, grab, slap, or throw something at you? Or ever hit you so hard that you had marks or were injured?","Did an adult or person at least 5 years older than you ever… Touch or fondle you or have you touch their body in a sexual way? Or attempt or actually have oral, anal, or vaginal intercourse with you?","Did you often or very often feel that… No one in your family loved you or thought you were important or special? Or your family didn’t look out for each other, feel close to each other, or support each other?","Did you often or very often feel that… You didn’t have enough to eat, had to wear dirty clothes, and had no one to protect you? Or your parents were too drunk or high to take care of you or take you to the doctor if you needed it?","Were your parents ever separated or divorced?","Was your mother or stepmother often or very often pushed, grabbed, slapped, or had something thrown at her? Or sometimes, often, or very often kicked, bitten, hit with a fist, or hit with something hard? Or ever repeatedly hit at least a few minutes or threatened with a gun or knife?","Did you live with anyone who was a problem drinker or alcoholic or who used street drugs?","Was a household member depressed or mentally ill, or did a household member attempt suicide?","Did a household member go to prison?"],"options":["No","Yes"],"instructions":"While you were growing up, during your first 18 years of life, answer Yes or No. Historical wording is retained for fidelity to the original ACE categories.","rights":"Original CDC-Kaiser ACE study questionnaires are not copyrighted and have no use fees.","rightsClass":"public","source":"https://www.cdc.gov/violence-prevention/about/about-the-cdc-kaiser-ace-study.html","attribution":"CDC-Kaiser Adverse Childhood Experiences Study.","scoreType":"sumIndex","scoreLabel":"ACE category count (0–10)","riskItems":[]},{"id":"des","name":"Dissociative Experiences Scale — II","short":"DES-II","category":"Trauma & dissociation","mode":"included","count":28,"questions":["Some people have the experience of driving or riding in a car or bus or subway and suddenly realizing that they don’t remember what has happened during all or part of the trip.","Some people find that sometimes they are listening to someone talk and they suddenly realize that they did not hear part or all of what was said.","Some people have the experience of finding themselves in a place and have no idea how they got there.","Some people have the experience of finding themselves dressed in clothes that they don’t remember putting on.","Some people have the experience of finding new things among their belongings that they do not remember buying.","Some people sometimes find that they are approached by people that they do not know, who call them by another name or insist that they have met them before.","Some people sometimes have the experience of feeling as though they are standing next to themselves or watching themselves do something and they actually see themselves as if they were looking at another person.","Some people are told that they sometimes do not recognize friends or family members.","Some people find that they have no memory for some important events in their lives (for example, a wedding or graduation).","Some people have the experience of being accused of lying when they do not think that they have lied.","Some people have the experience of looking in a mirror and not recognizing themselves.","Some people have the experience of feeling that other people, objects, and the world around them are not real.","Some people have the experience of feeling that their body does not seem to belong to them.","Some people have the experience of sometimes remembering a past event so vividly that they feel as if they were reliving that event.","Some people have the experience of not being sure whether things that they remember happening really did happen or whether they just dreamed them.","Some people have the experience of being in a familiar place but finding it strange and unfamiliar.","Some people find that when they are watching television or a movie they become so absorbed in the story that they are unaware of other events happening around them.","Some people find that they become so involved in a fantasy or daydream that it feels as though it were really happening to them.","Some people find that they sometimes are able to ignore pain.","Some people find that they sometimes sit staring off into space, thinking of nothing, and are not aware of the passage of time.","Some people sometimes find that when they are alone they talk out loud to themselves.","Some people find that in one situation they may act so differently compared with another situation that they feel almost as if they were two different people.","Some people sometimes find that in certain situations they are able to do things with amazing ease and spontaneity that would usually be difficult for them (for example, sports, work, social situations, etc.).","Some people sometimes find that they cannot remember whether they have done something or have just thought about doing that thing (for example, not knowing whether they have just mailed a letter or have just thought about mailing it).","Some people find evidence that they have done things that they do not remember doing.","Some people sometimes find writings, drawings, or notes among their belongings that they must have done but cannot remember doing.","Some people sometimes find that they hear voices inside their head that tell them to do things or comment on things that they are doing.","Some people sometimes feel as if they are looking at the world through a fog, so that people and objects appear far away or unclear."],"options":["0%","10%","20%","30%","40%","50%","60%","70%","80%","90%","100%"],"instructions":"Estimate the percentage of time each experience happens to you when you are not under the influence of alcohol or drugs.","rights":"Authors permit reproduction for clinical and research use.","rightsClass":"permitted","source":"https://novopsych.com/assessments/formulation/dissociative-experiences-scale-ii-des-ii/","attribution":"Dissociative Experiences Scale-II (DES-II).","scoreType":"des","riskItems":[]},{"id":"bsl23","name":"Borderline Symptom List — 23","short":"BSL-23","category":"Personality & schemas","mode":"included","count":23,"questions":["It was hard for me to concentrate.","I felt helpless.","I was absent-minded and unable to remember what I was actually doing.","I felt disgust.","I thought of hurting myself.","I didn’t trust other people.","I didn’t believe in my right to live.","I was lonely.","I experienced stressful inner tension.","I had images that I was very much afraid of.","I hated myself.","I wanted to punish myself.","I suffered from shame.","My mood rapidly cycled in terms of anxiety, anger, and depression.","I suffered from voices and noises from inside or outside my head.","Criticism had a devastating effect on me.","I felt vulnerable.","The idea of death had a certain fascination for me.","Everything seemed senseless to me.","I was afraid of losing control.","I felt disgusted by myself.","I felt as if I was far away from myself.","I felt worthless."],"options":["0 — Not at all","1 — A little","2 — Rather","3 — Much","4 — Very strong"],"instructions":"During the past week, indicate how strongly you suffered from each problem or complaint.","rights":"Official developer site permits licence-free use for strictly non-commercial purposes.","rightsClass":"permitted","source":"https://www.zi-mannheim.de/forschung/abteilungen-ags-institute/psm/psm-informationen-downloads.html","attribution":"Bohus et al., Borderline Symptom List (BSL-23).","scoreType":"bsl23","extra":{"key":"state","label":"Optional: overall personal state during the past week","options":["0%","10%","20%","30%","40%","50%","60%","70%","80%","90%","100%"]},"riskItems":[5,7,12,18]},{"id":"mss","name":"Maladaptive Schema Scale — Young Schema Aligned","short":"MSS-YSQ","category":"Personality & schemas","mode":"included","count":76,"questions":["I fear that my important relationships will end unexpectedly.","I worry that people I love can't be there for me in a committed way.","I feel confident that other people will be there for me when I need them.","I worry about losing people that I rely on.","I have others I can depend on for advice and emotional support.","If I was in trouble, I wouldn't know who to call.","Other people don't care about my emotional needs.","I feel unsupported by others, so I wouldn’t share my emotions.","People usually conceal their real intentions.","I don't trust people.","I don't believe what people say at face value.","People usually tell the truth.","I'm inherently different from everyone else.","I haven't met anyone that thinks like me.","I am typically accepted by people.","I am an outsider.","If people knew the real me, they wouldn't like me.","I am inherently defective.","My flaws make me unlovable.","I have reasons to be ashamed of myself and my character.","I’m afraid of venturing too far because there are so many bad things happening.","The world is safe for me.","The world is a dangerous and unforgiving place, and I worry it will spiral into catastrophe.","The world is a bad place and will harm me.","I cannot take care of myself, so I need others to take care of me.","I feel incapable of managing daily tasks without help from others.","I often worry about making decisions on my own and prefer someone else to make them for me.","I feel confident making decisions on my own.","If a task is difficult, I'm unlikely to be able to accomplish it.","I can rarely come up with solutions to my own problems.","I can handle anything that comes my way.","Most problems are too hard for me to deal with.","Most other people have achieved more than me.","I feel proud of my accomplishments.","I feel inferior when I think of the accomplishments of others.","I compare my achievements with others and feel that I am not as successful.","I am responsible for the emotions of the person I am closest to.","With those closest to me, I don’t know where my needs and emotions end and where theirs begin.","I am so close to someone it feels like I have merged with them.","The needs of the person closest to me consume me.","Other people know better than I do.","I should always do as I'm told.","Other people know what is best for me.","I feel like I have to let others take control in relationships.","I always prioritise others no matter what's going on for me.","I believe it is my duty to listen to other people's problems.","My needs are as important as other people's needs.","No matter how much I give to others, I can never give enough.","Gaining the approval of others is often more important to me than following my own desires.","I want people to like me, so I would tend to agree with people even if I know they are factually wrong.","Even if I don’t like someone, I still strongly desire for them to like me.","I find it hard to make a decision unless I know what other people think.","Tuning into my emotions is helpful.","My emotions do more harm than good.","Emotions are not useful, so I need to ignore them.","It is dangerous to feel emotions too strongly.","Things almost always go wrong for me.","In uncertain times, I usually expect the best.","Things inevitably don't go my way, so I prefer to expect the worst to avoid disappointment.","I am pessimistic about the future.","If I make a mistake, I can let it go easily.","Achieving high standards is more important than my own happiness.","I should always perform at an extremely high level.","It is ok for me not to be a high performer.","I try to be compassionate and understanding to myself when I make a mistake.","If something goes wrong, I shouldn't get away with it.","If I fail, I should suffer the consequences.","It doesn't matter how small a mistake I make is, I deserve to be punished for it.","I try to be compassionate and understanding to others when they make a mistake.","People should be held to account for their failings.","If someone fails, they should face the consequences.","People deserve to be disciplined for their mistakes.","When I ask someone for something they should agree to it.","I am above the usual rules that others follow.","Other people should appreciate how unique I am.","I deserve special privileges."],"options":["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"],"instructions":"Choose how strongly you agree or disagree with each statement.","rights":"NovoPsych explicitly releases the MSS-YSQ under its open-source assessment licence.","rightsClass":"open","source":"https://novopsych.com/assessments/formulation/mss-ysq-young-schema-questionnaire/","attribution":"NovoPsych Maladaptive Schema Scale — Young Schema Aligned (MSS-YSQ).","scoreType":"mss","riskItems":[]},{"id":"fmps","name":"Frost Multidimensional Perfectionism Scale","short":"FMPS-35","category":"Personality & schemas","mode":"included","count":35,"questions":["My parents set very high standards for me.","Organization is very important to me.","As a child, I was punished for doing things less than perfect.","If I do not set the highest standards for myself, I am likely to end up a second-rate person.","My parents never tried to understand my mistakes.","It is important to me that I am thoroughly competent in everything I do.","I am a neat person.","I try to be an organized person.","If I fail at work/school, I am a failure as a person.","I should be upset if I make a mistake.","My parents wanted me to do the best at everything.","I set higher goals than most people.","If someone does a task at work/school better than I, then I feel like I failed the whole task.","If I fail partly, it is as bad as being a complete failure.","Only outstanding performance is good enough in my family.","I am very good at focusing my efforts on attaining a goal.","Even when I do something very carefully, I often feel that it is not quite right.","I hate being less than the best at things.","I have extremely high goals.","My parents have expected excellence from me.","People will probably think less of me if I make a mistake.","I never felt like I could meet my parents’ expectations.","If I do not do as well as other people, it means I am an inferior human being.","Other people seem to accept lower standards than I do.","If I do not do well all the time, people will not respect me.","My parents have always had higher expectations for my future than I have.","I try to be a neat person.","I usually have doubts about the simple everyday things I do.","Neatness is very important to me.","I expect higher performance in my daily tasks than most people.","I am an organized person.","I tend to get behind in my work because I repeat things over and over.","It takes me a long time to do something “right.”","The fewer mistakes I make, the more people will like me.","I never felt like I could meet my parents’ standards."],"options":["1 — Strongly disagree","2 — Disagree","3 — Neutral","4 — Agree","5 — Strongly agree"],"instructions":"Choose how strongly you agree or disagree with each statement.","rights":"University of Salford PsyTech lists the instrument as having no copyright restrictions.","rightsClass":"public","source":"https://hub.salford.ac.uk/psytech/frost-multidimensional-perfectionism-scale/","attribution":"Frost et al. Multidimensional Perfectionism Scale.","scoreType":"fmps","riskItems":[]},{"id":"core10","name":"Clinical Outcomes in Routine Evaluation — 10","short":"CORE-10","category":"Outcomes","mode":"included","count":10,"questions":["I have felt tense, anxious or nervous","I have felt I have someone to turn to for support when needed","I have felt able to cope when things go wrong","Talking to people has felt too much for me","I have felt panic or terror","I made plans to end my life","I have had difficulty getting to sleep or staying asleep","I have felt despairing or hopeless","I have felt unhappy","Unwanted images or memories have been distressing me"],"options":["Not at all","Only occasionally","Sometimes","Often","Most or all the time"],"instructions":"This form has 10 statements about how you have been over the last week. Choose how often you felt that way.","rights":"CC BY-NC-ND 4.0: non-commercial reproduction is permitted if content is unchanged and attribution retained.","rightsClass":"cc","source":"https://www.coresystemtrust.org.uk/home/instruments/core-10-information/","attribution":"© CORE System Trust: https://www.coresystemtrust.org.uk/copyright.pdf","scoreType":"core10","riskItems":[6]},{"id":"coreom","name":"Clinical Outcomes in Routine Evaluation — Outcome Measure","short":"CORE-OM","category":"Outcomes","mode":"included","count":34,"questions":["I have felt terribly alone and isolated","I have felt tense, anxious or nervous","I have felt I have someone to turn to for support when needed","I have felt O.K. about myself","I have felt totally lacking in energy and enthusiasm","I have been physically violent to others","I have felt able to cope when things go wrong","I have been troubled by aches, pains or other physical problems","I have thought of hurting myself","Talking to people has felt too much for me","Tension and anxiety have prevented me doing important things","I have been happy with the things I have done","I have been disturbed by unwanted thoughts and feelings","I have felt like crying","I have felt panic or terror","I made plans to end my life","I have felt overwhelmed by my problems","I have had difficulty getting to sleep or staying asleep","I have felt warmth or affection for someone","My problems have been impossible to put to one side","I have been able to do most things I needed to","I have threatened or intimidated another person","I have felt despairing or hopeless","I have thought it would be better if I were dead","I have felt criticised by other people","I have thought I have no friends","I have felt unhappy","Unwanted images or memories have been distressing me","I have been irritable when with other people","I have thought I am to blame for my problems and difficulties","I have felt optimistic about my future","I have achieved the things I wanted to","I have felt humiliated or shamed by other people","I have hurt myself physically or taken dangerous risks with my health"],"options":["Not at all","Only occasionally","Sometimes","Often","Most or all the time"],"instructions":"This form has 34 statements about how you have been over the last week. Choose how often you felt that way.","rights":"CC BY-NC-ND 4.0: non-commercial reproduction is permitted if content is unchanged and attribution retained.","rightsClass":"cc","source":"https://www.coresystemtrust.org.uk/home/instruments/core-om-information/","attribution":"© CORE System Trust: https://www.coresystemtrust.org.uk/copyright.pdf","scoreType":"coreom","riskItems":[6,9,16,22,24,34]},{"id":"asrs18","name":"Adult ADHD Self-Report Scale v1.1 — 18 item","short":"ASRS-18","category":"ADHD","riskItems":[],"count":18,"options":["0 — Never","1 — Rarely","2 — Sometimes","3 — Often","4 — Very Often"],"scoreType":"asrs18","scoreLabel":"Total (0–72)","mode":"included","questions":["How often do you have trouble wrapping up the final details of a project once the challenging parts have been done?","How often do you have difficulty getting things in order when you have to do a task that requires organization?","How often do you have problems remembering appointments or obligations?","When you have a task that requires a lot of thought, how often do you avoid or delay getting started?","How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?","How often do you feel overly active and compelled to do things, like you are driven by a motor?","How often do you make careless mistakes when you have to work on a boring or difficult project?","How often do you have difficulty keeping your attention when you are doing boring or repetitive work?","How often do you have difficulty concentrating on what people say to you, even when they are speaking to you directly?","How often do you misplace or have difficulty finding things at home or at work?","How often are you distracted by activity or noise around you?","How often do you leave your seat in meetings or other situations in which you are expected to remain seated?","How often do you feel restless or fidgety?","How often do you have difficulty unwinding and relaxing when you have time to yourself?","How often do you find yourself talking too much when you are in social situations?","When you're in a conversation, how often do you find yourself finishing the sentences of the people you are talking to, before they can finish them themselves?","How often do you have difficulty waiting your turn in situations when turn-taking is required?","How often do you interrupt others when they are busy?"],"instructions":"Please answer the questions below, rating how often each symptom has occurred over the past 6 months.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version / scoring note: This is the 18-item questionnaire text and scoring instructions supplied by you. The workbook records the supplied 0–4 responses and the supplied total/screener calculation. It does not independently validate the pasted scoring against the current licensed ASRS-18 scoring system.","suggestion":"Suggestion: Compare this with the separate ASRS-6 screener already in the workbook; bring any large differences to your clinician rather than treating either number as a diagnosis."},{"id":"ocir","name":"Obsessive-Compulsive Inventory — Revised","short":"OCI-R","category":"OCD","riskItems":[],"count":18,"options":["0 — Not at all","1 — A little","2 — Moderately","3 — Quite a bit","4 — Extremely"],"scoreType":"ocir","scoreLabel":"Total (0–72)","mode":"included","questions":["I have saved up so many things that they get in the way.","I check things more often than necessary.","I get upset if objects are not arranged properly.","I feel compelled to count while I am doing things.","I find it difficult to touch an object when I know it has been touched by strangers or certain people.","I find it difficult to control my own thoughts.","I collect things I don't need.","I repeatedly check doors, windows, drawers, etc.","I get upset if others change the way I have arranged things.","I feel I have to repeat certain numbers.","I sometimes have to wash or clean myself simply because I feel contaminated.","I am upset by unpleasant thoughts that come into my mind against my will.","I avoid throwing things away because I am afraid I might need them later.","I repeatedly check gas and water taps and light switches after turning them off.","I need things to be arranged in a particular order.","I feel that there are good and bad numbers.","I wash or clean myself more than I really need to.","I frequently get nasty thoughts and have difficulty in getting rid of them."],"instructions":"The following statements describe experiences many people have. Please rate how much each experience has distressed or bothered you during the past month.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version note: The questionnaire text and subscale groupings below are the exact set you supplied. The workbook calculates the supplied total and six 3-item subscales; interpret against your clinician's intended version.","suggestion":"Suggestion: Use the six subscales to identify which OCD-type experiences are most worth discussing, instead of focusing only on the total."},{"id":"ders16","name":"Difficulties in Emotion Regulation Scale — 16","short":"DERS-16","category":"Emotion regulation","riskItems":[],"count":16,"options":["1 — Almost never (0–10%)","2 — Sometimes (11–35%)","3 — About half the time (36–65%)","4 — Most of the time (66–90%)","5 — Almost always (91–100%)"],"scoreType":"ders16","mode":"included","questions":["I am clear about my feelings.","I pay attention to how I feel.","I experience my emotions as overwhelming and out of control.","I have no idea how I am feeling.","I have difficulty making sense out of my feelings.","I am attentive to my feelings.","I know exactly how I am feeling.","I care about what I am feeling.","When I'm upset, I become out of control.","When I'm upset, I believe that I'll remain that way for a long time.","When I'm upset, I believe that I'll end up feeling very depressed.","When I'm upset, I lose control over my behaviors.","When I'm upset, I have difficulty concentrating.","When I'm upset, I have difficulty controlling my behaviors.","When I'm upset, I believe that wallowing in it is all I can do.","When I'm upset, I feel ashamed with myself for feeling that way."],"instructions":"Please indicate how often the following statements apply to you.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version note: Your supplied 16-item set may differ from the validated DERS-16 item set. The workbook calculates the reverse-scored total exactly according to the scoring instructions in your uploaded document, but the result is labelled as **user-supplied version** rather than a standardized DERS-16 norm score.","suggestion":"Suggestion: Flag questions that feel especially true and add a real-life example; those examples can be more useful in therapy than the total alone."},{"id":"ders36","name":"Difficulties in Emotion Regulation Scale — 36","short":"DERS-36","category":"Emotion regulation","riskItems":[],"count":36,"options":["1 — Almost never (0–10%)","2 — Sometimes (11–35%)","3 — About half the time (36–65%)","4 — Most of the time (66–90%)","5 — Almost always (91–100%)"],"scoreType":"ders36","mode":"included","questions":["I am clear about my feelings.","I pay attention to how I feel.","I experience my emotions as overwhelming and out of control.","I have no idea how I am feeling.","I have difficulty making sense out of my feelings.","I am attentive to my feelings.","I know exactly how I am feeling.","I care about what I am feeling.","When I'm upset, I become out of control.","When I'm upset, I believe that I'll remain that way for a long time.","When I'm upset, I believe that I'll end up feeling very depressed.","When I'm upset, I have difficulty getting work done.","When I'm upset, I lose control over my behaviors.","When I'm upset, I have difficulty concentrating.","When I'm upset, I have difficulty controlling my behaviors.","When I'm upset, I believe that wallowing in it is all I can do.","When I'm upset, I feel ashamed with myself for feeling that way.","When I'm upset, my behavior feels out of control.","When I'm upset, I have difficulty focusing on other things.","When I'm upset, I feel guilty for feeling that way.","When I'm upset, I have difficulty thinking about anything else.","When I'm upset, I feel like I am weak.","When I'm upset, I feel like I am out of control.","When I'm upset, I have difficulty controlling my impulses.","When I'm upset, I have difficulty stopping myself from acting impulsively.","When I'm upset, I feel numb.","When I'm upset, I have difficulty calming myself down.","When I'm upset, I feel overwhelmed.","When I'm upset, I feel like I am weak.","When I'm upset, I feel like I have control over my reactions.","When I'm upset, I feel like I can handle my distress.","When I'm upset, I feel like I am going crazy.","When I'm upset, I feel like I am in control.","When I'm upset, I feel like I can cope with my distress.","When I'm upset, I feel like I can manage my emotions.","When I'm upset, I feel like I can handle it."],"instructions":"Please indicate how often the following statements apply to you.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version note: Your supplied 36-item set/subscale mapping may differ from the standard published DERS-36. The workbook uses the reverse-scoring and subscale mapping supplied in your document and labels the result as **user-supplied version**.","suggestion":"Suggestion: Because this overlaps with DERS-16, consider using one as the main measure and the other as a comparison rather than treating both as independent diagnoses."},{"id":"pss10","name":"Perceived Stress Scale — 10","short":"PSS-10","category":"Mood & anxiety","riskItems":[],"count":10,"options":["0 — Never","1 — Almost never","2 — Sometimes","3 — Fairly often","4 — Very often"],"scoreType":"pss10","mode":"included","questions":["In the last month, how often have you been upset because of something that happened unexpectedly?","In the last month, how often have you felt that you were unable to control the important things in your life?","In the last month, how often have you felt nervous and stressed?","In the last month, how often have you felt confident about your ability to handle your personal problems?","In the last month, how often have you felt that things were going your way?","In the last month, how often have you found that you could not cope with all the things that you had to do?","In the last month, how often have you been able to control irritations in your life?","In the last month, how often have you felt that you were on top of things?","In the last month, how often have you been angered because of things that happened that were outside of your control?","In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?"],"instructions":"The questions in this scale ask about your feelings and thoughts during the LAST MONTH. In each case, indicate how often you felt or thought a certain way.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Scoring note: The workbook applies the reverse-scoring and 0–40 total described in your uploaded document. The low/moderate/high bands are shown only as the bands supplied in your document; they are not presented as diagnostic cutoffs.","suggestion":"Suggestion: Compare perceived stress with your anxiety/depression measures and your notes about what was actually happening during the last month."},{"id":"mdq","name":"Mood Disorder Questionnaire","short":"MDQ","category":"Mood & anxiety","riskItems":[],"count":15,"options":["No","Yes"],"scoreType":"mdq","mode":"included","questions":["...you felt so good or so hyper that other people thought you were not your normal self or you were so hyper that you got into trouble? ____ (Y/N)","...you were so irritable that you shouted at people or started fights or arguments? ____ (Y/N)","...you felt much more self-confident than usual? ____ (Y/N)","...you got much less sleep than usual and found you didn't really miss it? ____ (Y/N)","...you were much more talkative or spoke much faster than usual? ____ (Y/N)","...thoughts raced through your head or you couldn't slow your mind down? ____ (Y/N)","...you were so easily distracted by things around you that you had trouble concentrating or staying on track? ____ (Y/N)","...you had much more energy than usual? ____ (Y/N)","...you were much more active or did many more things than usual? ____ (Y/N)","...you were much more social or outgoing than usual, for example, you telephoned friends in the middle of the night? ____ (Y/N)","...you were much more interested in sex than usual? ____ (Y/N)","...you did things that were unusual for you or that other people might have thought were excessive, foolish, or risky? ____ (Y/N)","...spending money got you or your family into trouble? ____ (Y/N)","If you checked YES to more than one item in Section A, did several of these happen during the same period of time?","How much did these problems cause you difficulty?"],"instructions":"Please answer the following questions based on your experiences. Section A asks whether there has ever been a period when you were not your usual self; Sections B and C ask about co-occurrence and impairment.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Structure note: This is treated as a 15-item module: 13 symptom questions plus the two follow-up questions (same-period and impairment). Only Section A contributes to the symptom count; the follow-ups are used in the supplied screen logic.","suggestion":"Suggestion: If Section A is positive, the most useful therapy discussion is the timing, duration, change from your baseline, impairment, sleep need, and whether symptoms occurred together—not the checkbox total alone.","questionOptions":[["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No","Yes"],["No problem","Minor problem","Moderate problem","Serious problem"]]},{"id":"msibpd","name":"McLean Screening Instrument for BPD","short":"MSI-BPD","category":"Personality & schemas","riskItems":[7],"count":10,"options":["No","Yes"],"scoreType":"msibpd","mode":"included","questions":["Have you ever had a close relationship (like with a romantic partner, friend, or family member) that went from being extremely good to extremely bad very quickly? ____ (Y/N)","Have you ever had relationships that are very intense and stormy? ____ (Y/N)","Do you have a pattern of very unstable and intense relationships? ____ (Y/N)","Have you often felt like you don't know who you are or what you want? ____ (Y/N)","Have you felt empty inside a lot of the time? ____ (Y/N)","Have you done things that are impulsive and risky (like spending too much money, having unsafe sex, using drugs, reckless driving, binge eating)? ____ (Y/N)","Have you had thoughts of hurting yourself or attempted suicide? ____ (Y/N)","Have you had intense anger or difficulty controlling your anger? ____ (Y/N)","Have you felt suspicious or paranoid when you are stressed? ____ (Y/N)","Have you felt like you are losing touch with reality or like things are unreal when you are stressed? ____ (Y/N)"],"instructions":"Please answer YES or NO to each item based on your experiences.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Screening note: The workbook shows the supplied 7+ screening threshold as a screening flag only. It does not diagnose BPD.","suggestion":"Suggestion: If the screen reaches the threshold, use the individual yes/no items to identify which patterns are worth exploring with your clinician."},{"id":"asqsf","name":"Attachment Style Questionnaire — Short Form (supplied version)","short":"ASQ-SF","category":"Relationships","riskItems":[],"count":40,"options":["1 — Strongly Disagree","2 — Somewhat Disagree","3 — Neither Agree nor Disagree","4 — Somewhat Agree","5 — Strongly Agree"],"scoreType":"asqsf","mode":"included","questions":["I find it easy to trust others.","I worry about being abandoned.","I am comfortable depending on others.","I feel confident that others will be there for me when I need them.","I often worry that my partner doesn't really love me.","I prefer not to get too close to others.","I worry that others will reject me.","I feel uncomfortable when others get too close to me.","I feel that others are generally well-intentioned.","I often worry that I am not good enough for others.","I feel uneasy when I get too close to someone.","I have confidence in my relationships with others.","I often worry that others will not accept me.","I am comfortable sharing my feelings with others.","I often feel that others don't care about me.","I find it difficult to depend on others.","I worry that my relationships will end.","I prefer to keep my distance from others.","I feel that others can be trusted.","I often feel insecure in my relationships.","I find it easy to get close to others.","I often worry that I will be rejected.","I am comfortable with intimacy.","I often worry that I am not loved.","I prefer to be self-sufficient.","I worry that others will let me down.","I am comfortable relying on others.","I often feel that I am not important to others.","I find it hard to trust others completely.","I worry that others will not be there when I need them.","I am comfortable opening up to others.","I often worry that others don't care about me.","I prefer not to need others.","I feel secure in my relationships.","I worry that others will hurt me.","I am comfortable being vulnerable with others.","I often feel like others don't understand me.","I find it hard to ask others for help.","I worry that I will be alone.","I am comfortable with closeness."],"instructions":"Please indicate how much you agree or disagree with each statement.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version note: Your supplied set contains 40 items on a 5-point scale, while published ASQ variants can differ in structure. The workbook calculates only the three item groupings explicitly supplied in your document (Confidence, Discomfort with Closeness, Need for Approval) and does not invent the two remaining subscales.","suggestion":"Suggestion: Treat the three available subscale totals as descriptive relationship patterns. Use your notes to give concrete examples from real relationships.","variantGroup":"asq","variantLabel":"40-item supplied version"},{"id":"ecrs","name":"Experiences in Close Relationships — Short Form (supplied version)","short":"ECR-S","category":"Relationships","riskItems":[],"count":12,"options":["1 — Strongly Disagree","2 — Somewhat Disagree","3 — Neither Agree nor Disagree","4 — Somewhat Agree","5 — Strongly Agree"],"scoreType":"ecrs","mode":"included","questions":["I worry about being abandoned.","I find it easy to get close to others.","I worry that others will not care about me as much as I care about them.","I am comfortable being close to others.","I often worry that my partner doesn't really love me.","I prefer not to get too close to others.","I worry that I will lose my partner's love.","I feel uncomfortable when others get too close to me.","I often worry that others will reject me.","I find it difficult to depend on others.","I worry that I am not good enough for others.","I prefer not to show my feelings to others."],"instructions":"Please indicate how much you agree or disagree with each statement as it applies to your close relationships.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Version note: Your supplied ECR-S uses a 5-point response scale and the scoring instructions in your document. Published ECR-S versions may use different response formats; therefore the workbook labels these as user-supplied ECR-S results.","suggestion":"Suggestion: Compare the anxiety and avoidance dimensions with the ASQ results rather than trying to label yourself from either questionnaire alone.","variantGroup":"ecr","variantLabel":"12-item supplied version"},{"id":"ysq","name":"Young Schema Questionnaire — 10-item sample","short":"YSQ-10 sample","category":"Personality & schemas","riskItems":[],"count":10,"options":["1 — Completely untrue of me","2 — Mostly untrue","3 — Slightly more true than untrue","4 — Moderately true of me","5 — Mostly true","6 — Describes me perfectly"],"scoreType":"ysq_sample","mode":"included","questions":["I feel that no one truly understands me.","I feel like I can't make it on my own.","I often feel like I have to do everything perfectly.","I feel like I'm not good enough.","I feel like I need to put others' needs before my own.","I feel like I have no one to turn to when I need help.","I worry that I will be abandoned.","I feel like I have to control everything to prevent things from going wrong.","I feel like I am defective or flawed.","I feel like I don't deserve to be loved."],"instructions":"Please indicate how well each statement describes you. This is a 10-item sample only.","rights":"User-supplied questionnaire text from uploaded clinician materials; retained exactly as supplied for this private workbook.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","note":"⚠️ Sample-only note: This is a 10-item sample, not a full YSQ. The workbook provides a descriptive 10-item mean only and does not present it as a full Young Schema Questionnaire score. This is the short/sample variant. A full 75-item version is available in the workbook.","suggestion":"Suggestion: Use this sample to note which beliefs feel most familiar, then discuss them with your therapist instead of interpreting the 10-item mean as a formal YSQ score.","variantGroup":"ysq","variantLabel":"10-item sample"},{"id":"ysq75","name":"Young Schema Questionnaire — Short Form (75-item)","short":"YSQ-SF 75","category":"Personality & schemas","mode":"included","count":75,"questions":["Most of the time, I haven't had someone to nurture me, share him/herself with me, or care deeply about everything that happens to me.","In general, people have not been there to give me warmth, holding and affection.","For much of my life, I haven't felt that I am special to someone.","For the most part, I have not had someone who really listens to me, understands me, or is tuned into my true needs and feelings.","I have rarely had a strong person to give me sound advice or direction when I'm not sure what to do.","I find myself clinging to people I'm close to, because I'm afraid they'll leave me.","I need other people so much that I worry about losing them.","I worry that people I feel close to will leave me or abandon me.","When I feel someone I care for pulling away from me, I get desperate.","Sometimes I am so worried about people leaving me that I drive them away.","I feel that people will take advantage of me.","I feel that I cannot let my guard down in the presence of other people, or else they will intentionally hurt me.","It is only a matter of time before someone betrays me.","I am quite suspicious of other people's motives.","I'm usually on the lookout for people's ulterior motives.","I don't fit in.","I'm fundamentally different from other people.","I don't belong; I'm a loner.","I feel alienated from other people.","I always feel on the outside of groups.","No man/woman I desire could love me once he/she saw my defects.","No one I desire would want to stay close to me if he/she knew the real me.","I'm unworthy of the love, attention, and respect of others.","I feel that I'm not lovable.","I am too unacceptable in the very basic ways to reveal myself to other people.","Almost nothing I do at work (or school) is as good as other people can do.","I'm incompetent when it comes to achievement.","Most other people are more capable than I am in areas of work and achievement.","I'm not as talented as most people are at their work.","I'm not as intelligent as most people when it comes to work (or school).","I do not feel capable of getting by on my own in everyday life.","I think of myself as a dependent person, when it comes to everyday functioning.","I lack common sense.","My judgement cannot be relied upon in everyday situations.","I don't feel confident about my ability to solve everyday problems that come up.","I can't seem to escape the feeling that something bad is about to happen.","I feel that a disaster (natural, criminal, financial, or medical) could strike at any moment.","I worry about being attacked.","I worry that I'll lose all my money and become destitute.","I worry about becoming a street person or vagrant.","I have not been able to separate myself from my parent(s), the way other people my age seem to.","My parent(s) and I tend to be over-involved in each other's lives and problems.","It is very difficult for my parent(s) and me to keep from getting over-involved in each other's problems.","I often feel as if my parent(s) are living through me and I don't have a life of my own.","I often feel that I don't have a separate identity from my parent(s).","I let other people control me.","I do not feel that my own needs or feelings are as important as other people's.","I do not express my opinions because I am afraid of the reaction of others.","I do not feel that I have a right to express my needs.","I have a lot of trouble standing up for my rights or my beliefs.","I am a good person because I think of others more than myself.","I am so busy doing things for other people that I have little time for myself.","I have always been the one who takes care of other people.","I put other people's needs before my own.","I feel guilty if I do something for myself instead of for others.","I am very inhibited about showing my feelings.","I find it embarrassing to express my feelings to others.","I control my emotions.","I find it difficult to express my feelings.","People see me as being unemotional.","I must be the best at most of what I do.","I must meet all my responsibilities.","I am a perfectionist.","I try very hard to meet the expectations of others.","I am very demanding of myself.","I feel that I am a very special person.","I think that I am more special than other people.","I am better than other people.","I don't think I should have to follow the rules that other people follow.","I feel that what I have to offer is more important than what other people have to offer.","I have trouble forcing myself to do things that I do not enjoy.","I am very lazy.","I can't seem to discipline myself to complete routine or boring tasks.","I often can't bring myself to do things that I should do.","I have a very hard time sacrificing immediate pleasure for a long-term goal."],"options":["1 — Completely untrue of me","2 — Mostly untrue","3 — Slightly more true than untrue","4 — Moderately true of me","5 — Mostly true","6 — Describes me perfectly"],"instructions":"Read each statement and decide how well it describes you. When unsure, base your answer on what you emotionally feel, not what you think is true.","rights":"User-supplied full 75-item version from uploaded clinician materials.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","variantGroup":"ysq","variantLabel":"75-item full version","note":"⚠️ Version note: This is the 75-item YSQ-SF version supplied in your uploaded clinician material. Each schema has five items. The workbook keeps the original item order and does not display schema names while you answer, so the experience flows as one continuous questionnaire.","suggestion":"Suggestion: Answer each statement from your immediate emotional sense rather than trying to decide whether the belief is objectively true.","scoreType":"ysq75"},{"id":"ecr36","name":"Experiences in Close Relationships — Revised (36-item)","short":"ECR-R 36","category":"Relationships","mode":"included","count":36,"questions":["I'm afraid that I will lose my partner's love.","I often worry that my partner will not want to stay with me.","I often worry that my partner doesn't really love me.","I worry that romantic partners won't care about me as much as I care about them.","I often wish that my partner's feelings for me were as strong as my feelings for him/her.","I worry a lot about my relationships.","When my partner is out of sight, I worry that he or she might become interested in someone else.","When I show my feelings for romantic partners, I'm afraid they will not feel the same about me.","I rarely worry about my partner leaving me.","My romantic partner makes me doubt myself.","I do not often worry about being abandoned.","I find that my partner(s) don't want to get as close as I would like.","Sometimes romantic partners change their feelings about me for no apparent reason.","My desire to be very close sometimes scares people away.","I'm afraid that once a romantic partner gets to know me, they won't like who I really am.","It makes me mad that I don't get the affection and support I need from my partner.","I worry that I won't measure up to other people.","My partner only seems to notice me when I'm angry.","I prefer not to show a partner how I feel deep down.","I feel comfortable sharing my private thoughts and feelings with my partner.","I find it difficult to allow myself to depend on romantic partners.","I am very comfortable being close to romantic partners.","I don't feel comfortable opening up to romantic partners.","I prefer not to be too close to romantic partners.","I get uncomfortable when a romantic partner wants to be very close.","I find it relatively easy to get close to my partner.","It's not difficult for me to get close to my partner.","I usually discuss my problems and concerns with my partner.","It helps to turn to my partner in times of need.","I tell my partner just about everything.","I talk things over with my partner.","I feel comfortable depending on romantic partners.","I find it easy to depend on romantic partners.","It's easy for me to be affectionate with my partner.","My partner really understands me and my needs.","I often worry that my partner does not really understand me. ================================================================================"],"options":["1 — Strongly Disagree","2 — Disagree","3 — Somewhat Disagree","4 — Neutral / Mixed","5 — Somewhat Agree","6 — Agree","7 — Strongly Agree"],"instructions":"Rate how much each statement describes how you feel in close relationships, especially romantic relationships.","rights":"User-supplied full 36-item version from uploaded clinician materials.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","variantGroup":"ecr","variantLabel":"36-item full version","note":"⚠️ Version note: This is the full 36-item version supplied in your uploaded document. Scores are averages for attachment anxiety and avoidance.","suggestion":"Suggestion: Consider whether responses reflect a general relationship pattern or are specific to one relationship/person.","scoreType":"ecr36"},{"id":"asq40","name":"Attachment Style Questionnaire — Original 40-item","short":"ASQ 40","category":"Relationships","mode":"included","count":40,"questions":["Overall, I am a worthwhile person.","I am easier to get to know than most people.","I feel confident that other people will be there for me when I need them.","I prefer to depend on myself rather than other people.","I prefer to keep to myself.","To ask for help is to admit that you're a failure.","People's worth should be judged by what they achieve.","Achieving things is more important than building relationships.","Doing your best is more important than getting on with others.","If you've got a job to do, you should do it no matter who gets hurt.","It's important to me that others like me.","It's important to me to avoid doing things that others won't like.","I find it hard to make a decision unless I know what other people think.","My relationships with others are generally superficial.","Sometimes I think I am no good at all.","I find it hard to trust other people.","I find it difficult to depend on others.","I find that others are reluctant to get as close as I would like.","I find it relatively easy to get close to other people.","I find it easy to trust others.","I feel comfortable depending on other people.","I worry that others won't care about me as much as I care about them.","I worry about people getting too close.","I worry that I won't measure up to other people.","I have mixed feelings about being close to others.","While I want to get close to others, I feel uneasy about it.","I wonder why people would want to be involved with me.","It's very important to me to have a close relationship.","I worry a lot about my relationships.","I wonder how I would cope without someone to love me.","I feel confident about relating to others.","I often feel left out or alone.","I often worry that I do not really fit with other people.","Other people have their own problems, so I don't bother them with mine.","When I talk over my problems with others, I generally feel ashamed or foolish.","I am too busy with other activities to put much time into relationships.","If something is bothering me, others are generally aware and concerned.","I am confident that other people will like and respect me.","I get frustrated when others are not available when I need them.","Other people often disappoint me. ================================================================================"],"options":["1 — Totally Disagree","2 — Strongly Disagree","3 — Somewhat Disagree","4 — Somewhat Agree","5 — Strongly Agree","6 — Totally Agree"],"instructions":"Show how much you agree with each item using the 1–6 scale.","rights":"User-supplied full 40-item version from uploaded clinician materials.","rightsClass":"user-supplied","source":"","attribution":"Source text supplied by user.","variantGroup":"asq","variantLabel":"Original 40-item version","note":"ℹ️ Version note: This uploaded version provides five subscales: Confidence, Discomfort with Closeness, Need for Approval, Preoccupation with Relationships, and Relationships as Secondary.","suggestion":"Suggestion: Look at the profile across the five subscales rather than relying on one number; use relationship examples in your notes.","scoreType":"asq40"}];
+const STORE_KEY = "therapyAssessmentWorkbook_verified_v2";
+const BUILD_DATE = "2026-08-15";
+
+function blankState(){
+  return {answers:{}, flags:{}, unclear:{}, notes:{}, assigned:{}, customItems:{}, customOptions:{}, extras:{}, profile:{name:"", clinician:""}};
+}
+let state = loadState();
+let current = {id:null,index:0};
+let filters = {category:"All", status:"All", search:""};
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(!raw) return blankState();
+    return Object.assign(blankState(),JSON.parse(raw));
+  }catch(e){return blankState();}
+}
+function saveState(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}
+}
+function tById(id){return TESTS.find(t=>t.id===id)}
+function aFor(id){return state.answers[id]||(state.answers[id]={})}
+function fFor(id){return state.flags[id]||(state.flags[id]={})}
+function uFor(id){return state.unclear[id]||(state.unclear[id]={})}
+function nFor(id){return state.notes[id]||(state.notes[id]={})}
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function includedTests(){return TESTS.filter(t=>t.mode==="included")}
+function importTests(){return TESTS.filter(t=>t.mode==="import")}
+function getCustomItems(t){return state.customItems[t.id]||[]}
+function itemsFor(t){
+  if(t.mode==="included") return t.questions.map((x,i)=>typeof x==="string"?({text:x,options:null,number:i+1}):({text:x.text,options:x.options||null,number:i+1}));
+  return getCustomItems(t).map((x,i)=>({text:x.text,options:x.options||null,number:i+1}));
+}
+function optionsFor(t,i){
+  const items=itemsFor(t);
+  if(items[i] && items[i].options && items[i].options.length) return items[i].options;
+  if(t.questionOptions && t.questionOptions[i] && t.questionOptions[i].length) return t.questionOptions[i];
+  if(t.mode==="import" && state.customOptions[t.id] && state.customOptions[t.id].length) return state.customOptions[t.id];
+  return t.options||[];
+}
+function countFor(t){return itemsFor(t).length}
+function answeredCount(t){
+  const count=countFor(t), ans=aFor(t.id);
+  let n=0; for(let i=0;i<count;i++) if(ans[i]!==undefined&&ans[i]!==null) n++;
+  return n;
+}
+function started(t){return answeredCount(t)>0 || (t.mode==="import" && countFor(t)>0)}
+function isAssigned(t){return !!state.assigned[t.id]}
+function activeScope(){
+  const assigned=TESTS.filter(isAssigned);
+  return assigned.length?assigned:TESTS.filter(started);
+}
+function scopeProgress(){
+  const scope=activeScope();
+  const total=scope.reduce((s,t)=>s+countFor(t),0);
+  const answered=scope.reduce((s,t)=>s+answeredCount(t),0);
+  return {scope,total,answered,pct:total?Math.round(answered/total*100):0,assigned:TESTS.filter(isAssigned).length};
+}
+
+function setView(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function showDashboard(){current.id=null;setView("dashboardView");renderDashboard()}
+function toggleAssigned(id){
+  state.assigned[id]=!state.assigned[id]; saveState(); renderDashboard();
+}
+function setCategory(c){filters.category=c;renderDashboard()}
+function setStatus(s){filters.status=s;renderDashboard()}
+function setSearch(v){filters.search=v.toLowerCase().trim();renderCardsOnly()}
+function saveProfile(k,v){state.profile[k]=v;saveState()}
+function clearAll(){
+  if(confirm("Delete every answer, note, assignment star, and clinician-pasted question saved by this workbook on this browser?")){
+    localStorage.removeItem(STORE_KEY);state=blankState();showDashboard();
+  }
+}
+
+function renderDashboard(){
+  const root=document.getElementById("dashboardView");
+  const p=scopeProgress();
+  const cats=["All",...Array.from(new Set(TESTS.map(t=>t.category)))];
+  root.innerHTML=`
+    <section class="panel howto">
+      <h2 style="margin:0 0 8px">How to use this workbook</h2>
+      <div class="sub">★ Mark the assessments your therapist assigned. For every question you can also flag it for discussion, mark it as unclear, and add a real-life example. The final clinician report prioritizes those annotations.</div>
+      <div class="howgrid">
+        <div><strong>1. Answer first, interpret later</strong><br><span class="sub">Do not change an answer because you dislike what a score might mean.</span></div>
+        <div><strong>2. Use notes for context</strong><br><span class="sub">Add examples such as “only at work” or “mostly when anxious.”</span></div>
+        <div><strong>3. Mark confusing items</strong><br><span class="sub">A ? marker tells your clinician the wording or context was difficult.</span></div>
+        <div><strong>4. Export JSON</strong><br><span class="sub">That preserves your answers, scores, flags and notes for later analysis.</span></div>
+      </div>
+    </section>
+    <section class="profile panel">
+      <label><span class="sub">Your name (optional)</span><input class="field" value="${escapeHTML(state.profile.name||"")}" oninput="saveProfile('name',this.value)" placeholder="Name"></label>
+      <label><span class="sub">Clinician (optional)</span><input class="field" value="${escapeHTML(state.profile.clinician||"")}" oninput="saveProfile('clinician',this.value)" placeholder="Clinician name"></label>
+    </section>
+    <section class="stats">
+      <div class="stat"><strong>${includedTests().length}</strong><span>questionnaires with full items</span></div>
+      <div class="stat"><strong>${importTests().length}</strong><span>clinician-copy modules</span></div>
+      <div class="stat"><strong>${includedTests().reduce((s,t)=>s+t.count,0)}</strong><span>verified built-in questions</span></div>
+    </section>
+    <section class="progressbox">
+      <div class="progressline"><strong>${p.assigned?`Assigned progress · ${p.answered}/${p.total}`:"Star your therapist’s assessments"}</strong><span>${p.assigned?p.pct+"%":"No assigned set yet"}</span></div>
+      <div class="track"><div class="fill" style="width:${p.assigned?p.pct:0}%"></div></div>
+      <div class="tabsnote" style="margin-top:8px">${p.assigned?`${p.assigned} assessment${p.assigned===1?"":"s"} marked as assigned.`:"Tap ☆ on the tests your therapist sent you. Once you have marked the 11, overall progress tracks only those tests."}</div>
+    </section>
+    <section class="panel no-print">
+      <div class="searchrow"><input id="searchBox" class="search" value="${escapeHTML(filters.search)}" placeholder="Search assessments…" oninput="setSearch(this.value)">
+      <div><button class="btn small" onclick="downloadJSON()">Backup</button> <button class="btn small danger" onclick="clearAll()">Clear all</button></div></div>
+      <div class="filters">${cats.map(c=>`<button class="filter ${filters.category===c?"active":""}" onclick='setCategory(${JSON.stringify(c)})'>${escapeHTML(c)}</button>`).join("")}</div>
+      <div class="filters">
+        ${["All","Assigned","Built-in","Add questions"].map(s=>`<button class="filter ${filters.status===s?"active":""}" onclick='setStatus(${JSON.stringify(s)})'>${escapeHTML(s)}</button>`).join("")}
+      </div>
+    </section>
+    <div style="height:12px"></div>
+    <section id="cards" class="grid"></section>`;
+  renderCardsOnly();
+}
+function visibleTests(){
+  return TESTS.filter(t=>{
+    if(filters.category!=="All"&&t.category!==filters.category) return false;
+    if(filters.status==="Assigned"&&!isAssigned(t)) return false;
+    if(filters.status==="Built-in"&&t.mode!=="included") return false;
+    if(filters.status==="Add questions"&&t.mode!=="import") return false;
+    if(filters.search && !(t.name+" "+t.short+" "+t.category).toLowerCase().includes(filters.search)) return false;
+    return true;
+  });
+}
+function renderCardsOnly(){
+  const root=document.getElementById("cards"); if(!root)return;
+  const list=visibleTests();
+  if(!list.length){root.innerHTML=`<div class="panel empty">No assessments match these filters.</div>`;return}
+  root.innerHTML=list.map(t=>{
+    const count=countFor(t), n=answeredCount(t), pct=count?Math.round(n/count*100):0;
+    const expected=t.mode==="import"?(t.expectedCount?`${t.expectedCount} expected`:"version-dependent"):`${t.count} items`;
+    const status=t.mode==="included"?`<span class="pill included">Questions included</span>`:`<span class="pill import">${count?"Questions added":"Add therapist questions"}</span>`;
+    return `<article class="card">
+      <div class="cardtop"><div><div class="sub">${escapeHTML(t.category)}</div><h2>${escapeHTML(t.name)}</h2><div class="sub">${escapeHTML(t.short)}</div></div>
+      <button class="star ${isAssigned(t)?"on":""}" title="Mark as therapist-assigned" onclick="toggleAssigned('${t.id}')">${isAssigned(t)?"★":"☆"}</button></div>
+      <div style="margin-top:9px">${status} ${isAssigned(t)?'<span class="pill assigned">Assigned</span>':""}</div>
+      <div class="meta">${escapeHTML(expected)}${t.mode==="import"&&count?` · ${count} pasted`:""}${n?` · ${n} answered`:""}</div>
+      <div class="minitrack"><div class="minifill" style="width:${pct}%"></div></div>
+      <div class="sub">${count?pct+"% complete":escapeHTML(t.reason||"Official questions required")}</div>
+      <div class="cardbuttons">
+        <button class="btn ${t.mode==="included"||count?"primary":""}" onclick="openTest('${t.id}')">${t.mode==="import"&&!count?"Add questions":n?"Continue":"Start"}</button>
+        <button class="btn small" onclick="showRights('${t.id}')">Rights</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function openTest(id,index){
+  const t=tById(id);current.id=id;
+  if(t.mode==="import"&&!countFor(t)){setView("testView");renderImport(t);return}
+  const count=countFor(t);if(!count){setView("testView");renderImport(t);return}
+  if(index===undefined){
+    const ans=aFor(id);let first=0;
+    for(let i=0;i<count;i++){if(ans[i]===undefined){first=i;break} if(i===count-1)first=0}
+    current.index=first;
+  }else current.index=clamp(index,0,count-1);
+  setView("testView");renderQuestion();
+}
+function questionLead(t,i){
+  if(t.id==="wurs25") return i<22?"As a child I was (or had):":"As a child in school I was (or had):";
+  if(t.id==="ace") return "While you were growing up, during your first 18 years of life:";
+  if(t.id==="bsl23") return "During the past week…";
+  return "";
+}
+function renderExtra(t){
+  if(!t.extra)return "";
+  const ex=state.extras[t.id]||(state.extras[t.id]={});
+  if(t.extra.type==="text") return `<label class="sub">${escapeHTML(t.extra.label)}<input class="field" style="margin-top:6px" value="${escapeHTML(ex[t.extra.key]||"")}" oninput="saveExtra('${t.id}','${t.extra.key}',this.value)"></label>`;
+  return `<label class="sub">${escapeHTML(t.extra.label)}<select class="field" style="margin-top:6px" onchange="saveExtra('${t.id}','${t.extra.key}',this.value)"><option value="">—</option>${t.extra.options.map(o=>`<option ${ex[t.extra.key]===o?"selected":""}>${escapeHTML(o)}</option>`).join("")}</select></label>`;
+}
+function screenThreshold(t,i){if(t.id!=="asrs6")return null;return [2,2,2,3,3,3][i]}
+function renderQuestion(){
+  const t=tById(current.id), items=itemsFor(t), i=current.index, item=items[i], opts=optionsFor(t,i);
+  const ans=aFor(t.id), flags=fFor(t.id), unclear=uFor(t.id), notes=nFor(t.id);
+  const threshold=screenThreshold(t,i);
+  const root=document.getElementById("testView");
+  root.innerHTML=`
+    <section class="testhead">
+      <button class="btn small" onclick="showDashboard()">← Assessments</button>
+      <div class="kicker" style="margin-top:13px">${escapeHTML(t.category)}</div>
+      <h2>${escapeHTML(t.name)}</h2>
+      <div>${escapeHTML(t.instructions)}</div>
+      ${t.note?`<div class="assessment-note"><strong>⚠️ Note about this version</strong><div style="margin-top:5px">${escapeHTML(t.note)}</div></div>`:""}
+      ${t.suggestion?`<div class="suggestion"><strong>💡 Suggestion</strong><div style="margin-top:5px">${escapeHTML(t.suggestion)}</div></div>`:""}
+      ${renderExtra(t)}
+      <div class="rights">${escapeHTML(t.rights)}${t.source?` · <a href="${escapeHTML(t.source)}" target="_blank" rel="noopener">source ↗</a>`:""}</div>
+      ${t.attribution?`<div class="rights">${escapeHTML(t.attribution)}</div>`:""}
+      ${t.mode==="import"?`<div style="margin-top:10px"><button class="btn small" onclick="renderImport(tById('${t.id}'))">Edit pasted questions</button></div>`:""}
+    </section>
+    <section class="qpanel">
+      <div class="qnum">Question ${i+1} of ${items.length}</div>
+      ${questionLead(t,i)?`<div class="qlead">${escapeHTML(questionLead(t,i))}</div>`:""}
+      <div class="qtext">${escapeHTML(item.text)}</div>
+      <div class="options">${opts.map((label,idx)=>`<button class="option ${String(ans[i])===String(idx)?"selected":""} ${threshold!==null&&idx>=threshold?"screenzone":""}" onclick="choose(${idx})">${escapeHTML(label)}</button>`).join("")}</div>
+      ${threshold!==null?`<div class="screenhint">The lightly marked response zone preserves the original ASRS screener’s shaded-box scoring logic.</div>`:""}
+      <div class="qtools">
+        <label class="checkrow"><input type="checkbox" ${flags[i]?"checked":""} onchange="setFlag(this.checked)"> ⭐ Discuss this item with my clinician</label>
+        <label class="checkrow"><input type="checkbox" ${unclear[i]?"checked":""} onchange="setUnclear(this.checked)"> ? I found this item hard to understand or answer</label>
+        <textarea class="field note" placeholder="Optional note or real-life example…" oninput="saveNote(this.value)">${escapeHTML(notes[i]||"")}</textarea>
+      </div>
+      ${riskAlertForCurrent(t,i,ans[i])}
+      <div class="nav"><button class="btn" onclick="prevQ()" ${i===0?"disabled":""}>← Previous</button><div class="tap-hint">Tap an answer to continue</div></div>
+      <div class="jump">${items.map((_,j)=>`<button class="dot ${ans[j]!==undefined?"done":""} ${flags[j]?"flagged":""} ${unclear[j]?"unclear":""} ${j===i?"current":""}" onclick="jumpQ(${j})">${j+1}</button>`).join("")}</div>
+    </section>`;
+}
+function riskAlertForCurrent(t,i,answerIdx){
+  if(!t.riskItems||!t.riskItems.includes(i+1)||answerIdx===undefined||Number(answerIdx)<=0)return "";
+  return `<div class="risknotice"><strong>Bring this response to your clinician.</strong> If you think you may act on thoughts of harming yourself or someone else, or you cannot stay safe, seek urgent local clinical/emergency support now.</div>`;
+}
+function choose(idx){
+  const t=tById(current.id), items=itemsFor(t), currentIndex=current.index;
+  aFor(current.id)[currentIndex]=idx;
+  saveState();
+  if(currentIndex < items.length-1){
+    current.index=currentIndex+1;
+    const y=window.scrollY;
+    renderQuestion();
+    requestAnimationFrame(()=>window.scrollTo(0,y));
+  }else{
+    showDashboard();
+  }
+}
+function setFlag(v){fFor(current.id)[current.index]=v;saveState();renderQuestion()}
+function setUnclear(v){uFor(current.id)[current.index]=v;saveState();renderQuestion()}
+function saveNote(v){nFor(current.id)[current.index]=v;saveState()}
+function saveExtra(id,k,v){state.extras[id]=state.extras[id]||{};state.extras[id][k]=v;saveState()}
+function prevQ(){if(current.index>0){current.index--;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}}
+function nextQ(){const t=tById(current.id),n=countFor(t);if(current.index<n-1){current.index++;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}else showDashboard()}
+function jumpQ(i){current.index=i;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}
+
+function renderImport(t){
+  setView("testView");
+  const saved=getCustomItems(t);
+  const text=saved.map(x=>x.text+(x.options&&x.options.length?` || ${x.options.join(" | ")}`:"")).join("\n");
+  const defaults=(state.customOptions[t.id]||t.options||[]).join("\n");
+  document.getElementById("testView").innerHTML=`
+    <section class="testhead">
+      <button class="btn small" onclick="showDashboard()">← Assessments</button>
+      <div class="kicker" style="margin-top:13px">${escapeHTML(t.category)}</div><h2>${escapeHTML(t.name)}</h2>
+      <div>${escapeHTML(t.reason)}</div><div class="rights"><a href="${escapeHTML(t.source)}" target="_blank" rel="noopener">Rights/source information ↗</a></div>
+    </section>
+    <section class="importbox">
+      <div class="importhelp"><strong>The official question text is intentionally not bundled.</strong> Paste the exact questions your clinician supplied. Everything you paste stays in this browser unless you export it.</div>
+      <div class="two">
+        <label><strong>Questions</strong><div class="sub">One question per line.${t.expectedCount?` Expected: ${t.expectedCount}.`:" This instrument has multiple versions, so the pasted line count is used."}</div>
+          <textarea id="pasteItems" class="textarea" style="min-height:330px" placeholder="Paste questions here…">${escapeHTML(text)}</textarea>
+        </label>
+        <label><strong>Default answer choices</strong><div class="sub">One choice per line. Check these against the clinician copy.</div>
+          <textarea id="pasteOptions" class="textarea">${escapeHTML(defaults)}</textarea>
+          <div class="sub" style="margin-top:10px">For a question that needs different choices, use:</div>
+          <div class="sample">Question text || Yes | No<br>Another question || None | Mild | Moderate | Severe</div>
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn primary" onclick="saveImported('${t.id}')">Save questions</button>
+        ${saved.length?`<button class="btn" onclick="openTest('${t.id}',0)">Back to questionnaire</button>`:""}
+        <button class="btn danger" onclick="clearImported('${t.id}')">Clear pasted questions</button>
+      </div>
+      <div id="importStatus" class="sub" style="margin-top:9px">${saved.length?`${saved.length} question${saved.length===1?"":"s"} currently saved.`:""}</div>
+    </section>`;
+}
+function parseItemLine(line){
+  const clean=line.trim().replace(/^\s*\d+\s*[\.\)]\s*/,"");
+  if(!clean)return null;
+  const parts=clean.split("||");
+  const text=parts[0].trim();
+  if(!text)return null;
+  let options=null;
+  if(parts.length>1) options=parts.slice(1).join("||").split("|").map(x=>x.trim()).filter(Boolean);
+  return {text,options:options&&options.length?options:null};
+}
+function saveImported(id){
+  const t=tById(id);
+  const lines=document.getElementById("pasteItems").value.split(/\r?\n/).map(parseItemLine).filter(Boolean);
+  const opts=document.getElementById("pasteOptions").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  state.customItems[id]=lines;state.customOptions[id]=opts;saveState();
+  const status=document.getElementById("importStatus");
+  const mismatch=t.expectedCount&&lines.length!==t.expectedCount;
+  status.innerHTML=`<strong>${lines.length} saved.</strong>${mismatch?` Expected ${t.expectedCount}; double-check that each item is on its own line.`:" ✓"} ${opts.length?`${opts.length} default answer choices saved.`:""}`;
+  if(lines.length) setTimeout(()=>openTest(id,0),500);
+}
+function clearImported(id){
+  if(confirm("Remove the clinician-pasted questions and answers for this assessment?")){
+    delete state.customItems[id];delete state.customOptions[id];delete state.answers[id];delete state.flags[id];delete state.unclear[id];delete state.notes[id];saveState();renderImport(tById(id));
+  }
+}
+
+function completeAnswers(t){
+  const n=countFor(t),ans=aFor(t.id);if(!n||answeredCount(t)!==n)return null;
+  return Array.from({length:n},(_,i)=>Number(ans[i]));
+}
+function listSum(arr){return arr.reduce((a,b)=>a+b,0)}
+function scoreTest(t){
+  const idx=completeAnswers(t);
+  if(!idx)return {complete:false,answered:answeredCount(t),total:countFor(t)};
+  const S={complete:true,scores:{}};
+  switch(t.scoreType){
+    case "asrs18": {
+      S.scores["Total (0–72)"]=listSum(idx);
+      const c=idx.slice(0,6).reduce((s,v,i)=>s+(v>=(i<3?2:3)?1:0),0);
+      S.scores["6-item screener count"]=c;
+      S.scores["Supplied screener threshold reached"]=c>=4?"Yes (4+ of 6)":"No";
+      S.note="Uses the scoring instructions supplied with this workbook."; break;
+    }
+    case "ocir": {
+      S.scores["Total (0–72)"]=listSum(idx);
+      const groups={Washing:[5,11,17],Checking:[2,8,14],Ordering:[3,9,15],Neutralizing:[4,10,16],Obsessing:[6,12,18],Hoarding:[1,7,13]};
+      Object.entries(groups).forEach(([k,a])=>S.scores[k]=listSum(a.map(n=>idx[n-1]))); break;
+    }
+    case "ders16": {
+      const rev=new Set([1,2,6,7,8]); const v=idx.map((x,i)=>rev.has(i+1)?4-x:x);
+      S.scores["Total (16–80)"]=listSum(v.map(x=>x+1));
+      S.note="Reverse-scored according to the uploaded questionnaire instructions."; break;
+    }
+    case "ders36": {
+      const rev=new Set([1,2,6,7,8,30,31,33,34,35,36]); const v=idx.map((x,i)=>rev.has(i+1)?4-x:x);
+      S.scores["Total"]=listSum(v.map(x=>x+1));
+      const groups={Nonacceptance:[17,20,22,29],Goals:[12,14,19,21],Impulse:[13,15,18,24,25,26],Awareness:[1,2,4,6,7,8],Strategies:[10,11,16,23,27,28,32],Clarity:[3,5,9,30,31,33,34,35,36]};
+      Object.entries(groups).forEach(([k,a])=>S.scores[k]=listSum(a.map(n=>v[n-1]+1))); break;
+    }
+    case "pss10": {
+      const rev=new Set([4,5,7,8]); const v=idx.map((x,i)=>rev.has(i+1)?4-x:x); S.scores["Total (0–40)"]=listSum(v); S.note="Reverse-scored according to the uploaded questionnaire instructions. The workbook does not treat the supplied low/moderate/high bands as diagnostic."; break;
+    }
+    case "mdq": {
+      const symptom=idx.slice(0,13).filter(x=>x===1).length; const same=idx[13]===1; const impairment=idx[14];
+      S.scores["Section A YES count"]=symptom; S.scores["Section B: same period"]=same?"Yes":"No"; S.scores["Section C: impairment"]=t.questionOptions[14][impairment]||"";
+      S.scores["Supplied screen reached"]=(symptom>=7&&same&&(impairment>=2))?"Yes":"No"; break;
+    }
+    case "msibpd": { const yes=idx.filter(x=>x===1).length; S.scores["YES count (0–10)"]=yes; S.scores["Supplied screening threshold reached"]=yes>=7?"Yes (7+)":"No"; break; }
+    case "asqsf": {
+      const v=idx.map(x=>x+1); const groups={"Confidence": [1,3,4,9,12,14,19,21,23,27,31,34,36,40],"Discomfort with Closeness":[6,8,11,16,18,25,29,33,38],"Need for Approval":[2,5,7,10,13,22,24,26,28,30,32,35,37,39]};
+      Object.entries(groups).forEach(([k,a])=>S.scores[k+" mean"]=Math.round((listSum(a.map(n=>v[n-1]))/a.length)*100)/100); break;
+    }
+    case "ecrs": {
+      const v=idx.map((x,i)=>[1,3].includes(i+1)?x+1:([2,4].includes(i+1)?5-x:x+1));
+      const an=[1,3,5,7,9,11].map(n=>v[n-1]), av=[2,4,6,8,10,12].map(n=>v[n-1]);
+      S.scores["Anxiety (6–30)"]=listSum(an); S.scores["Avoidance (6–30)"]=listSum(av); break;
+    }
+    case "ysq_sample": { S.scores["10-item mean (1–6)"]=Math.round((listSum(idx.map(x=>x+1))/idx.length)*100)/100; break; }
+    case "sumIndex": S.scores[t.scoreLabel||"Total"]=listSum(idx); break;
+    case "sum1": S.scores[t.scoreLabel||"Total"]=listSum(idx.map(x=>x+1)); break;
+    case "asrs6":{
+      const th=[2,2,2,3,3,3];const c=idx.reduce((s,v,i)=>s+(v>=th[i]?1:0),0);
+      S.scores["Shaded-box count"]=c;S.scores["Original screener threshold reached"]=c>=4?"Yes (4+ of 6)":"No";break;
+    }
+    case "raads":{
+      const rev=new Set([1,6,11,18,23,26,33,37,43,47,48,53,58,62,68,72,77]);
+      const vals=idx.map((v,i)=>(rev.has(i+1)?[0,1,2,3]:[3,2,1,0])[v]);
+      const subs={
+        "Social relatedness":[1,6,8,11,14,17,18,25,37,38,3,5,12,28,39,44,45,76,79,80,20,21,22,23,26,31,43,47,48,53,54,55,60,61,64,68,69,72,77],
+        "Circumscribed interests":[9,13,24,30,32,40,41,50,52,56,63,70,75,78],
+        "Language":[2,7,27,35,58,66,15],
+        "Sensory-motor":[10,19,4,33,34,36,46,71,16,29,42,49,51,57,59,62,65,67,73,74]
+      };
+      S.scores["Total"]=listSum(vals);Object.entries(subs).forEach(([k,a])=>S.scores[k]=listSum(a.map(n=>vals[n-1])));break;
+    }
+    case "aq":{
+      const agree=new Set([2,4,5,6,7,9,12,13,16,18,19,20,21,22,23,26,33,35,39,41,42,43,45,46]);
+      const vals=idx.map((v,i)=>agree.has(i+1)?(v<=1?1:0):(v>=2?1:0));
+      const subs={"Social skill":[1,11,13,15,22,36,44,45,47,48],"Attention switching":[2,4,10,16,25,32,34,37,43,46],"Attention to detail":[5,6,9,12,19,23,28,29,30,49],"Communication":[7,17,18,26,27,31,33,35,38,39],"Imagination":[3,8,14,20,21,24,40,41,42,50]};
+      S.scores["Total"]=listSum(vals);Object.entries(subs).forEach(([k,a])=>S.scores[k]=listSum(a.map(n=>vals[n-1])));break;
+    }
+    case "catq":{
+      const rev=new Set([14,15,18,19,25]);const vals=idx.map((v,i)=>{const x=v+1;return rev.has(i+1)?8-x:x});
+      const subs={"Compensation":[1,2,3,4,5,6,7,8,9],"Masking":[10,11,12,13,14,15,16,17],"Assimilation":[18,19,20,21,22,23,24,25]};
+      S.scores["Total"]=listSum(vals);Object.entries(subs).forEach(([k,a])=>S.scores[k]=listSum(a.map(n=>vals[n-1])));break;
+    }
+    case "eq40":{
+      const forward=new Set([1,3,11,13,14,15,21,22,23,24,26,27,28,29,34,35,36,37,38,39,40]);
+      const vals=idx.map((v,i)=>forward.has(i+1)?(v===0?2:v===1?1:0):(v===3?2:v===2?1:0));
+      S.scores["Total (0–80)"]=listSum(vals);break;
+    }
+    case "dass21":{
+      const dep=[3,5,10,13,16,17,21],anx=[2,4,7,9,15,19,20],stress=[1,6,8,11,12,14,18];
+      const sum=a=>listSum(a.map(n=>idx[n-1]))*2;
+      S.scores["Depression (×2)"]=sum(dep);S.scores["Anxiety (×2)"]=sum(anx);S.scores["Stress (×2)"]=sum(stress);break;
+    }
+    case "pswq":{
+      const rev=new Set([1,3,8,10,11]);const vals=idx.map((v,i)=>rev.has(i+1)?5-v:v+1);S.scores["Total (16–80)"]=listSum(vals);break;
+    }
+    case "pcl5":{
+      const vals=idx;const sum=a=>listSum(a);S.scores["Total"]=sum(vals);S.scores["Cluster B (1–5)"]=sum(vals.slice(0,5));S.scores["Cluster C (6–7)"]=sum(vals.slice(5,7));S.scores["Cluster D (8–14)"]=sum(vals.slice(7,14));S.scores["Cluster E (15–20)"]=sum(vals.slice(14,20));break;
+    }
+    case "des":{
+      const vals=idx.map(v=>v*10);S.scores["Average percentage"]=Math.round((listSum(vals)/vals.length)*10)/10+"%";break;
+    }
+    case "bsl23":{
+      S.scores["Mean score (0–4)"]=Math.round((listSum(idx)/23)*100)/100;S.scores["Raw sum"]=listSum(idx);break;
+    }
+    case "mss":{
+      const rev=new Set([3,5,12,15,22,28,31,34,47,53,58,61,64,65,69]);
+      const vals=idx.map((v,i)=>rev.has(i+1)?4-v:v);
+      const names=["Abandonment / anxious attachment","Emotional deprivation","Mistrust of others","Social isolation / outsider","Defectiveness / shame","Vulnerability to dangerous world","Dependence","Low self-efficacy / weakness","Failure / achievement inferiority","Enmeshment / diffuse boundaries","Subjugation","Self-sacrifice","Approval seeking","Emotional inhibition","Pessimism / negativity","Unrelenting standards","Punitiveness — self","Punitiveness — others","Entitlement / specialness"];
+      names.forEach((name,g)=>{const a=vals.slice(g*4,g*4+4);S.scores[name]=Math.round((listSum(a)/4)*100)/100});break;
+    }
+    case "fmps":{
+      const v=idx.map(x=>x+1);const groups={"Concern over mistakes":[9,10,13,14,18,21,23,25,34],"Personal standards":[4,6,12,16,19,24,30],"Parental expectations":[1,11,15,20,26],"Parental criticism":[3,5,22,35],"Doubts about actions":[17,28,32,33],"Organization":[2,7,8,27,29,31]};
+      const sums={};Object.entries(groups).forEach(([k,a])=>sums[k]=listSum(a.map(n=>v[n-1])));
+      S.scores["Total perfectionism (29 items; excludes Organization)"]=sums["Concern over mistakes"]+sums["Personal standards"]+sums["Parental expectations"]+sums["Parental criticism"]+sums["Doubts about actions"];
+      Object.assign(S.scores,sums);break;
+    }
+    case "core10":{
+      const rev=new Set([2,3]);const v=idx.map((x,i)=>rev.has(i+1)?4-x:x);S.scores["Clinical score (0–40)"]=listSum(v);break;
+    }
+    case "coreom":{
+      const rev=new Set([3,4,7,12,19,21,31,32]);const v=idx.map((x,i)=>rev.has(i+1)?4-x:x);
+      const domains={"Wellbeing":[4,14,17,23],"Problems":[2,5,8,11,13,15,18,20,27,28,30,33],"Functioning":[1,3,7,10,12,19,21,25,26,29,31,32],"Risk":[6,9,16,22,24,34]};
+      const mean=a=>listSum(a.map(n=>v[n-1]))/a.length;
+      S.scores["Total clinical score (0–40)"]=Math.round((listSum(v)/34*10)*100)/100;
+      const nonRisk=Array.from({length:34},(_,i)=>i+1).filter(n=>!domains.Risk.includes(n));
+      S.scores["Non-risk clinical score (0–40)"]=Math.round((mean(nonRisk)*10)*100)/100;
+      Object.entries(domains).forEach(([k,a])=>S.scores[k+" mean (0–4)"]=Math.round(mean(a)*100)/100);break;
+    }
+  }
+  return S;
+}
+function riskResponses(t){
+  if(!t.riskItems||!t.riskItems.length)return [];
+  const items=itemsFor(t),ans=aFor(t.id);
+  return t.riskItems.filter(n=>ans[n-1]!==undefined&&Number(ans[n-1])>0).map(n=>({item:n,text:items[n-1]?.text||"",answer:answerLabel(t,n-1)}));
+}
+function answerLabel(t,i){
+  const ans=aFor(t.id)[i];if(ans===undefined)return null;
+  const opts=optionsFor(t,i);return opts[Number(ans)]??String(ans);
+}
+function exportObject(){
+  return {
+    workbook:"Therapy Assessment Workbook — V3",
+    buildDate:BUILD_DATE,exportedAt:new Date().toISOString(),profile:state.profile,
+    disclaimer:"Screening/formulation data only. Not a diagnosis. Review with a qualified clinician.",
+    assignedAssessmentIds:Object.keys(state.assigned).filter(k=>state.assigned[k]),
+    assessments:TESTS.filter(t=>isAssigned(t)||started(t)).map(t=>{
+      const items=itemsFor(t),flags=fFor(t.id),unclear=uFor(t.id),notes=nFor(t.id);
+      return {id:t.id,name:t.name,short:t.short,category:t.category,mode:t.mode,rights:t.rights,source:t.source,attribution:t.attribution||"",
+        assigned:isAssigned(t),completion:{answered:answeredCount(t),total:items.length},scoreSummary:scoreTest(t),extra:state.extras[t.id]||{},
+        responses:items.map((x,i)=>({item:i+1,question:x.text,responseOptions:optionsFor(t,i),answerIndex:aFor(t.id)[i]===undefined?null:Number(aFor(t.id)[i]),answer:answerLabel(t,i),flagged:!!flags[i],unclear:!!unclear[i],note:notes[i]||""}))
+      };
+    })
+  };
+}
+function csvCell(v){if(v===undefined||v===null)v="";return '"'+String(v).replaceAll('"','""')+'"'}
+function stamp(){return new Date().toISOString().slice(0,10)}
+function download(name,content,mime){const b=new Blob([content],{type:mime}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function downloadJSON(){download(`therapy-assessments-${stamp()}.json`,JSON.stringify(exportObject(),null,2),"application/json")}
+function downloadCSV(){
+  const rows=[["Assessment","Short name","Category","Assigned","Item","Question","Answer","Answer index","Discuss","Unclear","Note"]];
+  exportObject().assessments.forEach(a=>a.responses.forEach(r=>rows.push([a.name,a.short,a.category,a.assigned?"YES":"",r.item,r.question,r.answer,r.answerIndex,r.flagged?"YES":"",r.unclear?"YES":"",r.note])));
+  download(`therapy-assessments-${stamp()}.csv`,rows.map(r=>r.map(csvCell).join(",")).join("\n"),"text/csv;charset=utf-8");
+}
+function summaryText(){
+  const ex=exportObject();let s=`THERAPY ASSESSMENT SUMMARY\nGenerated: ${new Date().toLocaleString()}\nName: ${ex.profile.name||"—"}\nClinician: ${ex.profile.clinician||"—"}\nScreening/formulation data only — not a diagnosis.\n\n`;
+  ex.assessments.forEach(a=>{s+=`${a.name}${a.assigned?" [ASSIGNED]":""}: ${a.completion.answered}/${a.completion.total}\n`;if(a.scoreSummary.complete&&a.scoreSummary.scores)s+="Scores: "+Object.entries(a.scoreSummary.scores).map(([k,v])=>`${k}=${v}`).join("; ")+"\n";
+    const marked=a.responses.filter(r=>r.flagged||r.unclear||r.note);if(marked.length){s+="Items for discussion:\n";marked.forEach(r=>s+=`- #${r.item}: ${r.question} | ${r.answer??"unanswered"}${r.unclear?" | unclear":""}${r.note?` | note: ${r.note}`:""}\n`)}s+="\n";
+  });return s;
+}
+async function copySummary(){const text=summaryText();try{await navigator.clipboard.writeText(text);alert("Summary copied.")}catch(e){download(`therapy-summary-${stamp()}.txt`,text,"text/plain")}}
+function importBackup(ev){
+  const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.assessments&&d.workbook){
+      if(!confirm("Import this exported assessment file into the workbook? Existing matching answers may be replaced."))return;
+      if(d.profile)state.profile=d.profile;if(Array.isArray(d.assignedAssessmentIds))d.assignedAssessmentIds.forEach(id=>state.assigned[id]=true);
+      d.assessments.forEach(a=>{const t=tById(a.id);if(!t)return;if(t.mode==="import"&&a.responses){state.customItems[a.id]=a.responses.map(x=>({text:x.question,options:Array.isArray(x.responseOptions)?x.responseOptions:null}))}
+        state.answers[a.id]={};state.flags[a.id]={};state.unclear[a.id]={};state.notes[a.id]={};
+        (a.responses||[]).forEach((x,i)=>{if(x.answerIndex!==null&&x.answerIndex!==undefined)state.answers[a.id][i]=x.answerIndex;if(x.flagged)state.flags[a.id][i]=true;if(x.unclear)state.unclear[a.id][i]=true;if(x.note)state.notes[a.id][i]=x.note});
+        if(a.extra)state.extras[a.id]=a.extra;
+      });saveState();showDashboard();alert("Backup imported.");
+    }else throw new Error("Unrecognized export");}catch(e){alert("That JSON file could not be imported: "+e.message)}};r.readAsText(file);ev.target.value="";
+}
+
+function reportAssessments(){return TESTS.filter(t=>isAssigned(t)||started(t))}
+function showReport(){
+  setView("reportView");const list=reportAssessments(),root=document.getElementById("reportView");
+  if(!list.length){root.innerHTML=`<section class="report"><h2>Clinician report</h2><div class="empty">No assessments have been assigned or started yet.</div></section>`;return}
+  let h=`<section class="report"><div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="btn" onclick="window.print()">Print / Save PDF</button><button class="btn" onclick="downloadReportHTML()">Download standalone report</button></div>
+  <h2>Clinician report</h2><div class="sub">${escapeHTML(state.profile.name||"Name not entered")}${state.profile.clinician?` · Clinician: ${escapeHTML(state.profile.clinician)}`:""} · Generated ${escapeHTML(new Date().toLocaleString())}</div>
+  <div class="notice"><strong>Interpretation boundary:</strong> scores below are arithmetic outputs from the instrument’s published scoring structure, not diagnoses. Flagged/unclear items and examples may be especially useful to discuss.</div>`;
+  list.forEach(t=>{
+    const score=scoreTest(t),items=itemsFor(t),marked=items.map((x,i)=>({i,text:x.text,answer:answerLabel(t,i),flag:fFor(t.id)[i],unclear:uFor(t.id)[i],note:nFor(t.id)[i]||""})).filter(x=>x.flag||x.unclear||x.note);
+    const risks=riskResponses(t);
+    h+=`<div class="reporttest"><h3>${escapeHTML(t.name)} ${isAssigned(t)?'<span class="pill assigned">Assigned</span>':""}</h3><div class="sub">${answeredCount(t)}/${countFor(t)} answered · ${escapeHTML(t.category)}</div>`;
+    if(score.complete&&score.scores)h+=`<div class="scorechips">${Object.entries(score.scores).map(([k,v])=>`<span class="scorechip">${escapeHTML(k)}: <strong>${escapeHTML(v)}</strong></span>`).join("")}</div>`;
+    else if(score.complete&&score.note)h+=`<div class="sub">${escapeHTML(score.note)}</div>`; else h+=`<div class="sub">Not complete — no automatic score shown.</div>`;
+    if(risks.length){h+=`<h4>Safety-relevant responses to review</h4>${risks.map(r=>`<div class="riskitem"><strong>#${r.item}</strong> ${escapeHTML(r.text)}<br><span class="sub">${escapeHTML(r.answer)}</span></div>`).join("")}`}
+    if(marked.length){h+=`<h4>Marked for discussion</h4>${marked.map(x=>`<div class="flagitem"><strong>#${x.i+1}</strong> ${escapeHTML(x.text)}<br><span class="sub">Answer: ${escapeHTML(x.answer??"Unanswered")}${x.flag?" · ⭐ discuss":""}${x.unclear?" · ? unclear":""}${x.note?` · Note: ${escapeHTML(x.note)}`:""}</span></div>`).join("")}`}
+    else h+=`<div class="empty">No items flagged, marked unclear, or annotated.</div>`;
+    h+=`<div class="rights">${escapeHTML(t.attribution||"")} ${t.source?`<a href="${escapeHTML(t.source)}" target="_blank" rel="noopener">Source</a>`:""}</div></div>`;
+  });
+  // Cross-assessment comparison: descriptive only, based on completed scores.
+  const completed=list.filter(t=>{const s=scoreTest(t);return s.complete&&s.scores});
+  if(completed.length){
+    const byId={};completed.forEach(t=>byId[t.id]=scoreTest(t));
+    const links=[];
+    const addLink=(label,ids)=>{const rows=ids.filter(id=>byId[id]).map(id=>{const s=byId[id];const val=Object.values(s.scores||{})[0];return `${tById(id).short}: ${val}`});if(rows.length>=2)links.push(`<div class="compare-row"><strong>${escapeHTML(label)}</strong><div class="sub">${escapeHTML(rows.join(" · "))}</div></div>`)};
+    addLink('Attention / ADHD', ['asrs6','asrs18','wurs25']);
+    addLink('Autism-related measures', ['raads','aq','catq','eq40']);
+    addLink('Mood / anxiety / stress', ['phq9','gad7','dass','k10','pss10']);
+    addLink('Trauma / dissociation', ['pcl','ace','des']);
+    addLink('Emotion regulation', ['ders16','ders36']);
+    addLink('Attachment / relationships', ['asqsf','ecrs']);
+    if(links.length){h+=`<div class="reporttest compare"><h3>Cross-assessment patterns</h3><div class="sub">This section does not diagnose or combine scores. It only places related completed measures next to one another so you and your clinician can decide what deserves discussion.</div>${links.join("")}</div>`}
+  }
+  const markedAll=[];list.forEach(t=>itemsFor(t).forEach((x,i)=>{if(fFor(t.id)[i]||uFor(t.id)[i]||nFor(t.id)[i])markedAll.push({t,item:i+1,text:x.text,answer:answerLabel(t,i),flag:fFor(t.id)[i],unclear:uFor(t.id)[i],note:nFor(t.id)[i]||''})}));
+  if(markedAll.length){h+=`<div class="reporttest"><h3>Therapy discussion priorities</h3><div class="sub">These are the questions you personally marked—not automatically “the most important” clinical findings.</div>${markedAll.slice(0,25).map(x=>`<div class="flagitem"><strong>${escapeHTML(x.t.short)} #${x.item}</strong> — ${escapeHTML(x.text)}<br><span class="sub">${escapeHTML(x.answer??'Unanswered')}${x.flag?' · ⭐ discuss':''}${x.unclear?' · ? unclear':''}${x.note?` · ${escapeHTML(x.note)}`:''}</span></div>`).join('')}${markedAll.length>25?`<div class="sub">${markedAll.length-25} additional marked items remain in the JSON/Excel export.</div>`:''}</div>`}
+  h+=`</section>`;root.innerHTML=h;
+}
+function reportBodyHTML(){
+  showReport();
+  const body=document.getElementById("reportView").innerHTML;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Clinician assessment report</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;max-width:900px;margin:30px auto;padding:0 16px;color:#17191d;line-height:1.45}.reporttest{border-top:1px solid #ddd;padding:15px 0}.sub{color:#667;font-size:13px}.scorechip{display:inline-block;background:#f1f3f6;border-radius:8px;padding:6px 8px;margin:3px;font-size:13px}.flagitem{background:#fff8e5;padding:10px;border-radius:9px;margin:6px 0}.riskitem{background:#fff0f0;padding:10px;border-radius:9px;margin:6px 0}.assessment-note{background:#fff7df;border:1px solid #ead48b;padding:11px 13px;border-radius:11px;margin:12px 0;color:#5e4a12}.suggestion{background:#eef4ff;border:1px solid #c9d7ff;padding:11px 13px;border-radius:11px;margin:12px 0;color:#213b7a}.compare-row{border-top:1px solid #e7e7e7;padding:9px 0}.compare{background:#fbfcff}.notice{background:#fff7df;padding:12px;border-radius:10px}.pill{font-size:11px;background:#eef2ff;padding:4px 7px;border-radius:99px}.no-print{display:none}@media print{body{margin:0}}</style></head><body>${body}</body></html>`;
+}
+function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
+
+function showRights(focusId){
+  setView("rightsView");const root=document.getElementById("rightsView");
+  root.innerHTML=`<section class="panel"><h2 style="margin-top:0">Sources & rights</h2>
+    <p>“Free” and “public domain” are not treated as synonyms in this build. Full item text is bundled only when the available source supports this non-commercial/clinical electronic use. When a measure was not independently verified for redistribution, this build only includes the exact text supplied by you and labels it “User-supplied”; no third-party question text was sourced or silently substituted.</p>
+    <div class="notice"><strong>Verification date:</strong> ${BUILD_DATE}. Rights can change; source links are retained so you or your clinician can re-check them.</div>
+    ${TESTS.map(t=>`<div class="rightscard" id="rights-${t.id}"><div style="display:flex;justify-content:space-between;gap:10px"><strong>${escapeHTML(t.name)}</strong><span class="pill ${t.mode==="included"?"included":"import"}">${t.mode==="included"?(t.rightsClass==="user-supplied"?"User-supplied":"Bundled"):"Not bundled"}</span></div><div class="sub">${escapeHTML(t.rights||t.reason||"Questions not bundled.")}</div>${t.note?`<div class="assessment-note">${escapeHTML(t.note)}</div>`:""}<div class="rights">${escapeHTML(t.attribution||"")}${t.source?` <a href="${escapeHTML(t.source)}" target="_blank" rel="noopener">Open source/rights page ↗</a>`:""}</div></div>`).join("")}
+  </section>`;
+  if(focusId)setTimeout(()=>document.getElementById("rights-"+focusId)?.scrollIntoView({behavior:"smooth",block:"center"}),100);
+}
+
+renderDashboard();
+</script>
+
+
+<style id="v4-overrides">
+/* V4 interaction fixes */
+.qtext{background:linear-gradient(180deg,#f7f8ff,#ffffff);border:2px solid #cbd3ff;border-radius:18px;padding:20px 20px 22px;box-shadow:0 8px 24px rgba(54,89,227,.08);font-size:clamp(21px,3.7vw,30px);line-height:1.28;margin:14px 0 18px}
+.qnum{font-weight:800;color:#4a55a7}
+.qpanel{scroll-margin-top:10px}
+.variant-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.variant-tab{border:1px solid #d7dbe4;background:#fff;border-radius:12px;padding:9px 12px;font-weight:700}
+.variant-tab.active{background:#edf1ff;border-color:#7c8be8;color:#23399b}
+.question-notes{margin-top:14px;padding-top:13px;border-top:1px solid #e4e6eb}
+.question-notes .assessment-note,.question-notes .suggestion,.question-notes .rights{margin-top:10px}
+.scrollhint{font-size:12px;color:#6b707b;margin-top:6px}
+.export-grid{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+<script>
+(function(){
+  const __oldRenderQuestion = window.renderQuestion;
+  const __oldRenderCardsOnly = window.renderCardsOnly;
+  const __oldRenderDashboard = window.renderDashboard;
+  const __oldShowReport = window.showReport;
+  const __oldDownloadJSON = window.downloadJSON;
+  const __oldCompleteAnswers = window.completeAnswers;
+  const __oldScoreTest = window.scoreTest;
+
+  function groupMembers(group){return TESTS.filter(t=>t.variantGroup===group)}
+  function variantTabsHtml(t){
+    if(!t.variantGroup) return '';
+    return `<div class="variant-tabs"><strong style="align-self:center;margin-right:4px">Version:</strong>${groupMembers(t.variantGroup).map(v=>`<button class="variant-tab ${v.id===t.id?'active':''}" onclick="openTest('${v.id}')">${escapeHTML(v.variantLabel||v.short||v.name)}</button>`).join('')}</div>`;
+  }
+
+  // Replace dashboard card renderer to group full/short versions into one card.
+  window.renderCardsOnly=function(){
+    const root=document.getElementById('cards'); if(!root)return;
+    const list=visibleTests(); if(!list.length){root.innerHTML='<div class="panel empty">No assessments match these filters.</div>';return}
+    const seen=new Set(), out=[];
+    for(const t of list){
+      if(t.variantGroup && seen.has(t.variantGroup)) continue;
+      if(t.variantGroup) seen.add(t.variantGroup);
+      const members=t.variantGroup?groupMembers(t.variantGroup):[t];
+      const selected=members.find(v=>isAssigned(v))||t;
+      const count=countFor(selected), n=answeredCount(selected), pct=count?Math.round(n/count*100):0;
+      const status=selected.mode==='included'?`<span class="pill included">Questions included</span>`:`<span class="pill import">${count?'Questions added':'Add therapist questions'}</span>`;
+      const tabButtons=t.variantGroup?`<div class="variant-tabs">${members.map(v=>`<button class="variant-tab ${v.id===selected.id?'active':''}" onclick="openTest('${v.id}')">${escapeHTML(v.variantLabel||v.short)}</button>`).join('')}</div>`:'';
+      out.push(`<article class="card">
+        <div class="cardtop"><div><div class="sub">${escapeHTML(selected.category)}</div><h2>${escapeHTML(selected.name.split(' — ')[0])}</h2><div class="sub">${escapeHTML(selected.short)}</div></div>
+        <button class="star ${members.some(v=>isAssigned(v))?'on':''}" title="Mark as therapist-assigned" onclick="toggleAssigned('${selected.id}')">${members.some(v=>isAssigned(v))?'★':'☆'}</button></div>
+        ${tabButtons}
+        <div style="margin-top:9px">${status} ${members.some(v=>isAssigned(v))?'<span class="pill assigned">Assigned</span>':''}</div>
+        <div class="meta">${count?`${n}/${count} answered`:'Not started'}</div>
+        <div class="minitrack"><div class="minifill" style="width:${pct}%"></div></div>
+        <div class="sub">${count?pct+'% complete':'Ready to start'}</div>
+        <div class="cardbuttons"><button class="btn primary" onclick="openTest('${selected.id}')">${n?'Continue':'Start'}</button><button class="btn small" onclick="showRights('${selected.id}')">Rights</button></div>
+      </article>`);
+    }
+    root.innerHTML=out.join('');
+  };
+
+  window.renderQuestion=function(){
+    const y=window.scrollY;
+    __oldRenderQuestion();
+    const t=tById(current.id), qpanel=document.querySelector('#testView .qpanel'), head=document.querySelector('#testView .testhead');
+    if(qpanel){
+      // Add version tabs above question card
+      const oldTabs=qpanel.querySelector('.variant-tabs'); if(oldTabs) oldTabs.remove();
+      if(t.variantGroup){qpanel.insertAdjacentHTML('afterbegin',variantTabsHtml(t));}
+      // Move important notes below the question/answer area
+      const notesWrap=document.createElement('div'); notesWrap.className='question-notes';
+      if(head){
+        ['.assessment-note','.suggestion','.rights'].forEach(sel=>{
+          head.querySelectorAll(sel).forEach(el=>notesWrap.appendChild(el.cloneNode(true)));
+        });
+        // Keep only rights header material, but remove duplicated moved blocks.
+        head.querySelectorAll('.assessment-note,.suggestion,.rights').forEach(el=>el.remove());
+      }
+      const qtools=qpanel.querySelector('.qtools');
+      if(qtools){qtools.insertAdjacentElement('afterend',notesWrap);}
+    }
+    requestAnimationFrame(()=>window.scrollTo(0,y));
+  };
+
+  // Save/answer actions preserve exact scroll position by relying on renderQuestion wrapper.
+
+  // Rich progress helpers
+  function testProgress(t){
+    const n=countFor(t), a=answeredCount(t); return {n,a,pct:n?Math.round(a/n*100):0};
+  }
+
+  // More informative clinician report + cross-test comparisons, while keeping existing output underneath.
+  window.showReport=function(){
+    __oldShowReport();
+    const root=document.getElementById('reportView');
+    if(!root)return;
+    const extra=document.createElement('section'); extra.className='report panel';
+    const assigned=TESTS.filter(t=>isAssigned(t));
+    const completed=TESTS.filter(t=>countFor(t)&&answeredCount(t)===countFor(t));
+    const flagged=[];
+    TESTS.forEach(t=>{
+      const f=fFor(t.id),u=uFor(t.id),n=nFor(t.id); const items=itemsFor(t);
+      for(let i=0;i<countFor(t);i++) if(f[i]||u[i]||n[i]) flagged.push({t,i,flag:!!f[i],unclear:!!u[i],note:n[i]||'',text:items[i].text});
+    });
+    extra.innerHTML=`<h2>Therapy discussion priorities</h2>
+      <div class="sub">This section is based on your own flags/notes and completion, not on an automatic diagnosis.</div>
+      <div class="stats" style="margin-top:12px">
+        <div class="stat"><strong>${assigned.length}</strong><span>assigned assessments</span></div>
+        <div class="stat"><strong>${completed.length}</strong><span>fully completed</span></div>
+        <div class="stat"><strong>${flagged.filter(x=>x.flag).length}</strong><span>items flagged for discussion</span></div>
+        <div class="stat"><strong>${flagged.filter(x=>x.unclear).length}</strong><span>items marked unclear</span></div>
+      </div>
+      <h3 style="margin-top:20px">Items to discuss</h3>
+      ${flagged.length?flagged.map(x=>`<div class="flagitem"><strong>${escapeHTML(x.t.name)} — #${x.i+1}</strong><br>${escapeHTML(x.text)}<br><span class="sub">${x.flag?'⭐ Discussed':''}${x.unclear?' · ? Unclear':''}${x.note?' · 📝 '+escapeHTML(x.note):''}</span></div>`).join(''):'<div class="empty">No questions flagged or annotated yet.</div>'}
+      <h3 style="margin-top:20px">Related-assessment comparison</h3>
+      <div class="compare-grid">
+        <div class="compare-box"><strong>ADHD</strong><br><span class="sub">ASRS-6 and ASRS-18 can be viewed together; WURS-25 adds childhood retrospective context.</span></div>
+        <div class="compare-box"><strong>Autism</strong><br><span class="sub">RAADS-R, AQ-50, CAT-Q and EQ provide different perspectives and should not be treated as interchangeable diagnoses.</span></div>
+        <div class="compare-box"><strong>Mood / distress</strong><br><span class="sub">PHQ-9, GAD-7, DASS-21 and K10 overlap but have different purposes and timeframes.</span></div>
+        <div class="compare-box"><strong>Relationships</strong><br><span class="sub">ASQ versions and ECR versions can be compared, but different item sets/scales should not be treated as numerically equivalent.</span></div>
+        <div class="compare-box"><strong>Schemas / emotion regulation</strong><br><span class="sub">YSQ and MSS-YSQ can identify recurring belief patterns; DERS adds a different lens on emotional processes.</span></div>
+      </div>`;
+    root.prepend(extra);
+  };
+
+  function excelXml(){
+    const rows=[['Assessment','Variant','Category','Item','Question','Answer','Answer index','Discuss','Unclear','Note','Score / subscale']];
+    TESTS.forEach(t=>{
+      const items=itemsFor(t), ans=aFor(t.id), f=fFor(t.id), u=uFor(t.id), notes=nFor(t.id);
+      const score=scoreTest(t); const scoreText=score&&score.scores?Object.entries(score.scores).map(([k,v])=>k+': '+v).join('; '):'';
+      for(let i=0;i<items.length;i++) rows.push([t.name,t.variantLabel||'',t.category,i+1,items[i].text,ans[i]!==undefined?optionsFor(t,i)[Number(ans[i])]:'',ans[i]!==undefined?ans[i]:'',f[i]?'YES':'',u[i]?'YES':'',notes[i]||'',i===0?scoreText:'']);
+    });
+    const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const xmlRows=rows.map(r=>'<Row>'+r.map(v=>'<Cell><Data ss:Type="String">'+esc(v)+'</Data></Cell>').join('')+'</Row>').join('');
+    return `<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Answers"><Table>${xmlRows}</Table></Worksheet></Workbook>`;
+  }
+  window.downloadExcel=function(){
+    const blob=new Blob([excelXml()],{type:'application/vnd.ms-excel'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='therapy-assessments-'+new Date().toISOString().slice(0,10)+'.xls'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  };
+  window.downloadText=function(){
+    const ex=exportObject(); let s=`THERAPY ASSESSMENT WORKBOOK\nExported: ${new Date().toLocaleString()}\n\n`;
+    s+=`ASSIGNED / PROGRESS\n`;
+    TESTS.filter(t=>isAssigned(t)).forEach(t=>{const n=countFor(t),a=answeredCount(t);s+=`- ${t.name}: ${a}/${n} (${n?Math.round(a/n*100):0}%)\n`;});
+    s+=`\nRESULTS\n`;
+    ex.assessments.forEach(a=>{
+      s+=`\n### ${a.name}\n${a.completion.answered}/${a.completion.total} answered\n`;
+      if(a.scoreSummary&&a.scoreSummary.scores)s+=Object.entries(a.scoreSummary.scores).map(([k,v])=>`${k}: ${v}`).join('\n')+'\n';
+      const marked=a.responses.filter(r=>r.flagged||r.unclear||r.note);
+      if(marked.length){s+='Questions to discuss:\n'; marked.forEach(r=>{s+=`#${r.item} | ${r.answer??'Unanswered'}${r.flagged?' | DISCUSS':''}${r.unclear?' | UNCLEAR':''}${r.note?' | '+r.note:''}\n`});}
+    });
+    download('therapy-assessments-'+new Date().toISOString().slice(0,10)+'.txt',s,'text/plain;charset=utf-8');
+  };
+
+  // Keep dashboard progress visible and note version counts.
+  window.renderDashboard=function(){__oldRenderDashboard();};
+})();
+</script>
+
+<style id="v8-overrides">
+/* V8 application UI */
+.hero .badges .badge:last-child{display:none}
+.v8-progress-hero{background:linear-gradient(135deg,#171d2d,#273663);color:#fff;padding:24px;border-radius:24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.v8-progress-title{display:flex;justify-content:space-between;gap:20px;align-items:flex-end}.v8-progress-title h1{font-size:clamp(24px,4vw,36px);margin:3px 0 0}.v8-progress-title>strong{font-size:32px}.v8-progress-hero .v8-eyebrow{color:#cbd5ff}.track.big{height:12px;margin-top:14px;background:rgba(255,255,255,.18)}.track.big .fill{background:#fff}
+.v8-progress-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}.v8-progress-grid>div{background:rgba(255,255,255,.09);border-radius:13px;padding:11px}.v8-progress-grid strong{display:block;font-size:20px}.v8-progress-grid span{font-size:12px;color:#dbe2ff}
+.v8-resume{background:#fff;border:1px solid #cfd6ff;border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:14px 0;box-shadow:0 5px 18px rgba(54,89,227,.06)}.v8-resume h2{margin:2px 0 3px;font-size:20px}
+.v8-eyebrow{text-transform:uppercase;letter-spacing:.07em;font-size:11px;font-weight:800;color:#596170}.v8-toolbar-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}.v8-mini-actions{display:flex;gap:7px;flex-wrap:wrap}
+.v8-list-section{margin:18px 0 26px}.v8-section-title{display:flex;align-items:center;gap:9px;margin:0 3px 10px}.v8-section-title h2{margin:0;font-size:20px}.v8-section-title span{background:#e9ebf0;padding:3px 8px;border-radius:99px;font-size:12px;font-weight:800}.completed-section .v8-section-title h2{color:#17613f}
+.v8-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;min-height:210px}.v8-card.complete-card{border-color:#b8ddca;background:linear-gradient(180deg,#f5fff9,#fff)}.v8-card.progress-card{border-color:#cdd5fa}.v8-card-head{display:flex;justify-content:space-between;gap:10px}.v8-card h3{margin:3px 0;font-size:18px;line-height:1.2}.v8-card-progress{margin-top:13px}.v8-card-progress>div:first-child{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}.v8-card-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:8px 0}.v8-card-meta span{background:#f1f3f6;border-radius:99px;padding:4px 7px}.v8-card-actions{display:flex;gap:7px;margin-top:auto}.v8-card-actions .btn:first-child{flex:1}
+.v8-version-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}.v8-version{border:1px solid #d5dae4;background:#fff;padding:7px 9px;border-radius:10px;font-size:12px;font-weight:750}.v8-version.active{background:#edf1ff;border-color:#8190e9;color:#263b9f}
+body.assessment-mode{overflow:hidden;background:#f7f8fb}.assessment-mode>.shell>.hero,.assessment-mode>.shell>.notice,.assessment-mode>.shell>.toolbar,.assessment-mode>.shell>.footer{display:none!important}.assessment-mode .shell{max-width:none;padding:0;height:100dvh}.assessment-mode #testView{height:100dvh;overflow:hidden}.v8-assessment-screen{height:100dvh;display:flex;flex-direction:column;background:#f7f8fb;overflow:hidden}.v8-assessment-header{height:54px;flex:0 0 54px;background:#fff;border-bottom:1px solid var(--line);display:grid;grid-template-columns:48px 1fr auto;align-items:center;padding:0 12px;gap:8px}.v8-iconbtn{border:0;background:#f1f3f6;width:36px;height:36px;border-radius:50%;font-size:16px}.v8-assessment-title{text-align:center;display:flex;flex-direction:column;font-size:13px}.v8-assessment-title span{color:var(--muted);font-size:11px}.v8-save{font-size:11px;color:#607064;min-width:88px;text-align:right}.saved-flash{color:#1d7a50;font-weight:800}.v8-assessment-screen>.v8-version-tabs{flex:0 0 auto;background:#fff;padding:7px 12px;margin:0;border-bottom:1px solid var(--line);justify-content:center}.v8-question-progress{height:30px;flex:0 0 30px;display:flex;align-items:center;gap:8px;padding:0 14px}.v8-question-progress .track{flex:1}.v8-question-progress span{font-size:11px;color:var(--muted);min-width:32px;text-align:right}.v8-question-stage{flex:1;min-height:0;display:flex;flex-direction:column;max-width:760px;width:100%;margin:0 auto;padding:8px 14px 7px;overflow:hidden}.v8-question-label{font-size:11px;font-weight:800;color:#5b64a2;text-transform:uppercase;letter-spacing:.08em}.v8-question-text{background:#fff;border:2px solid #cbd3ff;border-radius:17px;padding:14px 16px;font-size:clamp(18px,3.1vw,25px);font-weight:750;line-height:1.25;margin:6px 0 8px;max-height:22vh;overflow:auto;overscroll-behavior:contain}.v8-options{display:grid;gap:6px;flex:0 1 auto;min-height:0}.v8-option{border:1px solid #d5dae4;background:#fff;border-radius:12px;padding:9px 12px;min-height:40px;text-align:left;font-weight:650;line-height:1.2;transition:.12s}.v8-option.selected{background:#e8edff;border:2px solid var(--accent);padding:8px 11px;transform:scale(.995)}.v8-utilities{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px;font-size:11px}.v8-utilities label,.v8-link{border:0;background:#eef0f4;border-radius:9px;padding:6px 8px;font-size:11px}.v8-link{cursor:pointer}.v8-note-box{min-height:55px;max-height:75px;margin-top:6px;resize:none}.v8-info-box{margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:8px;font-size:11px;max-height:90px;overflow:auto}.v8-info-note{display:flex;gap:5px;flex-direction:column;margin-bottom:5px}.v8-info-note strong{color:#72540a}.v8-info-note.suggestion strong{color:#294395}.v8-assessment-footer{height:56px;flex:0 0 56px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:110px 1fr 90px;align-items:center;gap:8px;padding:7px 12px}.v8-live-score{text-align:center;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.risknotice{font-size:11px;margin:5px 0;padding:7px 9px}
+.v8-modal{position:fixed;inset:0;background:rgba(10,16,30,.54);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}.v8-modal-card{background:#fff;border-radius:18px;padding:17px;max-width:520px;width:100%;max-height:80vh;overflow:auto}.v8-modal-head{display:flex;justify-content:space-between;align-items:center}.v8-modal-head h2{margin:0}.v8-review-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:14px}.v8-review-dot{height:38px;border-radius:9px;border:1px solid var(--line);background:#fff;font-weight:700}.v8-review-dot.done{background:#edf1ff}.v8-review-dot.flagged{box-shadow:inset 0 0 0 2px #d5901d}.v8-review-dot.unclear{outline:2px dotted #8a63ad}
+.v8-completion{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;background:#f7f8fb}.v8-check{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:#e8f8ef;color:#18794e;font-size:38px;font-weight:900}.v8-completion h1{margin:17px 0 3px}.v8-completion p{color:var(--muted)}.v8-completion-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:min(440px,100%);margin:16px 0}.v8-completion-stats>div{background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px}.v8-completion-stats strong{display:block;font-size:22px}.v8-completion-stats span{font-size:11px;color:var(--muted)}.v8-assessment-discuss{background:#fff7df;padding:10px 12px;border-radius:11px;margin:4px 0 14px}.v8-completion-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.v8-options.dense-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.v8-options.dense-options .v8-option{text-align:center;min-height:34px;padding:6px 8px;font-size:12px}
+@media(max-width:700px){.v8-progress-grid{grid-template-columns:repeat(2,1fr)}.v8-resume{align-items:flex-start;flex-direction:column}.v8-resume .btn{width:100%}.v8-question-text{font-size:18px;padding:11px 12px;max-height:20vh}.v8-option{padding:8px 10px;min-height:38px;font-size:13px}.v8-assessment-footer{grid-template-columns:96px 1fr 74px;padding:6px 8px}.v8-assessment-footer .btn{padding:8px 6px;font-size:12px}.v8-assessment-header{grid-template-columns:42px 1fr 82px;padding:0 8px}.v8-save{font-size:10px}.v8-review-grid{grid-template-columns:repeat(6,1fr)}}
+@media(max-height:700px){.v8-question-text{font-size:17px;max-height:17vh;margin:4px 0 6px;padding:9px 11px}.v8-option{min-height:34px;padding:6px 9px;font-size:12px}.v8-utilities{margin-top:4px}.v8-assessment-footer{height:48px;flex-basis:48px}.v8-assessment-header{height:48px;flex-basis:48px}.v8-question-progress{height:24px;flex-basis:24px}}
+
+</style>
+<script>
+(function(){
+  // V8 application layer. Keeps V7 questionnaire/scoring data, replaces navigation/dashboard/export UX.
+  state.lastPositions = state.lastPositions || {};
+  state.preferredVariants = state.preferredVariants || {};
+  state.completedAt = state.completedAt || {};
+  state.assessmentDiscuss = state.assessmentDiscuss || {};
+  state.session = state.session || {answeredToday:{}, lastSaved:null};
+
+  // Clean accidental document separator remnants from supplied Word extraction.
+  TESTS.forEach(t=>{
+    if(Array.isArray(t.questions)) t.questions=t.questions.map(q=>typeof q==='string'?q.replace(/\s*=+\s*$/,'').trim():q);
+  });
+
+  const OLD_SHOW_REPORT = window.showReport;
+  const OLD_SHOW_RIGHTS = window.showRights;
+  const OLD_RENDER_IMPORT = window.renderImport;
+
+  function saveV8(){
+    state.session.lastSaved=new Date().toISOString();
+    saveState();
+    const el=document.getElementById('saveStateText');
+    if(el){el.textContent='✓ Saved locally';el.classList.add('saved-flash');setTimeout(()=>el.classList.remove('saved-flash'),450);}
+  }
+  function isComplete(t){const n=countFor(t);return !!n && answeredCount(t)===n}
+  function libraryStats(){
+    const totalQ=TESTS.reduce((s,t)=>s+countFor(t),0);
+    const answered=TESTS.reduce((s,t)=>s+answeredCount(t),0);
+    const complete=TESTS.filter(isComplete).length;
+    return {totalQ,answered,complete,totalForms:TESTS.length,qPct:totalQ?Math.round(answered/totalQ*100):0,fPct:TESTS.length?Math.round(complete/TESTS.length*100):0};
+  }
+  function assignedStats(){
+    const tests=TESTS.filter(isAssigned), totalQ=tests.reduce((s,t)=>s+countFor(t),0), answered=tests.reduce((s,t)=>s+answeredCount(t),0), complete=tests.filter(isComplete).length;
+    return {tests,totalQ,answered,complete,total:tests.length,pct:totalQ?Math.round(answered/totalQ*100):0};
+  }
+  function startedTests(){return TESTS.filter(t=>answeredCount(t)>0&&!isComplete(t))}
+  function lastResume(){
+    const candidates=startedTests().map(t=>({t,pos:state.lastPositions[t.id]??Math.min(answeredCount(t),Math.max(0,countFor(t)-1)),ts:state.lastTouched?.[t.id]||''}));
+    candidates.sort((a,b)=>String(b.ts).localeCompare(String(a.ts)));
+    return candidates[0]||null;
+  }
+  function touch(id,index){
+    state.lastPositions[id]=index;
+    state.lastTouched=state.lastTouched||{};
+    state.lastTouched[id]=new Date().toISOString();
+    if(tById(id)?.variantGroup) state.preferredVariants[tById(id).variantGroup]=id;
+    saveV8();
+  }
+  function variantMembers(t){return t.variantGroup?TESTS.filter(x=>x.variantGroup===t.variantGroup):[t]}
+  function selectedVariant(members){
+    const group=members[0]?.variantGroup;
+    if(group&&state.preferredVariants[group]) return members.find(x=>x.id===state.preferredVariants[group])||members.find(isAssigned)||members[0];
+    return members.find(isAssigned)||members[0];
+  }
+  function versionTabs(t){
+    if(!t.variantGroup)return '';
+    return `<div class="v8-version-tabs">${variantMembers(t).map(v=>`<button class="v8-version ${v.id===t.id?'active':''}" onclick="selectVariant('${v.id}')">${escapeHTML(v.variantLabel||v.short)}</button>`).join('')}</div>`;
+  }
+  window.selectVariant=function(id){const t=tById(id);if(t.variantGroup)state.preferredVariants[t.variantGroup]=id;saveV8();openTest(id)};
+
+  // Dashboard
+  window.showDashboard=function(){
+    current.id=null;
+    document.body.classList.remove('assessment-mode');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('dashboardView').classList.add('active');
+    window.scrollTo(0,0);
+    renderDashboard();
+  };
+
+  window.toggleAssigned=function(id){
+    state.assigned[id]=!state.assigned[id];
+    const t=tById(id); if(t.variantGroup && state.assigned[id]) state.preferredVariants[t.variantGroup]=id;
+    saveV8(); renderDashboard();
+  };
+
+  function cardHTML(t){
+    const n=countFor(t),a=answeredCount(t),complete=isComplete(t),pct=n?Math.round(a/n*100):0;
+    const flags=Object.values(fFor(t.id)).filter(Boolean).length, notes=Object.values(nFor(t.id)).filter(Boolean).length;
+    return `<article class="v8-card ${complete?'complete-card':a?'progress-card':''}">
+      <div class="v8-card-head"><div><div class="v8-eyebrow">${escapeHTML(t.category)}</div><h3>${escapeHTML(t.name)}</h3><div class="sub">${escapeHTML(t.short)} · ${n} questions</div></div>
+      <button class="star ${isAssigned(t)?'on':''}" onclick="event.stopPropagation();toggleAssigned('${t.id}')" title="Therapist assigned">${isAssigned(t)?'★':'☆'}</button></div>
+      ${t.variantGroup?versionTabs(t):''}
+      <div class="v8-card-progress"><div><strong>${complete?'✓ Complete':`${a} / ${n}`}</strong><span>${pct}%</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>
+      <div class="v8-card-meta">${isAssigned(t)?'<span>★ Assigned</span>':''}${flags?`<span>⭐ ${flags} discuss</span>`:''}${notes?`<span>📝 ${notes} notes</span>`:''}</div>
+      <div class="v8-card-actions"><button class="btn ${complete?'':'primary'}" onclick="openTest('${t.id}',${complete?0:(state.lastPositions[t.id]??0)})">${complete?'Review answers':a?'Continue':'Start'}</button>${complete?`<button class="btn small" onclick="openResults('${t.id}')">Results</button>`:''}</div>
+    </article>`;
+  }
+
+  function sectionHTML(title,tests,cls=''){
+    if(!tests.length)return '';
+    return `<section class="v8-list-section ${cls}"><div class="v8-section-title"><h2>${title}</h2><span>${tests.length}</span></div><div class="grid">${tests.map(cardHTML).join('')}</div></section>`;
+  }
+
+  window.renderDashboard=function(){
+    const root=document.getElementById('dashboardView'),lib=libraryStats(),asg=assignedStats(),resume=lastResume();
+    const query=(filters.search||'').toLowerCase();
+    let pool=TESTS.filter(t=>(filters.category==='All'||t.category===filters.category)&&(!query||(t.name+' '+t.short+' '+t.category).toLowerCase().includes(query)));
+    if(filters.status==='Assigned')pool=pool.filter(isAssigned);
+    if(filters.status==='Completed')pool=pool.filter(isComplete);
+    if(filters.status==='In progress')pool=pool.filter(t=>answeredCount(t)>0&&!isComplete(t));
+    if(filters.status==='Not started')pool=pool.filter(t=>answeredCount(t)===0);
+    // Visually group alternative full/short versions into one card, while library totals still count all 32 forms.
+    const units=[]; const seenGroups=new Set();
+    for(const t of pool){
+      if(t.variantGroup){
+        if(seenGroups.has(t.variantGroup))continue; seenGroups.add(t.variantGroup);
+        const eligible=variantMembers(t).filter(v=>pool.includes(v));
+        if(!eligible.length)continue;
+        let selected=selectedVariant(eligible);
+        // Prefer an assigned or started/completed member when that better reflects active work.
+        selected=eligible.find(isAssigned)||eligible.find(v=>answeredCount(v)>0)||selected;
+        units.push(selected);
+      }else units.push(t);
+    }
+    const completed=units.filter(isComplete).sort((a,b)=>String(state.completedAt[b.id]||'').localeCompare(String(state.completedAt[a.id]||''))||a.name.localeCompare(b.name));
+    const inProgress=units.filter(t=>answeredCount(t)>0&&!isComplete(t)).sort((a,b)=>answeredCount(b)/countFor(b)-answeredCount(a)/countFor(a));
+    const notStarted=units.filter(t=>answeredCount(t)===0).sort((a,b)=>(isAssigned(b)-isAssigned(a))||a.name.localeCompare(b.name));
+    const cats=['All',...Array.from(new Set(TESTS.map(t=>t.category)))];
+    root.innerHTML=`
+      <section class="v8-progress-hero">
+        <div class="v8-progress-title"><div><div class="v8-eyebrow">Overall library progress</div><h1>${lib.answered.toLocaleString()} / ${lib.totalQ.toLocaleString()} questions answered</h1></div><strong>${lib.qPct}%</strong></div>
+        <div class="track big"><div class="fill" style="width:${lib.qPct}%"></div></div>
+        <div class="v8-progress-grid">
+          <div><strong>${lib.complete} / ${lib.totalForms}</strong><span>assessments finished</span></div>
+          <div><strong>${lib.totalQ-lib.answered}</strong><span>questions remaining</span></div>
+          <div><strong>${asg.complete} / ${asg.total||0}</strong><span>assigned finished</span></div>
+          <div><strong>${asg.answered} / ${asg.totalQ||0}</strong><span>assigned questions</span></div>
+        </div>
+      </section>
+      ${resume?`<section class="v8-resume"><div><div class="v8-eyebrow">Continue where you left off</div><h2>${escapeHTML(resume.t.name)}</h2><div class="sub">Question ${(resume.pos||0)+1} of ${countFor(resume.t)} · ${answeredCount(resume.t)} answered</div></div><button class="btn primary" onclick="openTest('${resume.t.id}',${resume.pos||0})">Continue →</button></section>`:''}
+      <section class="v8-toolbar-panel no-print">
+        <div class="searchrow"><input class="search" placeholder="Search assessments…" value="${escapeHTML(filters.search||'')}" oninput="filters.search=this.value;renderDashboard()"><div class="v8-mini-actions"><button class="btn small" onclick="downloadJSON()">Create backup</button><button class="btn small" onclick="document.getElementById('backupInput').click()">Restore</button></div></div>
+        <div class="filters">${['All','Assigned','In progress','Completed','Not started'].map(s=>`<button class="filter ${filters.status===s?'active':''}" onclick="filters.status='${s}';renderDashboard()">${s}</button>`).join('')}</div>
+        <div class="filters category-filters">${cats.map(c=>`<button class="filter ${filters.category===c?'active':''}" onclick='filters.category=${JSON.stringify(c)};renderDashboard()'>${escapeHTML(c)}</button>`).join('')}</div>
+      </section>
+      ${sectionHTML('✓ Completed',completed,'completed-section')}
+      ${sectionHTML('▶ In progress',inProgress,'progress-section')}
+      ${sectionHTML('○ Not started',notStarted,'notstarted-section')}
+      ${!pool.length?'<div class="panel empty">No assessments match these filters.</div>':''}`;
+  };
+
+  // Questionnaire full-screen flow
+  window.openTest=function(id,index){
+    const t=tById(id), n=countFor(t); if(!n){return OLD_RENDER_IMPORT(t)};
+    current.id=id;
+    let pos=index;
+    if(pos===undefined||pos===null){
+      pos=state.lastPositions[id];
+      if(pos===undefined){const ans=aFor(id);pos=Array.from({length:n},(_,i)=>i).find(i=>ans[i]===undefined);if(pos===undefined)pos=0;}
+    }
+    current.index=clamp(Number(pos)||0,0,n-1);
+    touch(id,current.index);
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('testView').classList.add('active');
+    document.body.classList.add('assessment-mode');
+    window.scrollTo(0,0);
+    renderQuestion();
+  };
+
+  function compactInfo(t){
+    const bits=[];
+    if(t.note)bits.push(`<div class="v8-info-note"><strong>⚠ Version note</strong><span>${escapeHTML(t.note.replace(/^⚠️?\s*Version note:\s*/i,''))}</span></div>`);
+    if(t.suggestion)bits.push(`<div class="v8-info-note suggestion"><strong>💡 Tip</strong><span>${escapeHTML(t.suggestion.replace(/^Suggestion:\s*/i,''))}</span></div>`);
+    return bits.join('');
+  }
+  window.renderQuestion=function(){
+    const t=tById(current.id),items=itemsFor(t),i=current.index,item=items[i],opts=optionsFor(t,i),ans=aFor(t.id),flags=fFor(t.id),unclear=uFor(t.id),notes=nFor(t.id);
+    state.lastPositions[t.id]=i; saveV8();
+    const pct=Math.round((i+1)/items.length*100);
+    const score=scoreTest(t); const liveScores=score?.scores?Object.entries(score.scores).slice(0,2).map(([k,v])=>`${escapeHTML(k)}: <strong>${escapeHTML(v)}</strong>`).join(' · '):'';
+    document.getElementById('testView').innerHTML=`<div class="v8-assessment-screen">
+      <header class="v8-assessment-header"><button class="v8-iconbtn" onclick="showDashboard()">✕</button><div class="v8-assessment-title"><strong>${escapeHTML(t.short)}</strong><span>${i+1} / ${items.length}</span></div><div id="saveStateText" class="v8-save">✓ Saved locally</div></header>
+      ${versionTabs(t)}
+      <div class="v8-question-progress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>
+      <main class="v8-question-stage">
+        <div class="v8-question-label">Question ${i+1}</div>
+        ${questionLead(t,i)?`<div class="qlead">${escapeHTML(questionLead(t,i))}</div>`:''}
+        <div class="v8-question-text">${escapeHTML(item.text)}</div>
+        <div class="v8-options ${opts.length>=9?'dense-options':''}">${opts.map((label,idx)=>`<button class="v8-option ${String(ans[i])===String(idx)?'selected':''}" onclick="choose(${idx},this)">${escapeHTML(label)}</button>`).join('')}</div>
+        ${riskAlertForCurrent(t,i,ans[i])}
+        <div class="v8-utilities"><label><input type="checkbox" ${flags[i]?'checked':''} onchange="setFlagV8(this.checked)"> ⭐ Discuss</label><label><input type="checkbox" ${unclear[i]?'checked':''} onchange="setUnclearV8(this.checked)"> ? Unsure</label><button class="v8-link" onclick="toggleNoteBox()">📝 Note</button><button class="v8-link" onclick="toggleInfoBox()">ⓘ Info</button></div>
+        <textarea id="v8NoteBox" class="field v8-note-box ${notes[i]?'':'hidden'}" placeholder="Optional real-life example or context…" oninput="saveNoteV8(this.value)">${escapeHTML(notes[i]||'')}</textarea>
+        <div id="v8InfoBox" class="v8-info-box hidden">${compactInfo(t)}<div class="rights">${escapeHTML(t.rights||'')}${t.attribution?`<br>${escapeHTML(t.attribution)}`:''}</div></div>
+      </main>
+      <footer class="v8-assessment-footer"><button class="btn" onclick="prevQ()" ${i===0?'disabled':''}>← Previous</button><div class="v8-live-score">${liveScores||`${answeredCount(t)} / ${items.length} answered`}</div><button class="btn" onclick="reviewGrid()">Review</button></footer>
+    </div>`;
+  };
+  window.toggleNoteBox=function(){document.getElementById('v8NoteBox')?.classList.toggle('hidden')};
+  window.toggleInfoBox=function(){document.getElementById('v8InfoBox')?.classList.toggle('hidden')};
+  window.setFlagV8=function(v){fFor(current.id)[current.index]=v;saveV8()};
+  window.setUnclearV8=function(v){uFor(current.id)[current.index]=v;saveV8()};
+  window.saveNoteV8=function(v){nFor(current.id)[current.index]=v;saveV8()};
+  window.setFlag=window.setFlagV8;window.setUnclear=window.setUnclearV8;window.saveNote=window.saveNoteV8;
+
+  window.choose=function(idx,button){
+    const t=tById(current.id),i=current.index,n=countFor(t),wasUnset=aFor(t.id)[i]===undefined;
+    aFor(t.id)[i]=idx;
+    if(wasUnset){const d=new Date().toISOString().slice(0,10);state.session.answeredToday[d]=(state.session.answeredToday[d]||0)+1;}
+    touch(t.id,i);
+    document.querySelectorAll('.v8-option').forEach(b=>b.classList.remove('selected'));if(button)button.classList.add('selected');
+    if(i<n-1){
+      setTimeout(()=>{current.index=i+1;touch(t.id,current.index);renderQuestion();},180);
+    }else{
+      state.completedAt[t.id]=new Date().toISOString();saveV8();setTimeout(()=>showCompletion(t),220);
+    }
+  };
+  window.prevQ=function(){if(current.index>0){current.index--;touch(current.id,current.index);renderQuestion()}};
+  window.jumpQ=function(i){current.index=clamp(i,0,countFor(tById(current.id))-1);touch(current.id,current.index);renderQuestion()};
+
+  window.reviewGrid=function(){
+    const t=tById(current.id),items=itemsFor(t),ans=aFor(t.id),flags=fFor(t.id),unclear=uFor(t.id);
+    const modal=document.createElement('div');modal.className='v8-modal';modal.innerHTML=`<div class="v8-modal-card"><div class="v8-modal-head"><h2>Review ${escapeHTML(t.short)}</h2><button class="v8-iconbtn" onclick="this.closest('.v8-modal').remove()">✕</button></div><div class="v8-review-grid">${items.map((_,j)=>`<button class="v8-review-dot ${ans[j]!==undefined?'done':''} ${flags[j]?'flagged':''} ${unclear[j]?'unclear':''}" onclick="document.querySelector('.v8-modal').remove();jumpQ(${j})">${j+1}</button>`).join('')}</div><div class="sub" style="margin-top:12px">✓ answered · ⭐ discuss · ? unsure</div></div>`;document.body.appendChild(modal);
+  };
+
+  window.showCompletion=function(t){
+    document.getElementById('testView').innerHTML=`<div class="v8-completion"><div class="v8-check">✓</div><h1>${escapeHTML(t.short)} completed</h1><p>${countFor(t)} / ${countFor(t)} answered</p><div class="v8-completion-stats"><div><strong>${Object.values(fFor(t.id)).filter(Boolean).length}</strong><span>Discuss</span></div><div><strong>${Object.values(uFor(t.id)).filter(Boolean).length}</strong><span>Unsure</span></div><div><strong>${Object.values(nFor(t.id)).filter(Boolean).length}</strong><span>Notes</span></div></div><label class="v8-assessment-discuss"><input type="checkbox" ${state.assessmentDiscuss[t.id]?'checked':''} onchange="state.assessmentDiscuss['${t.id}']=this.checked;saveV8()"> ⭐ Discuss this assessment with my clinician</label><div class="v8-completion-actions"><button class="btn primary" onclick="openResults('${t.id}')">View results</button><button class="btn" onclick="showDashboard()">Return to assessments</button><button class="btn" onclick="openTest('${t.id}',0)">Review answers</button></div></div>`;
+  };
+
+  window.openResults=function(id){
+    const t=tById(id),score=scoreTest(t),root=document.getElementById('reportView');
+    document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));root.classList.add('active');window.scrollTo(0,0);
+    const marked=itemsFor(t).map((x,i)=>({x,i,a:answerLabel(t,i),f:fFor(t.id)[i],u:uFor(t.id)[i],n:nFor(t.id)[i]})).filter(z=>z.f||z.u||z.n);
+    root.innerHTML=`<section class="report"><button class="btn small no-print" onclick="showDashboard()">← Assessments</button><h2>${escapeHTML(t.name)}</h2><div class="sub">${answeredCount(t)} / ${countFor(t)} answered · ${escapeHTML(t.category)}</div>${score.scores?`<div class="scorechips">${Object.entries(score.scores).map(([k,v])=>`<span class="scorechip">${escapeHTML(k)}: <strong>${escapeHTML(v)}</strong></span>`).join('')}</div>`:''}<div class="notice"><strong>Clinical note:</strong> Scores are screening/formulation outputs, not diagnoses.</div><h3>Questions you marked</h3>${marked.length?marked.map(z=>`<div class="flagitem"><strong>#${z.i+1}</strong> ${escapeHTML(z.x.text)}<br><span class="sub">${escapeHTML(z.a||'Unanswered')}${z.f?' · ⭐ discuss':''}${z.u?' · ? unsure':''}${z.n?` · 📝 ${escapeHTML(z.n)}`:''}</span></div>`).join(''):'<div class="empty">No questions marked.</div>'}<div style="margin-top:16px"><button class="btn" onclick="openTest('${id}',0)">Review answers</button></div></section>`;
+  };
+
+  // Text export with completion summary.
+  window.downloadText=function(){
+    const lib=libraryStats(),asg=assignedStats(),ex=exportObject();
+    let s=`THERAPY ASSESSMENT EXPORT\nGenerated: ${new Date().toLocaleString()}\n\nCOMPLETION\n${lib.complete}/${lib.totalForms} assessments complete\n${lib.answered}/${lib.totalQ} questions answered\n${asg.complete}/${asg.total} therapist-assigned assessments complete\n${asg.answered}/${asg.totalQ} therapist-assigned questions answered\n\n`;
+    ex.assessments.forEach(a=>{s+=`=== ${a.name}${a.assigned?' [ASSIGNED]':''} ===\n${a.completion.answered}/${a.completion.total} answered\n`;if(a.scoreSummary?.scores)s+=Object.entries(a.scoreSummary.scores).map(([k,v])=>`${k}: ${v}`).join('\n')+'\n';const m=a.responses.filter(r=>r.flagged||r.unclear||r.note);if(m.length){s+='\nItems to discuss / clarify:\n';m.forEach(r=>s+=`#${r.item} ${r.question}\nAnswer: ${r.answer??'Unanswered'}${r.flagged?' | DISCUSS':''}${r.unclear?' | UNSURE':''}${r.note?` | Note: ${r.note}`:''}\n`)}s+='\n';});
+    download(`therapy-assessments-${stamp()}.txt`,s,'text/plain;charset=utf-8');
+  };
+
+  // Multi-sheet Excel-compatible SpreadsheetML (.xls).
+  function xmlEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function worksheet(name,rows){return `<Worksheet ss:Name="${xmlEscape(name.slice(0,31))}"><Table>${rows.map(r=>`<Row>${r.map(v=>`<Cell><Data ss:Type="String">${xmlEscape(v)}</Data></Cell>`).join('')}</Row>`).join('')}</Table></Worksheet>`}
+  window.downloadExcel=function(){
+    const lib=libraryStats(),asg=assignedStats();
+    const summary=[['Therapy Assessment Workbook',''],['Generated',new Date().toLocaleString()],['Questions answered',`${lib.answered}/${lib.totalQ}`],['Assessments completed',`${lib.complete}/${lib.totalForms}`],['Assigned questions',`${asg.answered}/${asg.totalQ}`],['Assigned assessments',`${asg.complete}/${asg.total}`],[],['Assessment','Category','Assigned','Answered','Total','Complete','Scores']];
+    TESTS.forEach(t=>{const sc=scoreTest(t);summary.push([t.name,t.category,isAssigned(t)?'YES':'',answeredCount(t),countFor(t),isComplete(t)?'YES':'',sc.scores?Object.entries(sc.scores).map(([k,v])=>`${k}: ${v}`).join('; '):''])});
+    const responses=[['Assessment','Category','Item','Question','Answer','Answer index','Discuss','Unsure','Note']];
+    const discuss=[['Assessment','Item','Question','Answer','Discuss','Unsure','Note']];
+    const notes=[['Assessment','Item','Question','Answer','Note']];
+    const versions=[['Assessment','Short name','Category','Version','Rights / version note','Attribution']];
+    TESTS.forEach(t=>{const items=itemsFor(t);versions.push([t.name,t.short,t.category,t.variantLabel||'',t.note||t.rights||'',t.attribution||'']);items.forEach((x,i)=>{const row=[t.name,t.category,i+1,x.text,answerLabel(t,i)||'',aFor(t.id)[i]??'',fFor(t.id)[i]?'YES':'',uFor(t.id)[i]?'YES':'',nFor(t.id)[i]||''];responses.push(row);if(fFor(t.id)[i]||uFor(t.id)[i]||nFor(t.id)[i])discuss.push(row);if(nFor(t.id)[i])notes.push([t.name,i+1,x.text,answerLabel(t,i)||'',nFor(t.id)[i]])})});
+    const xml=`<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">${worksheet('Summary',summary)}${worksheet('Responses',responses)}${worksheet('Discuss & Unsure',discuss)}${worksheet('Notes',notes)}${worksheet('Versions & Warnings',versions)}</Workbook>`;
+    download(`therapy-assessments-${stamp()}.xls`,xml,'application/vnd.ms-excel');
+  };
+
+  // Upgrade JSON backup to include V8 application state beyond response records.
+  const OLD_EXPORT_OBJECT=window.exportObject;
+  window.exportObject=function(){const ex=OLD_EXPORT_OBJECT();ex.workbook='Therapy Assessment Workbook — V8';ex.appState={preferredVariants:state.preferredVariants,lastPositions:state.lastPositions,completedAt:state.completedAt,assessmentDiscuss:state.assessmentDiscuss};ex.libraryProgress=libraryStats();ex.assignedProgress=assignedStats();return ex};
+
+  // Import app state if a V8 export is restored, while retaining old import compatibility.
+  const OLD_IMPORT_BACKUP=window.importBackup;
+  window.importBackup=function(ev){
+    const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.assessments||!d.workbook)throw new Error('Unrecognized export');if(!confirm('Restore this assessment backup? Matching local answers will be replaced.'))return;if(d.profile)state.profile=d.profile;state.assigned={};(d.assignedAssessmentIds||[]).forEach(id=>state.assigned[id]=true);d.assessments.forEach(a=>{if(!tById(a.id))return;state.answers[a.id]={};state.flags[a.id]={};state.unclear[a.id]={};state.notes[a.id]={};(a.responses||[]).forEach((x,i)=>{if(x.answerIndex!==null&&x.answerIndex!==undefined)state.answers[a.id][i]=x.answerIndex;if(x.flagged)state.flags[a.id][i]=true;if(x.unclear)state.unclear[a.id][i]=true;if(x.note)state.notes[a.id][i]=x.note});if(a.extra)state.extras[a.id]=a.extra});if(d.appState)Object.assign(state,d.appState);saveV8();showDashboard();alert('Backup restored.');}catch(e){alert('Could not restore backup: '+e.message)}finally{ev.target.value=''}};r.readAsText(file);
+  };
+
+  // Keep report/rights usable outside assessment mode.
+  window.showReport=function(){document.body.classList.remove('assessment-mode');OLD_SHOW_REPORT()};
+  window.showRights=function(id){document.body.classList.remove('assessment-mode');OLD_SHOW_RIGHTS(id)};
+
+  // Initialize dashboard.
+  showDashboard();
+})();
+
+</script>
+
+<script>
+// PWA shell: install prompt, offline indicator, service-worker registration and updates.
+let deferredInstallPrompt=null;
+window.installPWA=async function(){
+  if(!deferredInstallPrompt){
+    alert('Use your browser’s “Add to Home Screen” or “Install App” command to install this app.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  try{ await deferredInstallPrompt.userChoice; }catch(e){}
+  deferredInstallPrompt=null;
+  const b=document.getElementById('installAppBtn'); if(b)b.classList.add('hidden');
+};
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredInstallPrompt=e;
+  const b=document.getElementById('installAppBtn'); if(b)b.classList.remove('hidden');
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  const b=document.getElementById('installAppBtn'); if(b)b.classList.add('hidden');
+});
+function setOfflineBadge(){
+  let el=document.getElementById('pwaOfflineBadge');
+  if(!navigator.onLine){
+    if(!el){el=document.createElement('div');el.id='pwaOfflineBadge';el.className='pwa-offline';el.textContent='Offline · answers still save locally';document.body.appendChild(el)}
+  }else if(el) el.remove();
+}
+window.addEventListener('online',setOfflineBadge);window.addEventListener('offline',setOfflineBadge);setOfflineBadge();
+function showUpdateToast(reg){
+  if(document.getElementById('pwaUpdateToast'))return;
+  const el=document.createElement('div');el.id='pwaUpdateToast';el.className='pwa-toast';
+  el.innerHTML='<span>A newer app version is ready.</span><button class="btn small">Update</button>';
+  el.querySelector('button').onclick=()=>{if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'})};
+  document.body.appendChild(el);
+}
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  window.addEventListener('load',async()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./service-worker.js');
+      if(reg.waiting)showUpdateToast(reg);
+      reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)showUpdateToast(reg)})});
+      navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());
+    }catch(e){console.warn('Service worker registration failed',e)}
+  });
+}
+</script>
+
+</body>
+</html>
