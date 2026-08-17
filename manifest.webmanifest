@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Moethr",
   "short_name": "Moethr",
-  "description": "Private on-device guided therapy assessment workbook.",
+  "description": "Moethr \u2014 a private, on-device therapy assessment workbook.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -10,8 +10,8 @@
     "standalone",
     "minimal-ui"
   ],
-  "background_color": "#f5f6f8",
-  "theme_color": "#26386d",
+  "background_color": "#F5F7F7",
+  "theme_color": "#35566B",
   "orientation": "any",
   "categories": [
     "health",
