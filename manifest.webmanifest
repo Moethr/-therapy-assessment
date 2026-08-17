@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Therapy Assessment Workbook",
-  "short_name": "Therapy Workbook",
-  "description": "Private on-device therapy assessment workbook.",
+  "name": "Moethr",
+  "short_name": "Moethr",
+  "description": "Private on-device guided therapy assessment workbook.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
