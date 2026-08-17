@@ -162,7 +162,7 @@ a{color:var(--accent)}
   <main id="reportView" class="view"></main>
   <main id="rightsView" class="view"></main>
 
-  <div class="footer">V9 build: 17 August 2026 · No external scripts, trackers, accounts, or network calls are used by this HTML file.</div>
+  <div class="footer">V9.0.1 build: 17 August 2026 · No external scripts, trackers, accounts, or network calls are used by this HTML file.</div>
 </div>
 
 <script>
@@ -725,7 +725,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js").catch(err => console.warn("Service worker registration failed:", err));
   });
 }
-</script>
+<\/script>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}

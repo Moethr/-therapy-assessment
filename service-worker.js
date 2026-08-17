@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moethr-v9-2026-08-17';
+const CACHE_NAME = 'moethr-v9-0-1-2026-08-17';
 const APP_SHELL = [
   './',
   './index.html',
