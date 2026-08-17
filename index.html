@@ -127,7 +127,7 @@ a{color:var(--accent)}
 /* V8.2 mobile app shell */
 :root{--nav-h:68px}
 body:not(.assessment-mode){padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px))}
-.app-bottom-nav{position:fixed;z-index:80;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding:6px 8px env(safe-area-inset-bottom,0px);background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);box-shadow:0 -8px 28px rgba(29,35,52,.08)}
+.app-bottom-nav{position:fixed;z-index:80;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding:6px 8px env(safe-area-inset-bottom,0px);background:rgba(255,255,255,.96);backdrop-filter:none;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);box-shadow:0 -8px 28px rgba(29,35,52,.08)}
 .app-bottom-nav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font:inherit;min-width:0;border-radius:12px;padding:5px 2px}.app-bottom-nav button span{font-size:20px;line-height:1}.app-bottom-nav button small{font-size:10px;font-weight:750}.app-bottom-nav button.active{color:var(--accent);background:#eef1ff}
 .assessment-mode .app-bottom-nav{display:none!important}
 .app-home{display:grid;gap:14px}.app-home-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.app-home-head h1{margin:3px 0;font-size:clamp(25px,5vw,38px)}.build-pill{white-space:nowrap;border:1px solid #cfd6ff;background:#f3f5ff;color:#4753a4;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
@@ -163,8 +163,11 @@ html,body{background:#f6f8fb}
 *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 #pwaVersionBadge,.standalone-badge{display:none!important}
 .shell>.footer{display:none!important}
-@media(display-mode:standalone){body::before{content:"";position:fixed;z-index:9990;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#f6f8fb;pointer-events:none}}
-body.v84-dark::before{background:#11141b!important}
+/* iOS safe area: reserve real space instead of painting an overlay over content */
+body{padding-top:env(safe-area-inset-top,0px)!important}
+body::before{content:none!important;display:none!important}
+.v84-topbar{top:env(safe-area-inset-top,0px)!important;padding-top:9px!important}
+@media(display-mode:standalone){html,body{background:#f6f8fb!important}body.v84-dark{background:#11141b!important}}
 .app-bottom-nav{background:#fff!important;box-shadow:0 -6px 20px rgba(24,34,53,.055)!important}
 .v85-brandbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 18px}
 .v85-brand h1{font-size:34px;line-height:1;margin:0;letter-spacing:-.035em}.v85-brand p{margin:7px 0 0;color:#6d7686;font-size:14px}
@@ -758,7 +761,7 @@ function reportBodyHTML(){
 
 
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:rgba(255,255,255,.88);border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;backdrop-filter:blur(8px);pointer-events:none">V8.5 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:rgba(255,255,255,.88);border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;backdrop-filter:none;pointer-events:none">V8.5 PWA</div>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
@@ -964,7 +967,7 @@ body{background:var(--app-bg)}
 .app-bottom-nav{height:calc(64px + env(safe-area-inset-bottom,0px));padding:5px 7px env(safe-area-inset-bottom,0px);border-top:1px solid rgba(220,224,232,.9);box-shadow:0 -8px 24px rgba(20,28,45,.055)}
 .app-bottom-nav button{gap:3px;border-radius:14px;padding:5px 1px;color:#697386}.app-bottom-nav button svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}.app-bottom-nav button small{font-size:10px;font-weight:700;letter-spacing:-.01em}.app-bottom-nav button.active{color:var(--app-blue);background:transparent}.app-bottom-nav button.active .nav-icon-wrap{background:var(--app-blue-soft)}.nav-icon-wrap{width:42px;height:29px;border-radius:999px;display:grid;place-items:center;transition:.15s}
 /* Assessment library */
-.v83-library-header{position:sticky;top:0;z-index:20;background:rgba(245,247,250,.92);backdrop-filter:blur(18px);padding:8px 0 9px;margin-bottom:5px}.v83-library-title{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px}.v83-library-title h1{font-size:27px;margin:0}.v83-library-title span{font-size:12px;color:var(--muted)}.v83-search{width:100%;border:1px solid #d9dee6;background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;outline:none}.v83-search:focus{border-color:#9fb2f2;box-shadow:0 0 0 3px #eaf0ff}.v83-filter-scroll{display:flex;gap:7px;overflow-x:auto;padding:9px 1px 3px;scrollbar-width:none}.v83-filter-scroll::-webkit-scrollbar{display:none}.v83-chip{border:1px solid #dce1e8;background:#fff;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;white-space:nowrap;color:#5f6876}.v83-chip.active{background:#182235;color:#fff;border-color:#182235}
+.v83-library-header{position:sticky;top:0;z-index:20;background:rgba(245,247,250,.92);backdrop-filter:none;padding:8px 0 9px;margin-bottom:5px}.v83-library-title{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px}.v83-library-title h1{font-size:27px;margin:0}.v83-library-title span{font-size:12px;color:var(--muted)}.v83-search{width:100%;border:1px solid #d9dee6;background:#fff;border-radius:14px;padding:12px 14px;font-size:16px;outline:none}.v83-search:focus{border-color:#9fb2f2;box-shadow:0 0 0 3px #eaf0ff}.v83-filter-scroll{display:flex;gap:7px;overflow-x:auto;padding:9px 1px 3px;scrollbar-width:none}.v83-filter-scroll::-webkit-scrollbar{display:none}.v83-chip{border:1px solid #dce1e8;background:#fff;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700;white-space:nowrap;color:#5f6876}.v83-chip.active{background:#182235;color:#fff;border-color:#182235}
 .v83-library-section{margin:15px 0}.v83-library-section-title{display:flex;align-items:center;gap:7px;margin:0 2px 8px;font-size:15px}.v83-count{font-size:10px;background:#e9edf2;color:#667085;border-radius:999px;padding:3px 7px}.v83-assessment-list{display:grid;gap:8px}.v83-assessment{background:#fff;border:1px solid #e0e4ea;border-radius:15px;padding:12px}.v83-assessment-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.v83-assessment h3{font-size:15px;line-height:1.25;margin:2px 0}.v83-assessment .sub{font-size:11px}.v83-progress-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:9px}.v83-progress-row .track{height:6px}.v83-progress-row span{font-size:11px;color:var(--muted);min-width:38px;text-align:right}.v83-assessment-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}.v83-badges{display:flex;gap:5px;flex-wrap:wrap}.v83-badge{font-size:10px;background:#f1f3f6;border-radius:999px;padding:4px 7px;color:#5f6875}.v83-assessment-actions{display:flex;gap:6px}.v83-assessment-actions .btn{padding:7px 10px;font-size:11px}.v83-star{border:0;background:transparent;font-size:20px;line-height:1;color:#9aa2af;padding:0}.v83-star.on{color:#d89a18}
 /* Results */
 .v83-empty{background:#fff;border:1px solid #e0e4ea;border-radius:20px;padding:32px 22px;text-align:center}.v83-empty-icon{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;background:#eef3ff;color:var(--app-blue);display:grid;place-items:center;font-size:24px}.v83-empty h2{font-size:21px;margin:0 0 7px}.v83-empty p{color:var(--muted);font-size:13px;max-width:420px;margin:0 auto 16px;line-height:1.5}.v83-results-list{display:grid;gap:9px}.v83-result-card{background:#fff;border:1px solid #e0e4ea;border-radius:16px;padding:13px}.v83-result-head{display:flex;justify-content:space-between;gap:10px}.v83-result-card h3{font-size:15px;margin:2px 0}.v83-result-score{font-size:12px;color:#334155;text-align:right}.v83-result-meta{font-size:11px;color:var(--muted);margin-top:5px}.v83-priority-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.v83-mini-stat{background:#f7f8fa;border-radius:13px;padding:10px}.v83-mini-stat strong{display:block;font-size:18px}.v83-mini-stat span{font-size:10px;color:var(--muted)}
@@ -1452,7 +1455,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V8.5',label:'V8.5 PWA',date:'17 August 2026',build:'2026.08.17.4'};
+  const V85_BUILD={version:'V8.5.2',label:'V8.5.2 PWA',date:'17 August 2026',build:'2026.08.17.6'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -1512,6 +1515,48 @@ window.activateAppView=function(id,tab){
 
   document.getElementById('v84PrivacyCover')?.querySelector('strong')?.replaceChildren('Moethr');
   showHome();
+})();
+</script>
+
+<script id="v852-corrective-patch">
+(()=>{
+  // V8.5.2 corrective patch. Deliberately limited to three behaviors.
+
+  // 1) Selecting suggested assessments must not rebuild onboarding or move the page.
+  window.togglePlanV85=function(id){
+    const p=state.extras?.appPrefs||(state.extras.appPrefs={});
+    p.planIds=Array.isArray(p.planIds)?p.planIds:[];
+    const i=p.planIds.indexOf(id);
+    if(i>=0)p.planIds.splice(i,1); else p.planIds.push(id);
+    saveState();
+    // No renderOnboarding() here: the checkbox already reflects the user's tap.
+    // Update an optional selected counter in-place if present.
+    document.querySelectorAll('[data-v852-plan-count]').forEach(el=>{
+      el.textContent=`${p.planIds.length} selected`;
+    });
+  };
+
+  // 2) Completion should continue through the user's selected assessment plan.
+  window.completeCurrentTest=function(){
+    const t=tById(current.id);
+    state.completedAt=state.completedAt||{};
+    state.completedAt[t.id]=new Date().toISOString();
+    saveState();
+
+    const p=state.extras?.appPrefs||{};
+    const ids=Array.isArray(p.planIds)?p.planIds:[];
+    const plan=ids.map(tById).filter(Boolean);
+    const currentIndex=plan.findIndex(x=>x.id===t.id);
+    const ordered=currentIndex>=0 ? [...plan.slice(currentIndex+1),...plan.slice(0,currentIndex)] : plan;
+    const next=ordered.find(x=>answeredCount(x)<countFor(x));
+    const sc=scoreTest(t),scores=sc&&sc.scores?Object.entries(sc.scores):[];
+    const hasDiscussion=Object.values(fFor(t.id)).some(Boolean)||Object.values(uFor(t.id)).some(Boolean)||Object.values(nFor(t.id)).some(v=>String(v||'').trim())||!!state.assessmentDiscuss?.[t.id];
+    const nextStarted=next?answeredCount(next)>0:false;
+    const nextPos=next?(state.lastPositions?.[next.id]??0):0;
+
+    setView('testView');
+    document.getElementById('testView').innerHTML=`<main class="v84-complete"><div class="v84-check">✓</div><div class="v8-eyebrow">Assessment complete</div><h1>${escapeHTML(t.short)}</h1><p class="sub">Your answers are saved locally. Scores are screening/formulation information, not a diagnosis.</p>${scores.length?`<div class="v84-scorebox">${scores.map(([k,v])=>`<div><span>${escapeHTML(k)}</span><strong>${escapeHTML(v)}</strong></div>`).join('')}</div>`:''}${next?`<section class="v85-next" style="text-align:left;margin:18px 0"><div class="v8-eyebrow">Next in your plan</div><h2>${escapeHTML(next.name)}</h2><p>${escapeHTML(next.category)} · ${countFor(next)} questions${nextStarted?` · ${answeredCount(next)} already answered`:''}</p><button class="btn primary" onclick="openTest('${next.id}',${nextPos})">${nextStarted?'Continue':'Start'} next assessment →</button></section>`:`<section class="v85-next" style="text-align:left;margin:18px 0"><div class="v8-eyebrow">Plan complete</div><h2>You’ve finished your current assessment plan</h2><p>You can review your results or add more assessments whenever you want.</p><button class="btn primary" onclick="showResultsHub()">View overall results →</button></section>`}<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${next?'<button class="btn" onclick="showResultsHub()">View results</button>':''}<button class="btn" onclick="showHome()">Home</button>${hasDiscussion?'<button class="btn" onclick="showDiscussionHub()">Discussion & notes</button>':''}</div></main>`;
+  };
 })();
 </script>
 
