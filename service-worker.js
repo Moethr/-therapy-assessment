@@ -1,4 +1,4 @@
-const CACHE_NAME = 'therapy-assessment-v8-3';
+const CACHE_NAME = 'therapy-assessment-v8-4';
 const SCOPE = self.registration.scope;
 const url = path => new URL(path, SCOPE).toString();
 const APP_SHELL = [
