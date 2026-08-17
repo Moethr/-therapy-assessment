@@ -1,40 +1,17 @@
 {
-  "id": "./",
-  "name": "Moethr",
+  "name": "Moethr — Therapy Assessment Workbook",
   "short_name": "Moethr",
-  "description": "Moethr \u2014 a private, on-device therapy assessment workbook.",
-  "start_url": "./",
-  "scope": "./",
+  "description": "Private, offline-capable therapy assessment workbook for screening and clinical discussion.",
+  "id": "/-therapy-assessment/",
+  "start_url": "/-therapy-assessment/",
+  "scope": "/-therapy-assessment/",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "background_color": "#F5F7F7",
+  "background_color": "#f5f6f8",
   "theme_color": "#35566B",
   "orientation": "any",
-  "categories": [
-    "health",
-    "productivity"
-  ],
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"./icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
   ]
 }
