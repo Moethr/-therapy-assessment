@@ -126,8 +126,22 @@ a{color:var(--accent)}
   .profile,.two,.stats{grid-template-columns:1fr}.searchrow{grid-template-columns:1fr}
   .toolbar .btn{flex:1 1 45%}.qpanel{padding:15px}
 }
+
+/* V8.2 mobile app shell */
+:root{--nav-h:68px}
+body:not(.assessment-mode){padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px))}
+.app-bottom-nav{position:fixed;z-index:80;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding:6px 8px env(safe-area-inset-bottom,0px);background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);box-shadow:0 -8px 28px rgba(29,35,52,.08)}
+.app-bottom-nav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font:inherit;min-width:0;border-radius:12px;padding:5px 2px}.app-bottom-nav button span{font-size:20px;line-height:1}.app-bottom-nav button small{font-size:10px;font-weight:750}.app-bottom-nav button.active{color:var(--accent);background:#eef1ff}
+.assessment-mode .app-bottom-nav{display:none!important}
+.app-home{display:grid;gap:14px}.app-home-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.app-home-head h1{margin:3px 0;font-size:clamp(25px,5vw,38px)}.build-pill{white-space:nowrap;border:1px solid #cfd6ff;background:#f3f5ff;color:#4753a4;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
+.home-progress{background:linear-gradient(145deg,#ffffff,#f6f7ff);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:0 8px 28px rgba(39,46,79,.06)}.home-progress-top{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}.home-progress-top strong{font-size:28px}.home-progress-top span{font-size:12px;color:var(--muted)}
+.home-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.home-stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}.home-stat strong{display:block;font-size:19px}.home-stat span{font-size:11px;color:var(--muted)}
+.home-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.home-action{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;text-align:left;min-height:92px}.home-action strong{display:block;margin:5px 0 2px}.home-action span{font-size:12px;color:var(--muted)}
+.hub-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}.hub-panel h2{margin:0 0 5px}.hub-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.hub-actions .btn{width:100%}.setting-row{display:flex;justify-content:space-between;gap:15px;padding:13px 0;border-top:1px solid var(--line)}.setting-row:first-of-type{border-top:0}.setting-row span{color:var(--muted);font-size:12px}.build-card{background:#f4f6ff;border:1px solid #d6dcff;border-radius:14px;padding:13px}.build-card strong{font-size:17px;color:#39459b}
+@media(max-width:700px){.shell{padding-left:12px;padding-right:12px}.hero,.toolbar{display:none}.notice{font-size:12px;margin-top:6px}.app-home{padding-top:8px}.home-stat-grid{grid-template-columns:repeat(3,1fr)}.home-stat{padding:10px 8px}.home-actions{grid-template-columns:1fr 1fr}.footer{margin-bottom:4px}.app-bottom-nav{width:100%}}
+
 @media print{
-  body{background:white}.shell{max-width:none;padding:0}.hero,.toolbar,#dashboardView,#testView,#rightsView,.footer,.no-print{display:none!important}
+  body{background:white}.shell{max-width:none;padding:0}.hero,.toolbar,#homeView,#dashboardView,#testView,#rightsView,#dataView,#settingsView,.footer,.app-bottom-nav,.no-print{display:none!important}
   #reportView{display:block!important}.report{border:0;padding:0}.reporttest{break-inside:avoid}
 }
 
@@ -165,12 +179,23 @@ a{color:var(--accent)}
     <input id="backupInput" type="file" accept=".json,application/json" class="hidden" onchange="importBackup(event)">
   </div>
 
-  <main id="dashboardView" class="view active"></main>
+  <main id="homeView" class="view active"></main>
+  <main id="dashboardView" class="view"></main>
   <main id="testView" class="view"></main>
   <main id="reportView" class="view"></main>
   <main id="rightsView" class="view"></main>
+  <main id="dataView" class="view"></main>
+  <main id="settingsView" class="view"></main>
 
-  <div class="footer">V8 build: 16 August 2026 · No external scripts, trackers, accounts, or network calls are used by this HTML file.</div>
+  <nav id="appBottomNav" class="app-bottom-nav no-print" aria-label="App navigation">
+    <button data-tab="home" onclick="showHome()"><span>⌂</span><small>Home</small></button>
+    <button data-tab="assessments" onclick="showDashboard()"><span>▦</span><small>Assessments</small></button>
+    <button data-tab="results" onclick="showResultsHub()"><span>◉</span><small>Results</small></button>
+    <button data-tab="data" onclick="showDataHub()"><span>⇅</span><small>Data</small></button>
+    <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
+  </nav>
+
+  <div class="footer">V8.2 PWA build · 17 August 2026 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1145,8 +1170,53 @@ body.assessment-mode{overflow:hidden;background:#f7f8fb}.assessment-mode>.shell>
   window.showReport=function(){document.body.classList.remove('assessment-mode');OLD_SHOW_REPORT()};
   window.showRights=function(id){document.body.classList.remove('assessment-mode');OLD_SHOW_RIGHTS(id)};
 
-  // Initialize dashboard.
-  showDashboard();
+
+  // V8.2 app shell -------------------------------------------------------
+  const APP_BUILD={version:'V8.2',label:'V8.2 PWA',date:'17 August 2026'};
+  function setAppTab(tab){
+    document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  }
+  function activateAppView(id,tab){
+    current.id=null;
+    document.body.classList.remove('assessment-mode');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const v=document.getElementById(id);if(v)v.classList.add('active');
+    setAppTab(tab);window.scrollTo(0,0);
+  }
+  window.showHome=function(){
+    activateAppView('homeView','home');
+    const root=document.getElementById('homeView'),lib=libraryStats(),asg=assignedStats(),resume=lastResume();
+    root.innerHTML=`<div class="app-home">
+      <div class="app-home-head"><div><div class="v8-eyebrow">Therapy assessment</div><h1>My workbook</h1><div class="sub">Private on-device assessment workspace</div></div><div class="build-pill">${APP_BUILD.label}</div></div>
+      <section class="home-progress"><div class="home-progress-top"><div><span>Overall progress</span><strong>${lib.qPct}%</strong></div><span>${lib.answered.toLocaleString()} / ${lib.totalQ.toLocaleString()} questions</span></div><div class="track big"><div class="fill" style="width:${lib.qPct}%"></div></div><div class="home-stat-grid"><div class="home-stat"><strong>${lib.complete}</strong><span>Completed</span></div><div class="home-stat"><strong>${startedTests().length}</strong><span>In progress</span></div><div class="home-stat"><strong>${asg.total}</strong><span>Assigned</span></div></div></section>
+      ${resume?`<section class="v8-resume"><div><div class="v8-eyebrow">Continue</div><h2>${escapeHTML(resume.t.short)}</h2><div class="sub">Question ${(resume.pos||0)+1} of ${countFor(resume.t)} · ${answeredCount(resume.t)} answered</div></div><button class="btn primary" onclick="openTest('${resume.t.id}',${resume.pos||0})">Continue →</button></section>`:''}
+      <div class="home-actions"><button class="home-action" onclick="showDashboard()"><span>▦</span><strong>Assessments</strong><span>Browse, start, or continue questionnaires.</span></button><button class="home-action" onclick="showResultsHub()"><span>◉</span><strong>Results</strong><span>Review completed results and clinician report.</span></button><button class="home-action" onclick="showDataHub()"><span>⇅</span><strong>Backup & export</strong><span>Save, restore, or share your data.</span></button><button class="home-action" onclick="showSettingsHub()"><span>⚙</span><strong>Settings</strong><span>App information, privacy, and build number.</span></button></div>
+    </div>`;
+  };
+  const V82_SHOW_DASHBOARD=window.showDashboard;
+  window.showDashboard=function(){V82_SHOW_DASHBOARD();setAppTab('assessments')};
+  window.showResultsHub=function(){
+    activateAppView('reportView','results');
+    OLD_SHOW_REPORT();document.body.classList.remove('assessment-mode');setAppTab('results');
+  };
+  window.showDataHub=function(){
+    activateAppView('dataView','data');
+    const root=document.getElementById('dataView');
+    root.innerHTML=`<section class="hub-panel"><div class="v8-eyebrow">Your data</div><h2>Backup & export</h2><p class="sub">Answers remain in this browser unless you explicitly export them.</p><div class="hub-actions"><button class="btn primary" onclick="downloadJSON()">Create backup</button><button class="btn" onclick="document.getElementById('backupInput').click()">Restore backup</button><button class="btn" onclick="downloadExcel()">Export Excel</button><button class="btn" onclick="downloadText()">Export text</button><button class="btn" onclick="downloadReportHTML()">Clinician report</button><button class="btn" onclick="copySummary()">Copy summary</button></div></section><section class="hub-panel"><h2>Storage</h2><div class="setting-row"><div><strong>Answer storage</strong><br><span>Local browser storage on this device</span></div><strong>Local</strong></div><div class="setting-row"><div><strong>Cloud account</strong><br><span>No account or server database connected</span></div><strong>None</strong></div></section>`;
+  };
+  window.showSettingsHub=function(){
+    activateAppView('settingsView','settings');
+    const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    document.getElementById('settingsView').innerHTML=`<section class="hub-panel"><div class="v8-eyebrow">App</div><h2>Settings</h2><div class="build-card"><span class="sub">Current build</span><br><strong>${APP_BUILD.label}</strong><br><span class="sub">${APP_BUILD.date}</span></div><div class="setting-row"><div><strong>Installation</strong><br><span>${standalone?'Running as an installed web app':'Running in a browser tab'}</span></div><strong>${standalone?'Installed':'Browser'}</strong></div><div class="setting-row"><div><strong>Offline support</strong><br><span>Core app files cached by the service worker</span></div><strong>${'serviceWorker' in navigator?'Enabled':'Unavailable'}</strong></div><div class="setting-row"><div><strong>Connection</strong><br><span>Current network state</span></div><strong>${navigator.onLine?'Online':'Offline'}</strong></div></section><section class="hub-panel"><h2>Privacy</h2><p class="sub">Assessment answers are stored locally in this browser. Opening the public website on another device does not show these answers.</p></section><section class="hub-panel"><h2>About</h2><button class="btn" onclick="showRights()">Sources & rights</button></section>`;
+  };
+  // Keep bottom navigation in sync when report/rights are opened from elsewhere.
+  const V82_SHOW_REPORT=window.showReport;
+  window.showReport=function(){V82_SHOW_REPORT();setAppTab('results')};
+  const V82_SHOW_RIGHTS=window.showRights;
+  window.showRights=function(id){V82_SHOW_RIGHTS(id);setAppTab('settings')};
+
+  // Initialize app home.
+  showHome();
 })();
 
 </script>
