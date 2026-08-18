@@ -313,7 +313,7 @@ body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V9.2.2 PWA · Build 2026.08.18.1 · Answers are stored locally on this device.</div>
+  <div class="footer">V9.3 PWA · Build 2026.08.18.1 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -923,7 +923,7 @@ body.v84-dark .fill,body.v84-dark .minifill{background:linear-gradient(90deg,#5D
 body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
 </style>
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.2.2 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.3 PWA</div>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
@@ -1424,7 +1424,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
+  const APP_BUILD={version:'V9.3',label:'V9.3 PWA',date:'18 August 2026',build:'2026.08.18.3'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -1448,11 +1448,11 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
   const V82_SHOW_DASHBOARD=window.showDashboard;
   window.showDashboard=function(){V82_SHOW_DASHBOARD();setAppTab('assessments')};
   window.showResultsHub=function(){
-    activateAppView('reportView','results');
+    activate93('reportView','results');
     OLD_SHOW_REPORT();document.body.classList.remove('assessment-mode');setAppTab('results');
   };
   window.showDataHub=function(){
-    activateAppView('dataView','data');
+    activate93('dataView','data');
     const root=document.getElementById('dataView');
     root.innerHTML=`<section class="hub-panel"><div class="v8-eyebrow">Your data</div><h2>Backup & export</h2><p class="sub">Answers remain in this browser unless you explicitly export them.</p><div class="hub-actions"><button class="btn primary" onclick="downloadJSON()">Create backup</button><button class="btn" onclick="document.getElementById('backupInput').click()">Restore backup</button><button class="btn" onclick="downloadExcel()">Export Excel</button><button class="btn" onclick="downloadText()">Export text</button><button class="btn" onclick="downloadReportHTML()">Clinician report</button><button class="btn" onclick="copySummary()">Copy summary</button></div></section><section class="hub-panel"><h2>Storage</h2><div class="setting-row"><div><strong>Answer storage</strong><br><span>Local browser storage on this device</span></div><strong>Local</strong></div><div class="setting-row"><div><strong>Cloud account</strong><br><span>No account or server database connected</span></div><strong>None</strong></div></section>`;
   };
@@ -1508,14 +1508,14 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
   const v83ShowDashboard=window.showDashboard; window.showDashboard=function(){v83ShowDashboard();setAppTab('assessments')};
 
   window.showResultsHub=function(){
-    activateAppView('reportView','results');
+    activate93('reportView','results');
     const root=document.getElementById('reportView'),completed=TESTS.filter(isComplete),flagged=[]; TESTS.forEach(t=>{const f=fFor(t.id),u=uFor(t.id),n=nFor(t.id);for(let i=0;i<countFor(t);i++)if(f[i]||u[i]||n[i])flagged.push({t,i})});
     if(!completed.length){root.innerHTML=`<div class="v83-screen">${clinicalDisclosure()}<header class="v83-mobile-header"><div><div class="v8-eyebrow">Your results</div><h1>Results</h1></div></header><section class="v83-empty"><div class="v83-empty-icon">↗</div><h2>No completed assessments yet</h2><p>Complete an assessment and its score summary, notes, and discussion items will appear here.</p><button class="btn primary" onclick="showDashboard()">Browse assessments</button></section></div>`;return}
     root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Your results</div><h1>Results</h1><div class="sub">Screening/formulation summaries, not diagnoses.</div></div></header><section class="v83-section"><div class="v83-section-head"><h2>Completed</h2><button class="v83-linkbtn" onclick="showReport()">Clinician report</button></div><div class="v83-results-list">${completed.map(t=>{const sc=scoreTest(t),txt=sc?.scores?Object.entries(sc.scores).slice(0,2).map(([k,v])=>`${escapeHTML(k)}: ${escapeHTML(v)}`).join(' · '):'Completed';return `<button class="v83-result-card" onclick="openResults('${t.id}')"><div class="v83-result-head"><div><div class="v8-eyebrow">${escapeHTML(t.category)}</div><h3>${escapeHTML(t.name)}</h3></div><div class="v83-result-score">${txt}</div></div><div class="v83-result-meta">${countFor(t)} of ${countFor(t)} answered</div></button>`}).join('')}</div></section><section class="v83-section"><div class="v83-section-head"><h2>Discussion priorities</h2></div><div class="v83-priority-row"><div class="v83-mini-stat"><strong>${flagged.filter(x=>fFor(x.t.id)[x.i]).length}</strong><span>Flagged</span></div><div class="v83-mini-stat"><strong>${flagged.filter(x=>uFor(x.t.id)[x.i]).length}</strong><span>Unclear</span></div><div class="v83-mini-stat"><strong>${TESTS.filter(isAssigned).length}</strong><span>Assigned</span></div></div></section></div>`;
   };
 
   window.showDataHub=function(){
-    activateAppView('dataView','data'); const root=document.getElementById('dataView');
+    activate93('dataView','data'); const root=document.getElementById('dataView');
     root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Your data</div><h1>Data</h1><div class="sub">Backup, restore, export, and share.</div></div></header><section class="hub-panel"><h2>Backup</h2><p class="sub">Create a portable copy of all answers, notes, flags, and settings.</p><div class="hub-actions"><button class="btn primary" onclick="downloadJSON()">Create backup</button><button class="btn" onclick="document.getElementById('backupInput').click()">Restore backup</button></div></section><section class="hub-panel"><h2>Export & share</h2><div class="hub-actions"><button class="btn" onclick="downloadExcel()">Export Excel</button><button class="btn" onclick="downloadText()">Export text</button><button class="btn" onclick="downloadReportHTML()">Clinician report</button><button class="btn" onclick="copySummary()">Copy summary</button></div></section><section class="hub-panel"><h2>Storage</h2><div class="setting-row"><div><strong>Answer storage</strong><br><span>Local browser storage on this device</span></div><strong>Local</strong></div><div class="setting-row"><div><strong>Cloud account</strong><br><span>No account or server database connected</span></div><strong>None</strong></div></section></div>`;
   };
 
@@ -1546,7 +1546,7 @@ window.activateAppView=function(id,tab){
 <script>
 // V8.4 guided-plan layer -------------------------------------------------
 (()=>{
-  const V84_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
+  const V84_BUILD={version:'V9.3',label:'V9.3 PWA',date:'18 August 2026',build:'2026.08.18.3'};
   const INTERESTS=[
     ['ADHD','Attention & ADHD','Focus, organization, impulsivity, restlessness'],
     ['Autism','Autism & neurodivergence','Social communication, sensory or masking traits'],
@@ -1584,7 +1584,7 @@ window.activateAppView=function(id,tab){
   }
   window.showHome=function(){if(shouldOnboard())return renderOnboarding();activateAppView('homeView','home');renderPlanHome(document.getElementById('homeView'))}
 
-  window.showDiscussionHub=function(){activateAppView('reportView','results');const rows=[];TESTS.forEach(t=>{const items=itemsFor(t),f=fFor(t.id),u=uFor(t.id),n=nFor(t.id);items.forEach((it,i)=>{if(f[i]||u[i]||String(n[i]||'').trim())rows.push({t,it,i,flag:!!f[i],unclear:!!u[i],note:n[i]||''})})});const root=document.getElementById('reportView');root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">For therapy</div><h1>Discussion & notes</h1><div class="sub">Everything you marked across all assessments.</div></div></header>${rows.length?`<div class="v84-discuss-hub">${rows.map(x=>`<button class="v84-discuss-item" onclick="openTest('${x.t.id}',${x.i})"><div class="v8-eyebrow">${escapeHTML(x.t.short)} · Question ${x.i+1}</div><h3>${escapeHTML(x.it.text)}</h3><p>${x.flag?'⭐ Discuss ':''}${x.unclear?'? Unsure ':''}${x.note?`📝 ${escapeHTML(x.note)}`:''}</p></button>`).join('')}</div>`:`<div class="v83-empty"><h2>Nothing marked yet</h2><p>Questions you flag, mark unsure, or add notes to will appear here.</p></div>`}</div>`}
+  window.showDiscussionHub=function(){activate93('reportView','results');const rows=[];TESTS.forEach(t=>{const items=itemsFor(t),f=fFor(t.id),u=uFor(t.id),n=nFor(t.id);items.forEach((it,i)=>{if(f[i]||u[i]||String(n[i]||'').trim())rows.push({t,it,i,flag:!!f[i],unclear:!!u[i],note:n[i]||''})})});const root=document.getElementById('reportView');root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">For therapy</div><h1>Discussion & notes</h1><div class="sub">Everything you marked across all assessments.</div></div></header>${rows.length?`<div class="v84-discuss-hub">${rows.map(x=>`<button class="v84-discuss-item" onclick="openTest('${x.t.id}',${x.i})"><div class="v8-eyebrow">${escapeHTML(x.t.short)} · Question ${x.i+1}</div><h3>${escapeHTML(x.it.text)}</h3><p>${x.flag?'⭐ Discuss ':''}${x.unclear?'? Unsure ':''}${x.note?`📝 ${escapeHTML(x.note)}`:''}</p></button>`).join('')}</div>`:`<div class="v83-empty"><h2>Nothing marked yet</h2><p>Questions you flag, mark unsure, or add notes to will appear here.</p></div>`}</div>`}
 
   // Question-taking preferences and flow
   function prefs(){const p=appPrefs();if(p.autoAdvance===undefined)p.autoAdvance=true;if(p.darkMode===undefined)p.darkMode=false;if(p.privacyCover===undefined)p.privacyCover=false;if(p.textSize===undefined)p.textSize='normal';return p}
@@ -1623,7 +1623,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
+  const V85_BUILD={version:'V9.3',label:'V9.3 PWA',date:'18 August 2026',build:'2026.08.18.3'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -1968,5 +1968,90 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
 }
 </script>
 
+
+<style id="v93-reporting-style">
+.v93-guidance{margin:14px 0;padding:15px;border:1px solid var(--v84-line,#e2e6ec);border-radius:16px;background:var(--v84-card,#fff);text-align:left}
+.v93-guidance h3{margin:0 0 6px;font-size:17px}.v93-guidance p{margin:5px 0;color:var(--v84-sub,#667085);line-height:1.45;font-size:14px}
+.v93-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:#eef4ff;color:#284a8a;font-size:12px;font-weight:800;margin:3px 5px 5px 0}
+.v93-status.good{background:#eaf7f0;color:#246848}.v93-status.attn{background:#fff3d8;color:#725314}.v93-status.neutral{background:#eef1f4;color:#4e5865}
+.v93-next-tests{display:grid;gap:9px;margin-top:10px}.v93-next-test{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid var(--v84-line,#e2e6ec);border-radius:14px;background:var(--v84-card,#fff)}
+.v93-next-test strong{display:block;font-size:14px}.v93-next-test span{display:block;font-size:12px;color:var(--v84-sub,#667085);margin-top:3px;line-height:1.35}
+.v93-report-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v93-report-actions .btn{width:100%}
+.v93-completeness{padding:14px;border-radius:16px;background:#f4f7fb;border:1px solid #e0e6ef;margin:12px 0}.v93-completeness strong{display:block;font-size:16px}.v93-completeness span{display:block;color:#667085;font-size:12px;margin-top:4px;line-height:1.4}
+.v93-result-summary{margin-top:8px;font-size:13px;color:var(--v84-sub,#667085);line-height:1.4}
+body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!important;border-color:#2A3A43!important}body.v84-dark .v93-guidance p,body.v84-dark .v93-next-test span,body.v84-dark .v93-result-summary{color:#A8B5BC!important}body.v84-dark .v93-completeness{background:#1B2A33;border-color:#2A3A43}body.v84-dark .v93-completeness span{color:#A8B5BC}
+@media(max-width:520px){.v93-report-actions{grid-template-columns:1fr}}
+</style>
+
+<script id="v93-reporting-and-next-tests">
+(()=>{
+  const V93_BUILD={label:'V9.3 PWA',build:'2026.08.18.3'};
+  function activate93(id,tab){current.id=null;document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));window.scrollTo(0,0);}
+  function completedTests93(){return TESTS.filter(t=>answeredCount(t)===countFor(t)&&countFor(t)>0)}
+  function firstNumericScore93(t){const sc=scoreTest(t);if(!sc?.scores)return null;for(const v of Object.values(sc.scores)){const n=typeof v==='number'?v:parseFloat(String(v));if(Number.isFinite(n))return n}return null}
+  function safetyMarked93(t){const ans=aFor(t.id);return Array.isArray(t.riskItems)&&t.riskItems.some(n=>ans[n-1]!==undefined&&Number(ans[n-1])>0)}
+  function screenSignal93(t){const sc=scoreTest(t);if(!sc?.scores)return null;for(const [k,v] of Object.entries(sc.scores)){if(/threshold reached|screen reached|algorithm criteria reached|panic algorithm reached/i.test(k)){const yes=/^yes/i.test(String(v));return {yes,label:k,value:v}}}return null}
+  function guidance93(t){
+    if(answeredCount(t)!==countFor(t)||!countFor(t))return {level:'neutral',range:'Incomplete',meaning:'This assessment is not complete, so Moethr is not interpreting its score.',next:'Finish the remaining questions before using this result in an overall report.'};
+    const n=firstNumericScore93(t),sig=screenSignal93(t),safe=safetyMarked93(t);
+    let g={level:'neutral',range:'Completed',meaning:'This assessment is complete. Moethr is showing the published/raw scoring output without treating it as a diagnosis.',next:'Use this result alongside your symptoms, daily functioning, history, and other related assessments.'};
+    if(t.id==='phq9'&&n!==null){const r=n<5?'Minimal range':n<10?'Mild range':n<15?'Moderate range':n<20?'Moderately severe range':'Severe range';g={level:n<10?'good':'attn',range:r,meaning:`Your PHQ-9 score is ${n}. This falls in the ${r.toLowerCase()} for depressive symptom severity.`,next:n<10?'This score alone does not show substantial elevation. If low mood is still causing distress or impairment, it is still reasonable to discuss it with a clinician.':'Because this score is meaningfully elevated, consider discussing depressive symptoms with a qualified mental-health professional, especially if they affect daily life.'}}
+    else if(t.id==='gad7'&&n!==null){const r=n<5?'Minimal range':n<10?'Mild range':n<15?'Moderate range':'Severe range';g={level:n<10?'good':'attn',range:r,meaning:`Your GAD-7 score is ${n}. This falls in the ${r.toLowerCase()} for anxiety symptom severity.`,next:n<10?'This screener does not show substantial elevation by itself. Persistent or impairing anxiety can still be worth discussing even with a low score.':'This level of anxiety symptoms is worth discussing with a clinician if it is persistent, distressing, or interfering with your life.'}}
+    else if(t.id==='phq15'&&n!==null){const r=n<5?'Minimal range':n<10?'Low range':n<15?'Medium range':'High range';g={level:n<10?'good':'attn',range:r,meaning:`Your PHQ-15 score is ${n}, in the ${r.toLowerCase()} for somatic symptom severity.`,next:n<10?'This score alone does not suggest a high somatic symptom burden.':'Consider discussing persistent physical symptoms with an appropriate clinician; physical symptoms deserve medical evaluation rather than being assumed to be psychological.'}}
+    else if(t.id==='pcl'&&n!==null){g={level:n>=31?'attn':'neutral',range:n>=31?'Elevated screening range':'Below a common provisional cutoff',meaning:`Your PCL-5 total is ${n}. A range around 31–33 is commonly used as a provisional screening cutoff, but interpretation depends on population and context.`,next:n>=31?'A clinician-led PTSD assessment would be reasonable to consider; this score is not itself a diagnosis.':'This score is below a common provisional cutoff, but it does not rule out trauma-related difficulties.'}}
+    else if(sig){g={level:sig.yes?'attn':'good',range:sig.yes?'Screening threshold reached':'Screening threshold not reached',meaning:sig.yes?'The scoring algorithm for this measure reached its screening threshold. That indicates the result deserves follow-up, not that a diagnosis has been established.':'The scoring algorithm for this measure did not reach its screening threshold. A negative screen cannot rule out every relevant difficulty.',next:sig.yes?'Consider discussing this result with a qualified clinician and combine it with related symptom and functioning measures.':'No professional action is required because of this score alone; seek help if your real-life symptoms or impairment are concerning despite the screen.'}}
+    if(safe){g.level='attn';g.range='Important response to review';g.next='One or more safety-sensitive items were endorsed. Bring those responses to a qualified clinician promptly; the total score should not be used to dismiss them.'}
+    return g;
+  }
+
+  const bundles93={
+    ADHD:['asrs6','asrs18','wurs25','wsas','gad7','phq9'],
+    Autism:['aq','raads','catq','eq40','wsas'],
+    'Mood & anxiety':['phq9','gad7','dass','pss10','pswq','phqpanic','who5','wsas'],
+    OCD:['ocir','gad7','phq9','wsas'],
+    'Trauma & dissociation':['pcptsd5','pcl','itq','lec5','des','wsas'],
+    'Emotion regulation':['ders16','ders36','bsl23','wsas'],
+    'Personality & schemas':['ysq75','mss','ysq','bsl23','fmps','ecr36','wsas'],
+    Relationships:['ecr36','asq40','ysq75','ders16','wsas'],
+    'Wellbeing & functioning':['who5','wsas','phq9','gad7'],
+    'Somatic & physical symptoms':['phq15','gad7','phq9','wsas'],
+    'Substance use':['audit','assist','wsas','phq9','gad7'],
+    Outcomes:['core10','coreom','who5','wsas']
+  };
+  const why93={
+    wurs25:'adds childhood history, which adult ADHD symptom scales cannot provide',wsas:'adds daily-life impairment and functioning',who5:'adds positive wellbeing rather than only symptoms',gad7:'checks overlapping anxiety symptoms',phq9:'checks overlapping depressive symptoms',dass:'adds depression, anxiety and stress context',pss10:'adds perceived stress',pswq:'adds persistent worry',phqpanic:'checks panic-specific symptoms',catq:'adds masking/camouflaging context',eq40:'adds empathy-related traits',pcl:'adds detailed PTSD symptom severity',pcptsd5:'adds a brief PTSD screen',itq:'adds ICD-11 PTSD/CPTSD symptom structure',lec5:'documents trauma exposure context',des:'adds dissociative symptoms',ders16:'adds emotion-regulation difficulties',ecr36:'adds attachment anxiety/avoidance',asq40:'adds attachment-style context',ysq75:'adds broader schema patterns',bsl23:'adds borderline-symptom burden',audit:'adds alcohol-risk screening',assist:'adds broader substance-use screening',phq15:'adds physical/somatic symptom burden'};
+  function recommendationSet93(t,max=4){
+    const ids=bundles93[t.category]||[];const seenGroups=new Set();const out=[];
+    for(const id of ids){const x=tById(id);if(!x||x.id===t.id||isComplete(x))continue;if(x.variantGroup){if(seenGroups.has(x.variantGroup))continue;seenGroups.add(x.variantGroup)}out.push({t:x,why:why93[id]||`adds another perspective on ${x.category.toLowerCase()}`});if(out.length>=max)break}
+    return out;
+  }
+  function completeness93(t){const ids=bundles93[t.category]||[t.id];const rel=ids.map(tById).filter(Boolean);const complete=rel.filter(isComplete);const hasFunction=complete.some(x=>['wsas','who5','core10','coreom'].includes(x.id));let label='Limited';if(complete.length>=2)label='Broader';if(complete.length>=3&&hasFunction)label='Well-rounded';return {label,count:complete.length,total:rel.length,hasFunction};}
+  function recHTML93(t,max=4){const rs=recommendationSet93(t,max);if(!rs.length)return '<p class="sub">You have already completed the main complementary measures currently available for this area.</p>';return `<div class="v93-next-tests">${rs.map(x=>`<div class="v93-next-test"><div><strong>${escapeHTML(x.t.name)}</strong><span>${escapeHTML(x.why)} · ${countFor(x.t)} questions</span></div><button class="btn small" onclick="openTest('${x.t.id}',${state.lastPositions?.[x.t.id]??0})">Take</button></div>`).join('')}</div>`}
+  function guidanceHTML93(t){const g=guidance93(t),c=completeness93(t);return `<div class="v93-guidance"><span class="v93-status ${g.level}">${escapeHTML(g.range)}</span><h3>What this result suggests</h3><p>${escapeHTML(g.meaning)}</p><h3 style="margin-top:12px">What to do next</h3><p>${escapeHTML(g.next)}</p></div><div class="v93-completeness"><strong>Current picture: ${c.label}</strong><span>${c.count} related/complementary measure${c.count===1?'':'s'} completed${c.hasFunction?' · functioning/wellbeing included':''}. This is a coverage indicator, not a statistical confidence or diagnostic-accuracy score.</span></div>`}
+
+  function fullReportText93(){
+    const done=completedTests93();let s=`MOETHR ASSESSMENT REPORT\nGenerated: ${new Date().toLocaleString()}\nCompleted assessments: ${done.length}\n\nIMPORTANT: These are screening/formulation measures, not diagnoses. Results should be interpreted with symptoms, history, impairment and clinical context.\n\n`;
+    done.forEach(t=>{const sc=scoreTest(t),g=guidance93(t),c=completeness93(t);s+=`==================================================\n${t.name} (${t.short})\nCategory: ${t.category}\n${countFor(t)}/${countFor(t)} answered\n`;if(sc?.scores)Object.entries(sc.scores).forEach(([k,v])=>s+=`${k}: ${v}\n`);s+=`Result summary: ${g.range}\nWhat this suggests: ${g.meaning}\nSuggested next step: ${g.next}\nContext coverage: ${c.label} (${c.count} related measures completed)\n`;const marked=itemsFor(t).map((q,i)=>({q,i,a:answerLabel(t,i),f:fFor(t.id)[i],u:uFor(t.id)[i],n:nFor(t.id)[i]})).filter(x=>x.f||x.u||x.n);if(marked.length){s+='Items marked for discussion/clarification:\n';marked.forEach(x=>s+=`#${x.i+1}: ${x.q.text}\nAnswer: ${x.a||'Unanswered'}${x.f?' | DISCUSS':''}${x.u?' | UNSURE':''}${x.n?` | Note: ${x.n}`:''}\n`)}const rs=recommendationSet93(t,3);if(rs.length){s+='Complementary assessments suggested:\n';rs.forEach(x=>s+=`- ${x.t.name}: ${x.why}\n`)}s+='\n'});
+    s+=`OVERALL NEXT STEP\nFor a more complete picture, use several complementary measures rather than treating one questionnaire as definitive. Include at least one symptom measure, a functioning/wellbeing measure, and relevant history/context where available.\n`;
+    return s;
+  }
+  function aiReportText93(){return fullReportText93()+`\n\nSUGGESTED PROMPT FOR CHATGPT / AI\nPlease analyse these screening results together. Explain the strongest patterns and contradictions, what appears relatively low versus elevated, which results need professional follow-up, and which additional assessments would add useful context. Prioritize daily-life impairment and my marked notes/flags. Do not diagnose me solely from these questionnaires, and do not treat a low score as proof that I do not need help.\n`}
+  function fullReportHTML93(){
+    const done=completedTests93();const cards=done.map(t=>{const sc=scoreTest(t),g=guidance93(t),c=completeness93(t),rs=recommendationSet93(t,3);return `<section style="border-top:1px solid #dfe5eb;padding:22px 0"><h2 style="margin:0 0 4px">${escapeHTML(t.name)}</h2><div style="color:#65707d;font-size:13px">${escapeHTML(t.category)} · ${escapeHTML(t.short)}</div>${sc?.scores?`<div style="margin:12px 0">${Object.entries(sc.scores).map(([k,v])=>`<span style="display:inline-block;background:#eef2f5;border-radius:9px;padding:6px 8px;margin:3px;font-size:13px">${escapeHTML(k)}: <b>${escapeHTML(v)}</b></span>`).join('')}</div>`:''}<h3>Result summary: ${escapeHTML(g.range)}</h3><p>${escapeHTML(g.meaning)}</p><h3>Suggested next step</h3><p>${escapeHTML(g.next)}</p><p><b>Current picture: ${escapeHTML(c.label)}</b> — ${c.count} related/complementary measures completed. This is coverage, not a diagnostic-confidence score.</p>${rs.length?`<h3>Useful additional assessments</h3><ul>${rs.map(x=>`<li><b>${escapeHTML(x.t.name)}</b> — ${escapeHTML(x.why)}</li>`).join('')}</ul>`:''}</section>`}).join('');return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Moethr Assessment Report</title></head><body style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;max-width:860px;margin:30px auto;padding:0 18px;color:#1b2530;line-height:1.5"><h1>Moethr Assessment Report</h1><p style="color:#65707d">Generated ${new Date().toLocaleString()} · ${done.length} completed assessments</p><div style="background:#fff6dc;border:1px solid #ecd895;border-radius:12px;padding:12px">Screening/formulation results are not diagnoses. A low score on one measure does not prove that help is unnecessary; real-life distress, safety concerns and impairment matter.</div>${cards||'<p>No completed assessments yet.</p>'}</body></html>`}
+  window.downloadPersonalReport93=()=>download(`moethr-full-report-${stamp()}.html`,fullReportHTML93(),'text/html;charset=utf-8');
+  window.downloadAIReport93=()=>download(`moethr-chatgpt-report-${stamp()}.txt`,aiReportText93(),'text/plain;charset=utf-8');
+  window.copyAIReport93=async()=>{try{await navigator.clipboard.writeText(aiReportText93());alert('ChatGPT-ready report copied.')}catch(e){downloadAIReport93()}};
+  window.shareFullReport93=async()=>{const txt=aiReportText93();try{const file=new File([txt],`moethr-report-${stamp()}.txt`,{type:'text/plain'});if(navigator.canShare?.({files:[file]})){await navigator.share({title:'Moethr assessment report',files:[file]});return}if(navigator.share){await navigator.share({title:'Moethr assessment report',text:txt.slice(0,12000)});return}}catch(e){if(e?.name==='AbortError')return}downloadAIReport93()};
+
+  window.openResults=function(id){const t=tById(id),score=scoreTest(t),root=document.getElementById('reportView');document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));root.classList.add('active');window.scrollTo(0,0);document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab==='results'));const marked=itemsFor(t).map((x,i)=>({x,i,a:answerLabel(t,i),f:fFor(t.id)[i],u:uFor(t.id)[i],n:nFor(t.id)[i]})).filter(z=>z.f||z.u||z.n);root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Assessment result</div><h1>${escapeHTML(t.short)}</h1><div class="sub">${escapeHTML(t.name)}</div></div><button class="v85-settings-btn" onclick="showHome()" aria-label="Home">×</button></header>${score.scores?`<section class="v83-settings-card"><h2>Your score</h2><div class="scorechips">${Object.entries(score.scores).map(([k,v])=>`<span class="scorechip">${escapeHTML(k)}: <strong>${escapeHTML(v)}</strong></span>`).join('')}</div></section>`:''}<section class="v83-settings-card">${guidanceHTML93(t)}</section><section class="v83-settings-card"><h2>Want a more complete picture?</h2><p class="sub">One questionnaire is only one perspective. Complementary measures can add symptom, history, functioning or related-domain context.</p>${recHTML93(t)}</section><section class="v83-settings-card"><h2>Questions you marked</h2>${marked.length?marked.map(z=>`<div class="flagitem"><strong>#${z.i+1}</strong> ${escapeHTML(z.x.text)}<br><span class="sub">${escapeHTML(z.a||'Unanswered')}${z.f?' · ⭐ discuss':''}${z.u?' · ? unsure':''}${z.n?` · 📝 ${escapeHTML(z.n)}`:''}</span></div>`).join(''):'<div class="sub">No questions marked.</div>'}</section><div class="v93-report-actions"><button class="btn" onclick="openTest('${id}',0)">Review answers</button><button class="btn primary" onclick="showResultsHub()">All results</button></div></div>`};
+
+  window.showResultsHub=function(){activate93('reportView','results');const root=document.getElementById('reportView'),done=completedTests93();if(!done.length){root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Your results</div><h1>Results</h1></div><button class="v85-settings-btn" onclick="showSettingsHub()">⚙</button></header><section class="v83-empty"><h2>No completed assessments yet</h2><p>Complete an assessment and Moethr will show the score, a short interpretation, suggested next steps, and complementary assessments.</p><button class="btn primary" onclick="showDashboard()">Browse assessments</button></section></div>`;return}root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Your results</div><h1>Results</h1><div class="sub">Scores + context + suggested next steps</div></div><button class="v85-settings-btn" onclick="showSettingsHub()">⚙</button></header><section class="v83-section"><div class="v83-section-head"><h2>Completed</h2><button class="v83-linkbtn" onclick="showDataHub()">Export full report</button></div><div class="v83-results-list">${done.map(t=>{const sc=scoreTest(t),g=guidance93(t),c=completeness93(t),txt=sc?.scores?Object.entries(sc.scores).slice(0,2).map(([k,v])=>`${escapeHTML(k)}: ${escapeHTML(v)}`).join(' · '):'Completed';return `<button class="v83-result-card" onclick="openResults('${t.id}')"><div class="v83-result-head"><div><div class="v8-eyebrow">${escapeHTML(t.category)}</div><h3>${escapeHTML(t.name)}</h3></div><div class="v83-result-score">${txt}</div></div><div class="v93-result-summary"><b>${escapeHTML(g.range)}</b> · Current picture: ${escapeHTML(c.label)}<br>${escapeHTML(g.next)}</div></button>`}).join('')}</div></section></div>`};
+
+  window.showDataHub=function(){activate93('dataView','data');const root=document.getElementById('dataView'),n=completedTests93().length;root.innerHTML=`<div class="v83-screen"><header class="v83-mobile-header"><div><div class="v8-eyebrow">Your data</div><h1>Data</h1><div class="sub">Backup and create useful reports.</div></div><button class="v85-settings-btn" onclick="showSettingsHub()">⚙</button></header><section class="hub-panel"><h2>Share & export results</h2><p class="sub">${n} completed assessment${n===1?'':'s'}. These reports include scores, short interpretations, suggested next steps, flags/notes, and complementary-test suggestions.</p><div class="v93-report-actions"><button class="btn primary" onclick="downloadPersonalReport93()">Full personal report</button><button class="btn" onclick="downloadReportHTML()">Clinician report</button><button class="btn" onclick="downloadAIReport93()">ChatGPT / AI report</button><button class="btn" onclick="copyAIReport93()">Copy AI report</button><button class="btn" onclick="shareFullReport93()">Share full report</button><button class="btn" onclick="downloadExcel()">Detailed Excel</button></div></section><section class="hub-panel"><h2>Backup</h2><p class="sub">Backup files are for restoring Moethr later; they are different from readable reports.</p><div class="hub-actions"><button class="btn" onclick="downloadJSON()">Create backup</button><button class="btn" onclick="document.getElementById('backupInput').click()">Restore backup</button></div></section><section class="hub-panel"><h2>Storage</h2><div class="setting-row"><div><strong>Answer storage</strong><br><span>Local browser storage on this device</span></div><strong>Local</strong></div><div class="setting-row"><div><strong>Cloud account</strong><br><span>No account or server database connected</span></div><strong>None</strong></div></section></div>`};
+
+  const oldComplete93=window.completeCurrentTest;
+  window.completeCurrentTest=function(){const finished=tById(current.id);oldComplete93();if(!finished)return;setTimeout(()=>{const main=document.querySelector('#testView .v84-complete');if(!main)return;const anchor=main.querySelector('.v84-scorebox')||main.querySelector('p.sub');if(anchor){anchor.insertAdjacentHTML('afterend',`<section style="text-align:left">${guidanceHTML93(finished)}<div class="v93-guidance"><h3>Want a more complete picture?</h3><p>Taking a few complementary assessments can add useful context. More tests do not automatically mean a more accurate diagnosis.</p>${recHTML93(finished,3)}</div></section>`) }},0)};
+})();
+</script>
 </body>
 </html>
