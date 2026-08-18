@@ -313,7 +313,7 @@ body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V10.0.0 PWA · Build 2026.08.18.8 · Answers are stored locally on this device.</div>
+  <div class="footer">V10.1.0 PWA · Build 2026.08.18.9 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1014,7 +1014,7 @@ body.v84-dark .fill,body.v84-dark .minifill{background:linear-gradient(90deg,#5D
 body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
 </style>
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V10.0.0 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V10.1.0 PWA</div>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
@@ -1515,7 +1515,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V10.0.0',label:'V10.0.0 PWA',date:'18 August 2026',build:'2026.08.18.8'};
+  const APP_BUILD={version:'V10.1.0',label:'V10.1.0 PWA',date:'18 August 2026',build:'2026.08.18.9'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -1637,7 +1637,7 @@ window.activateAppView=function(id,tab){
 <script>
 // V8.4 guided-plan layer -------------------------------------------------
 (()=>{
-  const V84_BUILD={version:'V10.0.0',label:'V10.0.0 PWA',date:'18 August 2026',build:'2026.08.18.8'};
+  const V84_BUILD={version:'V10.1.0',label:'V10.1.0 PWA',date:'18 August 2026',build:'2026.08.18.9'};
   const INTERESTS=[
     ['ADHD','Attention & ADHD','Focus, organization, impulsivity, restlessness'],
     ['Autism','Autism & neurodivergence','Social communication, sensory or masking traits'],
@@ -1714,7 +1714,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V10.0.0',label:'V10.0.0 PWA',date:'18 August 2026',build:'2026.08.18.8'};
+  const V85_BUILD={version:'V10.1.0',label:'V10.1.0 PWA',date:'18 August 2026',build:'2026.08.18.9'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -2076,7 +2076,7 @@ body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!impo
 
 <script id="v93-reporting-and-next-tests">
 (()=>{
-  const V93_BUILD={label:'V10.0.0 PWA',build:'2026.08.18.8'};
+  const V93_BUILD={label:'V10.1.0 PWA',build:'2026.08.18.9'};
   function activate93(id,tab){current.id=null;document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));window.scrollTo(0,0);}
   function isComplete93(t){try{const n=countFor(t);return !!n && answeredCount(t)===n}catch(e){console.error('Completion check failed',t?.id,e);return false}}
   function completedTests93(){const out=[];for(const t of TESTS){if(isComplete93(t))out.push(t)}return out}
@@ -2145,6 +2145,7 @@ body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!impo
     });
     return s;
   }
+  window.downloadAIReport93=function(){download(`moethr-ai-report-${stamp()}.txt`,chatGPTText101(),'text/plain;charset=utf-8')};
   window.copyForChatGPT942=async()=>{
     const text=chatGPTCopyText942();
     try{
@@ -2223,8 +2224,8 @@ body.v84-dark .v10-history-stat,body.v84-dark .v10-history-group{background:#172
 (()=>{
   'use strict';
   const V10_SCHEMA_VERSION=10;
-  const V10_APP_VERSION='10.0.0';
-  const V10_BUILD='2026.08.18.8';
+  const V10_APP_VERSION='10.1.0';
+  const V10_BUILD='2026.08.18.9';
   const V10_SCORING_VERSION='2026-08-18.1';
   const V10_ROLLBACK_KEY=STORE_KEY+'__pre_v10_rollback';
   const V10_IMPORT_ROLLBACK_KEY=STORE_KEY+'__pre_import_rollback';
@@ -2540,6 +2541,502 @@ body.v84-dark .v10-history-stat,body.v84-dark .v10-history-group{background:#172
   setTimeout(()=>{if(document.getElementById('homeView')?.classList.contains('active'))enhanceHomeV10();if(document.getElementById('dataView')?.classList.contains('active'))enhanceDataHubV10();if(document.getElementById('settingsView')?.classList.contains('active'))enhanceSettingsV10();},0);
 
   window.__MOETHR_V10_TEST__={schema:V10_SCHEMA_VERSION,normalize:normalizeStateV10,archive:archiveCompletedAttemptV10,history:historyAttemptsV10,backup:buildBackupV10,save:safeSaveStateV10};
+})();
+</script>
+
+<style id="v101-polish-style">
+:root{--v101-accent:#35566B;--v101-sage:#7F9B88}
+.v101-settings-btn{width:48px;height:48px;min-width:48px;border:1px solid var(--v84-line,#dde4e8);border-radius:50%;background:var(--v84-card,#fff);color:var(--v84-accent,#35566B);display:grid;place-items:center;padding:0;box-shadow:0 5px 18px rgba(35,50,65,.06);-webkit-tap-highlight-color:transparent}
+.v101-settings-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v101-settings-btn:active{transform:scale(.97)}
+body.v84-dark .v101-settings-btn{background:var(--v84-card,#1d2430);border-color:var(--v84-line,#343d4a);color:var(--v84-text,#eef2f6)}
+.v101-plan-tabs,.v101-results-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--v84-soft,#eef3f2);border-radius:14px;margin-bottom:16px}
+.v101-plan-tabs button,.v101-results-tabs button{border:0;border-radius:11px;background:transparent;color:var(--v84-sub,#667085);padding:10px 12px;font:inherit;font-size:13px;font-weight:800}
+.v101-plan-tabs button.active,.v101-results-tabs button.active{background:var(--v84-card,#fff);color:var(--v84-text,#17212b);box-shadow:0 2px 8px rgba(30,45,60,.08)}
+body.v84-dark .v101-plan-tabs,body.v84-dark .v101-results-tabs{background:#242c35}
+body.v84-dark .v101-plan-tabs button.active,body.v84-dark .v101-results-tabs button.active{background:#303944}
+.v101-browse-card{width:100%;border:1px solid var(--v84-line,#dfe4e8);border-radius:18px;background:var(--v84-card,#fff);color:var(--v84-text,#17212b);padding:15px 17px;margin:12px 0 0;display:flex;align-items:center;gap:13px;text-align:left;font:inherit}
+.v101-browse-plus{width:38px;height:38px;min-width:38px;border-radius:50%;display:grid;place-items:center;background:var(--v84-soft,#edf4f1);color:var(--v84-accent,#35566B);font-size:25px;line-height:1}
+.v101-browse-copy strong{display:block;font-size:15px}.v101-browse-copy span{display:block;color:var(--v84-sub,#667085);font-size:12px;line-height:1.35;margin-top:2px}
+.v101-plan-linkrow{display:flex;align-items:center;gap:12px;margin-top:13px;flex-wrap:wrap}.v101-plan-link{border:0;background:transparent;color:var(--v84-accent,#35566B);font:inherit;font-weight:800;padding:2px 0}
+.v101-update-intro{margin:-2px 0 12px;color:var(--v84-sub,#667085);font-size:13px;line-height:1.45}
+.v101-update-list{display:grid;gap:9px}.v101-update-row{border:1px solid var(--v84-line,#dfe4e8);background:var(--v84-bg,#f6f8fa);border-radius:14px;padding:12px}
+body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v101-update-row h3{margin:0;font-size:14px;line-height:1.3}.v101-update-row .sub{font-size:11px;margin-top:3px}.v101-update-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v101-update-actions .btn{font-size:11px;padding:7px 10px}
+.v101-plan-badge{display:inline-flex;align-items:center;border-radius:999px;background:var(--v84-soft,#eef3f2);color:var(--v84-accent,#35566B);font-size:10px;font-weight:800;padding:4px 7px;margin-left:5px}
+.v101-results-tabs{margin:2px 0 16px}.v101-data-note{font-size:12px;color:var(--v84-sub,#667085);line-height:1.45}
+.v101-integrity-row{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--v84-line,#dfe4e8)}.v101-integrity-row:last-child{border-bottom:0}.v101-integrity-row span{font-size:12px;color:var(--v84-sub,#667085)}
+.v101-advanced{margin-top:12px;border-top:1px solid var(--v84-line,#dfe4e8);padding-top:12px}.v101-advanced summary{font-weight:800;cursor:pointer;color:var(--v84-sub,#667085)}
+.v101-toast{position:fixed;left:50%;bottom:calc(var(--nav-h,72px) + 24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:500;background:#17212b;color:#fff;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:750;box-shadow:0 8px 25px rgba(0,0,0,.2);max-width:calc(100vw - 30px);text-align:center}
+.v101-assessment-card .v83-assessment-actions{flex-wrap:wrap;justify-content:flex-end}.v101-assessment-card .v83-assessment-actions .btn{white-space:nowrap}.v101-history-inline{border:0;background:transparent;color:var(--v84-accent,#35566B);font:inherit;font-size:11px;font-weight:800;padding:0}
+.v10-history-summary.v101-user-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:520px){.v101-settings-btn{width:46px;height:46px;min-width:46px}.v101-update-row-top{display:block}.v101-assessment-card .v83-assessment-foot{align-items:flex-end}.v101-assessment-card .v83-assessment-actions{max-width:60%}.v10-history-summary.v101-user-summary{grid-template-columns:1fr 1fr}.v10-history-summary.v101-user-summary .v10-history-stat:last-child{grid-column:auto}}
+</style>
+<script id="v101-polish-script">
+(()=>{
+  'use strict';
+
+  const V101_VERSION='V10.1.0 PWA';
+  const V101_BUILD='2026.08.18.9';
+  const SETTINGS_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1A7.6 7.6 0 0 0 15 6l-.4-2.6h-4L10 6a7.6 7.6 0 0 0-1.5 1L6.1 6 4 9.4 6 11a7 7 0 0 0 0 2l-2 1.6L6.1 18l2.4-1a7.6 7.6 0 0 0 1.5 1l.5 2.6h4L15 18a7.6 7.6 0 0 0 1.5-1l2.4 1 2.1-3.4-2-1.6a7 7 0 0 0 .1-1Z"></path></svg>';
+  const RETAKE_LABEL_IDS=new Set([
+    'wurs25','raads','aq','catq','eq40','ace','lec5','mss','fmps',
+    'asqsf','ecrs','ysq','ysq75','ecr36','asq40'
+  ]);
+  let homePlanTab101='plan';
+
+  function clone101(v){
+    try{return structuredClone(v)}catch(_){
+      try{return JSON.parse(JSON.stringify(v))}catch(__){return null}
+    }
+  }
+  function prefs101(){
+    state.extras=state.extras&&typeof state.extras==='object'?state.extras:{};
+    state.extras.appPrefs=state.extras.appPrefs&&typeof state.extras.appPrefs==='object'?state.extras.appPrefs:{};
+    const p=state.extras.appPrefs;
+    p.planIds=Array.isArray(p.planIds)?[...new Set(p.planIds.filter(id=>!!tById(id)))]:[];
+    return p;
+  }
+  function planIds101(){return prefs101().planIds}
+  function inPlan101(id){return planIds101().includes(id)}
+  function complete101(t){
+    try{const n=countFor(t);return n>0&&answeredCount(t)===n}catch(_){return false}
+  }
+  function history101(id){
+    try{return window.__MOETHR_V10_TEST__?.history(id)||[]}catch(_){return []}
+  }
+  function scoreText101(a){
+    const s=a?.scoreSnapshot?.scores;
+    if(!s||typeof s!=='object'||Array.isArray(s)||!Object.keys(s).length)return 'Completed';
+    return Object.entries(s).slice(0,3).map(([k,v])=>`${k}: ${v}`).join(' · ');
+  }
+  function dateText101(a){
+    if(a?.origin==='pre-v10-migration'&&!a?.completedAt)return 'Imported from earlier Moethr data';
+    const raw=a?.completedAt||a?.revisedAt||a?.archivedAt||a?.startedAt;
+    if(!raw||Number.isNaN(Date.parse(raw)))return 'Date unavailable';
+    try{return new Intl.DateTimeFormat(undefined,{dateStyle:'medium'}).format(new Date(raw))}
+    catch(_){return new Date(raw).toLocaleDateString()}
+  }
+  function actionLabel101(t){return RETAKE_LABEL_IDS.has(t.id)?'Take again':'New check-in'}
+  // Local variant helpers. The legacy helpers live inside an older IIFE, so
+  // V10.1 deliberately does not depend on their scope.
+  function variantMembers101(t){
+    return t?.variantGroup?TESTS.filter(x=>x.variantGroup===t.variantGroup):[t].filter(Boolean);
+  }
+  function selectedVariant101(members){
+    if(!Array.isArray(members)||!members.length)return null;
+    const group=members[0]?.variantGroup;
+    const preferred=group&&state.preferredVariants?.[group];
+    if(preferred){
+      const hit=members.find(x=>x.id===preferred);if(hit)return hit;
+    }
+    return members.find(isAssigned)||members[0];
+  }
+  function versionTabs101(t){
+    if(!t?.variantGroup)return '';
+    return `<div class="v8-version-tabs">${variantMembers101(t).map(v=>`<button class="v8-version ${v.id===t.id?'active':''}" onclick="selectVariant('${v.id}')">${escapeHTML(v.variantLabel||v.short)}</button>`).join('')}</div>`;
+  }
+  function makeAttemptId101(){
+    try{if(crypto&&typeof crypto.randomUUID==='function')return 'att_'+crypto.randomUUID()}catch(_){}
+    return 'att_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10);
+  }
+  function persist101(){
+    try{return window.__MOETHR_V10_TEST__?.save?window.__MOETHR_V10_TEST__.save():saveState()}
+    catch(e){console.error('V10.1 save failed',e);return false}
+  }
+  function toast101(msg){
+    document.querySelector('.v101-toast')?.remove();
+    const el=document.createElement('div');el.className='v101-toast';el.textContent=msg;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1700);
+  }
+  function settingsButton101(){
+    return `<button class="v101-settings-btn" onclick="showSettingsHub()" aria-label="Settings" title="Settings">${SETTINGS_SVG}</button>`;
+  }
+  function setMainTab101(tab){
+    document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  }
+  function activateMain101(viewId,tab){
+    current.id=null;
+    document.body.classList.remove('assessment-mode','completion-mode','onboarding-mode');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(viewId)?.classList.add('active');
+    setMainTab101(tab);window.scrollTo(0,0);
+  }
+  function normalizeSettings101(root,hostSelector){
+    if(!root)return;
+    const host=root.querySelector(hostSelector);if(!host)return;
+    [...host.querySelectorAll('.v85-settings-btn')].filter(b=>(b.getAttribute('onclick')||'').includes('showSettingsHub')).forEach(b=>b.remove());
+    const existing=host.querySelectorAll('.v101-settings-btn');existing.forEach((b,i)=>{if(i)b.remove()});
+    if(!host.querySelector('.v101-settings-btn'))host.insertAdjacentHTML('beforeend',settingsButton101());
+  }
+
+  // Empty-draft policy --------------------------------------------------
+  // Opening a questionnaire is not a saved attempt. A draft becomes real
+  // only after at least one answer has been selected.
+  function pendingMap101(){
+    state.session=state.session&&typeof state.session==='object'?state.session:{};
+    state.session.pendingRetakes=state.session.pendingRetakes&&typeof state.session.pendingRetakes==='object'?state.session.pendingRetakes:{};
+    return state.session.pendingRetakes;
+  }
+  function snapshotCurrent101(t){
+    const hasExtra=Object.prototype.hasOwnProperty.call(state.extras||{},t.id);
+    return {
+      answers:clone101(state.answers?.[t.id]||{}),
+      flags:clone101(state.flags?.[t.id]||{}),
+      unclear:clone101(state.unclear?.[t.id]||{}),
+      notes:clone101(state.notes?.[t.id]||{}),
+      completedAt:state.completedAt?.[t.id]||null,
+      assessmentDiscuss:state.assessmentDiscuss?.[t.id],
+      extraExists:hasExtra,
+      extra:hasExtra?clone101(state.extras[t.id]):null,
+      lastPosition:state.lastPositions?.[t.id],
+      lastTouched:state.lastTouched?.[t.id],
+      activeAttempt:clone101(state.activeAttempts?.[t.id])
+    };
+  }
+  function restoreSnapshot101(id,snap){
+    state.answers[id]=clone101(snap.answers)||{};
+    state.flags[id]=clone101(snap.flags)||{};
+    state.unclear[id]=clone101(snap.unclear)||{};
+    state.notes[id]=clone101(snap.notes)||{};
+    if(snap.completedAt)state.completedAt[id]=snap.completedAt;else delete state.completedAt[id];
+    if(snap.assessmentDiscuss!==undefined)state.assessmentDiscuss[id]=snap.assessmentDiscuss;else delete state.assessmentDiscuss[id];
+    if(snap.extraExists)state.extras[id]=clone101(snap.extra)||{};else delete state.extras[id];
+    if(snap.lastPosition!==undefined)state.lastPositions[id]=snap.lastPosition;else delete state.lastPositions[id];
+    if(snap.lastTouched!==undefined)state.lastTouched[id]=snap.lastTouched;else delete state.lastTouched[id];
+    if(snap.activeAttempt)state.activeAttempts[id]=clone101(snap.activeAttempt);else delete state.activeAttempts[id];
+  }
+  function cleanupTransientOpen101(id){
+    const t=tById(id);if(!t||answeredCount(t)>0||complete101(t))return;
+    // Rendering the questionnaire calls the legacy aFor/fFor/uFor/nFor helpers,
+    // which create empty containers. Remove those again so merely looking at a
+    // questionnaire does not leave a saved draft behind.
+    delete state.answers?.[id];delete state.flags?.[id];delete state.unclear?.[id];delete state.notes?.[id];
+    delete state.activeAttempts?.[id];delete state.lastTouched?.[id];delete state.lastPositions?.[id];delete state.assessmentDiscuss?.[id];
+    persist101();
+  }
+  function cleanupEmptyDraft101(id){
+    const t=tById(id);if(!t||answeredCount(t)>0||complete101(t))return false;
+    const pending=pendingMap101()[id];
+    if(pending?.snapshot){
+      restoreSnapshot101(id,pending.snapshot);delete pendingMap101()[id];persist101();return true;
+    }
+    delete state.answers?.[id];delete state.flags?.[id];delete state.unclear?.[id];delete state.notes?.[id];
+    delete state.activeAttempts?.[id];delete state.lastTouched?.[id];delete state.lastPositions?.[id];delete state.assessmentDiscuss?.[id];
+    persist101();return true;
+  }
+  function cleanupAllEmpty101(){
+    TESTS.forEach(t=>{if(answeredCount(t)===0&&!complete101(t))cleanupEmptyDraft101(t.id)});
+  }
+  function beginAnsweredAttempt101(t){
+    if(!t)return;
+    const pending=pendingMap101()[t.id];if(pending)delete pendingMap101()[t.id];
+    state.activeAttempts=state.activeAttempts&&typeof state.activeAttempts==='object'?state.activeAttempts:{};
+    if(!state.activeAttempts[t.id])state.activeAttempts[t.id]={id:makeAttemptId101(),startedAt:new Date().toISOString(),origin:'first-answer'};
+    persist101();
+  }
+  function restoreAbandonedRetakes101(){
+    const map=pendingMap101();let changed=false;
+    Object.keys(map).forEach(id=>{
+      const t=tById(id);
+      if(t&&answeredCount(t)===0&&map[id]?.snapshot){restoreSnapshot101(id,map[id].snapshot);delete map[id];changed=true}
+    });
+    if(changed)persist101();
+  }
+
+  const baseOpenTest101=window.openTest;
+  window.openTest=function(id,index){
+    const t=tById(String(id||''));const hadAnswers=t?answeredCount(t)>0:false;
+    const out=baseOpenTest101.apply(this,arguments);
+    // The legacy renderer is synchronous, so the temporary containers/attempt
+    // it creates can be removed immediately after rendering. A zero-answer
+    // visit therefore does not remain in the persisted state even briefly.
+    if(t&&!hadAnswers&&answeredCount(t)===0)cleanupTransientOpen101(t.id);
+    return out;
+  };
+  const baseChoose101=window.chooseV84;
+  window.chooseV84=function(idx){
+    const t=tById(current&&current.id);
+    if(t&&answeredCount(t)===0)beginAnsweredAttempt101(t);
+    return baseChoose101.apply(this,arguments);
+  };
+
+  // New check-ins preserve the completed result. If the user opens a new
+  // check-in but answers nothing, leaving/reloading restores the prior sheet.
+  window.retakeAssessmentV10=function(id){
+    const t=tById(String(id||''));if(!t)return;
+    const label=actionLabel101(t);
+    if(!confirm(`${label} for ${t.short}? Your previous completed result will stay in History. The new check-in starts blank and is only kept after you answer at least one question.`))return;
+    try{if(complete101(t))window.__MOETHR_V10_TEST__?.archive(t,'completed-before-new-check-in')}
+    catch(e){console.warn('Could not archive before new check-in',e)}
+    const map=pendingMap101();map[t.id]={createdAt:new Date().toISOString(),snapshot:snapshotCurrent101(t)};
+    state.answers[t.id]={};state.flags[t.id]={};state.unclear[t.id]={};state.notes[t.id]={};
+    delete state.completedAt[t.id];delete state.assessmentDiscuss[t.id];delete state.extras[t.id];
+    delete state.lastPositions[t.id];delete state.lastTouched[t.id];delete state.activeAttempts[t.id];
+    persist101();openTest(t.id,0);
+  };
+
+  // Assessment library -------------------------------------------------
+  window.addToPlan101=function(id){
+    const t=tById(id);if(!t)return;
+    const p=prefs101();if(!p.planIds.includes(id))p.planIds.push(id);p.onboardingDone=true;
+    persist101();toast101(`${t.short} added to My Plan`);renderDashboard();
+  };
+
+  function assessmentCard101(t){
+    const n=countFor(t),a=answeredCount(t),done=complete101(t),pct=n?Math.round(a/n*100):0;
+    const flags=Object.values(fFor(t.id)).filter(Boolean).length;
+    const notes=Object.values(nFor(t.id)).filter(v=>String(v||'').trim()).length;
+    const plan=inPlan101(t.id),hist=history101(t.id).length;
+    let actions='';
+    if(done){
+      actions=`<button class="btn" onclick="retakeAssessmentV10('${t.id}')">${actionLabel101(t)}</button><button class="btn" onclick="openResults('${t.id}')">Result</button>`;
+    }else if(a>0){
+      actions=`<button class="btn primary" onclick="openTest('${t.id}',${state.lastPositions?.[t.id]??0})">Continue</button>`;
+    }else if(plan){
+      actions=`<button class="btn primary" onclick="openTest('${t.id}',0)">${n?'Start':'Open'}</button>`;
+    }else{
+      actions=`<button class="btn primary" onclick="addToPlan101('${t.id}')">＋ Add to plan</button>`;
+    }
+    return `<article class="v83-assessment v101-assessment-card">
+      <div class="v83-assessment-top"><div><div class="v8-eyebrow">${escapeHTML(t.category)}</div><h3>${escapeHTML(t.name)}</h3><div class="sub">${escapeHTML(t.short)} · ${n} question${n===1?'':'s'}</div></div><button class="v83-star ${isAssigned(t)?'on':''}" onclick="event.stopPropagation();toggleAssigned('${t.id}')" aria-label="Therapist assigned">${isAssigned(t)?'★':'☆'}</button></div>
+      ${t.variantGroup?versionTabs101(t):''}
+      <div class="v83-progress-row"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${done?'Done':pct+'%'}</span></div>
+      <div class="v83-assessment-foot"><div class="v83-badges">${plan?'<span class="v83-badge">In plan</span>':''}${isAssigned(t)?'<span class="v83-badge">Assigned</span>':''}${flags?`<span class="v83-badge">${flags} flagged</span>`:''}${notes?`<span class="v83-badge">${notes} notes</span>`:''}${hist>1?`<button class="v101-history-inline" onclick="showAssessmentHistoryV10('${t.id}')">${hist} results</button>`:''}${!a&&!done&&!plan?'<span class="v83-badge">Not started</span>':''}</div><div class="v83-assessment-actions">${actions}</div></div>
+    </article>`;
+  }
+  function section101(title,tests){
+    return tests.length?`<section class="v83-library-section"><h2 class="v83-library-section-title">${title}<span class="v83-count">${tests.length}</span></h2><div class="v83-assessment-list">${tests.map(assessmentCard101).join('')}</div></section>`:'';
+  }
+  window.renderDashboard=function(){
+    const root=document.getElementById('dashboardView');if(!root)return;
+    const query=(filters.search||'').toLowerCase();
+    let pool=TESTS.filter(t=>(filters.category==='All'||t.category===filters.category)&&(!query||(t.name+' '+t.short+' '+t.category).toLowerCase().includes(query)));
+    if(filters.status==='Assigned')pool=pool.filter(isAssigned);
+    if(filters.status==='Completed')pool=pool.filter(complete101);
+    if(filters.status==='In progress')pool=pool.filter(t=>answeredCount(t)>0&&!complete101(t));
+    if(filters.status==='Not started')pool=pool.filter(t=>answeredCount(t)===0&&!complete101(t));
+    const units=[],seen=new Set();
+    for(const t of pool){
+      if(t.variantGroup){
+        if(seen.has(t.variantGroup))continue;seen.add(t.variantGroup);
+        const eligible=variantMembers101(t).filter(v=>pool.includes(v));if(!eligible.length)continue;
+        units.push(eligible.find(isAssigned)||eligible.find(v=>answeredCount(v)>0)||selectedVariant101(eligible));
+      }else units.push(t);
+    }
+    const completed=units.filter(complete101).sort((a,b)=>a.name.localeCompare(b.name));
+    const inProgress=units.filter(t=>answeredCount(t)>0&&!complete101(t));
+    const notStarted=units.filter(t=>answeredCount(t)===0&&!complete101(t)).sort((a,b)=>(Number(inPlan101(b.id))-Number(inPlan101(a.id)))||(isAssigned(b)-isAssigned(a))||a.name.localeCompare(b.name));
+    const cats=['All',...Array.from(new Set(TESTS.map(t=>t.category)))];
+    root.innerHTML=`<div class="v83-screen"><header class="v83-library-header"><div class="v83-library-title"><h1>Assessments</h1><span>${TESTS.length} forms</span>${settingsButton101()}</div><input class="v83-search" placeholder="Search assessments…" value="${escapeHTML(filters.search||'')}" oninput="filters.search=this.value;renderDashboard()"><div class="v83-filter-scroll">${['All','Assigned','In progress','Completed','Not started'].map(x=>`<button class="v83-chip ${filters.status===x?'active':''}" onclick="filters.status='${x}';renderDashboard()">${x}</button>`).join('')}</div><div class="v83-filter-scroll">${cats.map(c=>`<button class="v83-chip ${filters.category===c?'active':''}" onclick='filters.category=${JSON.stringify(c)};renderDashboard()'>${escapeHTML(c)}</button>`).join('')}</div></header>${section101('In progress',inProgress)}${section101('Completed',completed)}${section101('Not started',notStarted)}${!units.length?'<div class="v83-empty"><h2>No matches</h2><p>Try a different search or filter.</p></div>':''}</div>`;
+  };
+
+  // Home: one active plan + a separate Retake / Update view ------------
+  function planSummary101(){
+    const tests=planIds101().map(tById).filter(Boolean);let total=0,answered=0,complete=0;
+    tests.forEach(t=>{
+      const n=countFor(t);total+=n;
+      const completedBefore=history101(t.id).length>0||complete101(t);
+      if(completedBefore){complete++;answered+=n}else answered+=Math.min(answeredCount(t),n);
+    });
+    return {tests,total,answered,complete,pct:total?Math.round(answered/total*100):0};
+  }
+  function updateRows101(){
+    const ids=[...new Set(history101().map(a=>a.assessmentId))];
+    return ids.map(tById).filter(Boolean).sort((a,b)=>{
+      const ah=history101(a.id)[0],bh=history101(b.id)[0];
+      const at=Date.parse(ah?.completedAt||ah?.revisedAt||0)||0,bt=Date.parse(bh?.completedAt||bh?.revisedAt||0)||0;
+      return bt-at;
+    });
+  }
+  window.setHomePlanTab101=function(tab){homePlanTab101=tab==='updates'?'updates':'plan';showHome()};
+  window.browseAll101=function(){filters.search='';filters.status='All';filters.category='All';showDashboard()};
+  function enhanceHome101(){
+    const root=document.getElementById('homeView');if(!root||!root.classList.contains('active'))return;
+    normalizeSettings101(root,'.v85-brandbar');
+    root.querySelectorAll('[data-v10-home-history]').forEach(x=>x.remove());
+    const plan=root.querySelector('.v85-plan'),ps=planSummary101(),updates=updateRows101();
+    if(plan){
+      if(homePlanTab101==='updates'){
+        plan.innerHTML=`<div class="v101-plan-tabs"><button onclick="setHomePlanTab101('plan')">My Plan</button><button class="active" onclick="setHomePlanTab101('updates')">Retake / Update${updates.length?` · ${updates.length}`:''}</button></div><p class="v101-update-intro">Create a new snapshot without replacing previous results. Completed attempts stay in History.</p><div class="v101-update-list">${updates.length?updates.map(t=>{const latest=history101(t.id)[0];return `<div class="v101-update-row"><div class="v101-update-row-top"><div><h3>${escapeHTML(t.name)}${inPlan101(t.id)?'<span class="v101-plan-badge">In plan</span>':''}</h3><div class="sub">Last saved: ${escapeHTML(dateText101(latest))} · ${escapeHTML(scoreText101(latest))}</div></div></div><div class="v101-update-actions"><button class="btn primary" onclick="retakeAssessmentV10('${t.id}')">${actionLabel101(t)}</button><button class="btn" onclick="showAssessmentHistoryV10('${t.id}')">History (${history101(t.id).length})</button></div></div>`}).join(''):'<div class="sub">No completed assessments yet. Completed results will appear here when they are available to update.</div>'}</div>`;
+      }else{
+        plan.innerHTML=`<div class="v101-plan-tabs"><button class="active" onclick="setHomePlanTab101('plan')">My Plan</button><button onclick="setHomePlanTab101('updates')">Retake / Update${updates.length?` · ${updates.length}`:''}</button></div><div class="v85-plan-top"><div><div class="v8-eyebrow">My plan</div><h2>${ps.complete} of ${ps.tests.length} assessments completed</h2></div><strong>${ps.pct}%</strong></div><div class="track" style="margin-top:12px"><div class="fill" style="width:${ps.pct}%"></div></div><div class="v85-plan-meta">${ps.answered} of ${ps.total} selected questions answered</div><div class="v101-plan-linkrow"><button class="v101-plan-link" onclick="renderOnboarding()">Edit plan</button></div>`;
+      }
+    }
+    root.querySelectorAll('.v101-browse-card').forEach(x=>x.remove());
+    const anchor=plan||root.querySelector('.v85-welcome');
+    if(prefs101().onboardingDone&&anchor)anchor.insertAdjacentHTML('afterend',`<button class="v101-browse-card" onclick="browseAll101()"><span class="v101-browse-plus">＋</span><span class="v101-browse-copy"><strong>Browse all assessments</strong><span>Explore the full library and add assessments to My Plan.</span></span></button>`);
+  }
+
+  // Results: explicit Completed | History navigation -------------------
+  function addResultsTabs101(root,active){
+    if(!root)return;root.querySelectorAll('.v101-results-tabs').forEach(x=>x.remove());
+    const header=root.querySelector('.v83-mobile-header');if(!header)return;
+    header.insertAdjacentHTML('afterend',`<div class="v101-results-tabs"><button class="${active==='completed'?'active':''}" onclick="showResultsHub()">Completed</button><button class="${active==='history'?'active':''}" onclick="showAssessmentHistoryV10()">History</button></div>`);
+  }
+  function enhanceResults101(){
+    const root=document.getElementById('reportView');if(!root||!root.classList.contains('active'))return;
+    root.querySelectorAll('[data-v10-history]').forEach(x=>x.remove());
+    normalizeSettings101(root,'.v83-mobile-header');addResultsTabs101(root,'completed');
+  }
+  const baseHistory101=window.showAssessmentHistoryV10;
+  window.showAssessmentHistoryV10=function(id){
+    cleanupAllEmpty101();const out=baseHistory101.apply(this,arguments);
+    setTimeout(()=>{
+      const root=document.getElementById('reportView');if(!root)return;
+      const header=root.querySelector('.v83-mobile-header');
+      if(header)header.querySelectorAll('.v85-settings-btn').forEach(b=>b.remove());
+      const summary=root.querySelector('.v10-history-summary');
+      if(summary){summary.classList.add('v101-user-summary');const stats=summary.querySelectorAll('.v10-history-stat');if(stats.length>2)stats[stats.length-1].remove()}
+      normalizeSettings101(root,'.v83-mobile-header');addResultsTabs101(root,'history');setMainTab101('results');
+    },0);
+    return out;
+  };
+
+  // Keep retake language consistent on individual result/history pages.
+  const baseOpenResultsDetail101=window.openResults;
+  window.openResults=function(id){
+    cleanupAllEmpty101();const out=baseOpenResultsDetail101.apply(this,arguments);
+    setTimeout(()=>{
+      const t=tById(String(id||''));if(!t)return;
+      const root=document.getElementById('reportView');
+      const retake=root?.querySelector('[data-v10-retake="1"]');if(retake)retake.textContent=actionLabel101(t);
+      const hist=root?.querySelector('[data-v10-retake="history"]');if(hist)hist.textContent=`History (${history101(t.id).length})`;
+    },0);return out;
+  };
+  const baseHistoryAttempt101=window.showHistoryAttemptV10;
+  window.showHistoryAttemptV10=function(attemptId){
+    cleanupAllEmpty101();const out=baseHistoryAttempt101.apply(this,arguments);
+    setTimeout(()=>{
+      const a=state.history?.attempts?.[attemptId],t=a&&tById(a.assessmentId);if(!t)return;
+      const root=document.getElementById('reportView');
+      const retake=[...(root?.querySelectorAll('.v10-history-actions button')||[])].find(b=>(b.getAttribute('onclick')||'').includes('retakeAssessmentV10'));
+      if(retake)retake.textContent=actionLabel101(t);
+    },0);return out;
+  };
+
+  // Data: user actions first, technical recovery last ------------------
+  function storageBytes101(){try{return new Blob([JSON.stringify(state)]).size}catch(_){return 0}}
+  function fmtBytes101(n){if(n<1024)return `${n} B`;if(n<1024*1024)return `${(n/1024).toFixed(1)} KB`;return `${(n/1024/1024).toFixed(2)} MB`}
+  window.showDataHub=function(){
+    cleanupAllEmpty101();activateMain101('dataView','data');
+    const root=document.getElementById('dataView');
+    const currentDone=TESTS.filter(complete101).length,attempts=history101(),groups=new Set(attempts.map(a=>a.assessmentId));
+    const rollbackKey=STORE_KEY+'__pre_v10_rollback',hasRollback=!!localStorage.getItem(rollbackKey);
+    root.innerHTML=`<div class="v83-screen">
+      <header class="v83-mobile-header"><div><div class="v8-eyebrow">Your data</div><h1>Data</h1><div class="sub">Share results, keep backups, and manage assessment history.</div></div>${settingsButton101()}</header>
+      <section class="hub-panel"><h2>Share & export results</h2><p class="sub">${currentDone} current completed assessment${currentDone===1?'':'s'} · ${attempts.length} saved historical attempt${attempts.length===1?'':'s'}.</p><div class="v93-guidance"><h3>Use with ChatGPT</h3><p>Copies full current responses plus a compact timeline of saved assessment history, notes/flags, and a ready-made interpretation prompt. Nothing is uploaded by Moethr.</p><button class="btn primary" style="width:100%;margin-top:8px" onclick="copyForChatGPT942()">Copy for ChatGPT</button></div><details style="margin-top:12px"><summary style="font-weight:800;cursor:pointer">Other export options</summary><div class="v93-report-actions" style="margin-top:10px"><button class="btn" onclick="downloadPersonalReport93()">Full personal report</button><button class="btn" onclick="downloadReportHTML()">Clinician report</button><button class="btn" onclick="downloadAIReport93()">Download AI text</button><button class="btn" onclick="shareFullReport93()">Share report</button><button class="btn" onclick="downloadExcel()">Detailed Excel</button></div></details></section>
+      <section class="hub-panel"><h2>Assessment history</h2><p class="sub">Completed attempts stay separate, so a new check-in never replaces an older result.</p><div class="v101-integrity-row"><div><strong>${attempts.length} saved attempts</strong><br><span>Across ${groups.size} assessment${groups.size===1?'':'s'}</span></div><button class="btn" onclick="showAssessmentHistoryV10()">Open history</button></div></section>
+      <section class="hub-panel"><h2>Backup & restore</h2><p class="sub">Backup files preserve your current answers, plan, settings, and assessment history for restoration later.</p><div class="hub-actions"><button class="btn primary" onclick="downloadJSON()">Create backup</button><button class="btn" onclick="document.getElementById('backupInput').click()">Restore backup</button></div></section>
+      <section class="hub-panel"><h2>Data integrity</h2><div class="v101-integrity-row"><div><strong>Storage schema</strong><br><span>Version ${state.storageSchemaVersion||10} · approximately ${fmtBytes101(storageBytes101())}</span></div><strong>${window.__moethrLastSaveError?'Check':'Verified'}</strong></div><div class="v101-integrity-row"><div><strong>Answer storage</strong><br><span>Local browser storage on this device</span></div><strong>Local</strong></div><div class="v101-integrity-row"><div><strong>Cloud account</strong><br><span>No account or server database connected</span></div><strong>None</strong></div>${hasRollback?`<details class="v101-advanced"><summary>Advanced recovery tools</summary><p class="v101-data-note">A pre-V10 migration safety snapshot is still stored on this device. You normally do not need it.</p><button class="btn" onclick="downloadPreV10RollbackV10()">Download pre-V10 safety snapshot</button></details>`:''}</section>
+    </div>`;
+  };
+
+  // ChatGPT copy now includes a compact history timeline ---------------
+  function historyText101(){
+    const attempts=history101();if(!attempts.length)return 'No saved assessment history yet.\n';
+    const groups={};attempts.forEach(a=>(groups[a.assessmentId]||(groups[a.assessmentId]=[])).push(a));
+    let s='ASSESSMENT HISTORY — COMPACT TIMELINE\n';
+    Object.entries(groups).forEach(([id,list])=>{
+      const t=tById(id),name=t?.name||list[0]?.assessmentName||id;
+      s+=`\n${name} (${t?.short||list[0]?.shortName||id})\n`;
+      list.slice().sort((a,b)=>{
+        const at=Date.parse(a.completedAt||a.revisedAt||a.archivedAt||0)||0;
+        const bt=Date.parse(b.completedAt||b.revisedAt||b.archivedAt||0)||0;return at-bt;
+      }).forEach((a,i)=>{
+        s+=`Attempt ${i+1}: ${dateText101(a)}\nScore: ${scoreText101(a)}\n`;
+        if(a.revisionCount)s+=`Revisions: ${a.revisionCount}\n`;
+        if(Array.isArray(a.markedItems)&&a.markedItems.length){
+          const marked=a.markedItems.slice(0,12).map(x=>`Q${x.item}${x.flagged?' DISCUSS':''}${x.unclear?' UNSURE':''}${x.note?` note=${JSON.stringify(x.note)}`:''}`).join('; ');
+          s+=`Marked items: ${marked}\n`;
+        }
+        s+='\n';
+      });
+    });
+    return s;
+  }
+  function chatGPTText101(){
+    const done=TESTS.filter(complete101);
+    let s=`MOETHR — CHATGPT INTERPRETATION REQUEST\nGenerated: ${new Date().toLocaleString()}\nCurrent completed assessments: ${done.length}\nSaved historical attempts: ${history101().length}\n\nINSTRUCTIONS FOR CHATGPT\nInterpret the assessment data carefully. These are screening/formulation tools, not diagnoses.\n\nFor EACH current completed assessment:\n1. State the score/subscale scores.\n2. Give one short plain-English paragraph explaining what the result suggests.\n3. Use severity bands or cutoffs only when they are established for the exact version shown. Otherwise describe the score without inventing a band.\n4. Say what the result does not establish.\n5. Give a brief practical next step, considering impairment, safety-relevant answers, notes, and marked items.\n\nThen use the HISTORY section to compare repeated administrations of the SAME measure over time. Describe clear improvement, worsening, or relative stability when supported by the scores and dates. Do not treat small score changes as automatically meaningful, do not compare raw scores across different instruments as if they share a scale, and do not infer causes from score changes alone.\n\nFinally give an OVERALL SYNTHESIS:\n- strongest patterns across measures\n- contradictions or results that do not line up\n- areas that appear relatively low vs elevated\n- how functioning/impairment changes the interpretation\n- 3–6 useful topics to discuss with a therapist/doctor\n- 2–4 genuinely complementary assessments, avoiding duplicate screeners\n\nIMPORTANT\n- A low score does not prove that help is unnecessary.\n- Prioritize safety-relevant responses, functional impairment, notes, and flags over a reassuring total score.\n- Be concise but specific.\n\n==================== CURRENT DETAILED RESULTS ====================\n\n`;
+    if(!done.length)s+='No current completed assessments were found.\n\n';
+    done.forEach((t,idx)=>{
+      let sc;try{sc=scoreTest(t)}catch(_){sc=null}
+      const n=countFor(t),ans=aFor(t.id),flags=fFor(t.id),unsure=uFor(t.id),notes=nFor(t.id);
+      s+=`${idx+1}. ${t.name}\nShort name: ${t.short}\nCategory: ${t.category}\nAssessment ID/version: ${t.id}\nAnswered: ${answeredCount(t)}/${n}\n`;
+      if(sc?.scores){s+='Scores:\n';Object.entries(sc.scores).forEach(([k,v])=>s+=`- ${k}: ${v}\n`)}else s+='Scores: unavailable\n';
+      s+='Responses:\n';
+      itemsFor(t).forEach((q,i)=>{
+        const label=answerLabel(t,i)||(ans[i]===undefined?'Unanswered':String(ans[i]));
+        const extra=[];if(flags[i])extra.push('DISCUSS');if(unsure[i])extra.push('UNSURE');if(notes[i])extra.push(`NOTE: ${notes[i]}`);
+        s+=`Q${i+1}. ${q.text}\nAnswer: ${label}${extra.length?` | ${extra.join(' | ')}`:''}\n`;
+      });
+      s+='\n------------------------------------------------------------\n\n';
+    });
+    return s+'\n==================== HISTORY ====================\n\n'+historyText101();
+  }
+  window.copyForChatGPT942=async()=>{
+    const text=chatGPTText101();
+    try{
+      if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);else throw new Error('Clipboard API unavailable');
+      alert('Copied for ChatGPT, including assessment history. Open ChatGPT, start a new chat, and paste.');
+    }catch(e){
+      const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();
+      let ok=false;try{ok=document.execCommand('copy')}catch(_){ok=false}ta.remove();
+      if(ok)alert('Copied for ChatGPT, including assessment history. Open ChatGPT, start a new chat, and paste.');
+      else download(`moethr-chatgpt-copy-${stamp()}.txt`,text,'text/plain;charset=utf-8');
+    }
+  };
+
+  // Main-screen wrappers keep empty drafts clean and normalize settings.
+  const baseShowHome101=window.showHome;
+  window.showHome=function(){
+    cleanupAllEmpty101();const out=baseShowHome101.apply(this,arguments);
+    setTimeout(enhanceHome101,0);return out;
+  };
+
+  const baseShowDashboard101=window.showDashboard;
+  window.showDashboard=function(){
+    cleanupAllEmpty101();const out=baseShowDashboard101.apply(this,arguments);
+    setTimeout(()=>{const root=document.getElementById('dashboardView');normalizeSettings101(root,'.v83-library-title');setMainTab101('assessments')},0);
+    return out;
+  };
+
+  const baseShowResults101=window.showResultsHub;
+  window.showResultsHub=function(){
+    cleanupAllEmpty101();const out=baseShowResults101.apply(this,arguments);
+    setTimeout(()=>{enhanceResults101();setMainTab101('results')},0);return out;
+  };
+
+  const baseDiscussion101=window.showDiscussionHub;
+  window.showDiscussionHub=function(){
+    cleanupAllEmpty101();const out=baseDiscussion101.apply(this,arguments);
+    setTimeout(()=>{const root=document.getElementById('reportView');normalizeSettings101(root,'.v83-mobile-header');setMainTab101('discussion')},0);return out;
+  };
+
+  const baseSettings101=window.showSettingsHub;
+  window.showSettingsHub=function(){
+    cleanupAllEmpty101();const out=baseSettings101.apply(this,arguments);
+    setTimeout(()=>{
+      const root=document.getElementById('settingsView');if(!root)return;
+      const versionText=[...root.querySelectorAll('strong')].find(x=>/V10\.0\.0|V10\.1\.0/.test(x.textContent));if(versionText)versionText.textContent=V101_VERSION;
+      const buildText=[...root.querySelectorAll('strong')].find(x=>/2026\.08\.18\./.test(x.textContent));if(buildText)buildText.textContent=V101_BUILD;
+    },0);return out;
+  };
+
+  // If the previous session ended on a zero-answer new check-in, restore
+  // the previous completed sheet before the user sees the app again.
+  restoreAbandonedRetakes101();cleanupAllEmpty101();
+
+  window.__MOETHR_V101_TEST__={
+    cleanup:cleanupAllEmpty101,
+    plan:planIds101,
+    history:history101,
+    chatGPTText:chatGPTText101,
+    scoreText:scoreText101,
+    actionLabel:actionLabel101,
+    restoreAbandonedRetakes:restoreAbandonedRetakes101
+  };
+
+  setTimeout(()=>{if(!document.body.classList.contains('assessment-mode'))showHome()},0);
 })();
 </script>
 
