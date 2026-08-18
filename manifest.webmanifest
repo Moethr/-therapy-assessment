@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Moethr",
   "short_name": "Moethr",
-  "description": "Moethr \u2014 a private, on-device therapy assessment workbook.",
+  "description": "Moethr — a private, on-device therapy assessment workbook.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
