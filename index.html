@@ -313,7 +313,7 @@ body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V9.4.2 PWA · Build 2026.08.18.6 · Answers are stored locally on this device.</div>
+  <div class="footer">V9.4.3 PWA · Build 2026.08.18.7 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1007,7 +1007,7 @@ body.v84-dark .fill,body.v84-dark .minifill{background:linear-gradient(90deg,#5D
 body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
 </style>
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.4.2 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.4.3 PWA</div>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
@@ -1508,7 +1508,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V9.4.2',label:'V9.4.2 PWA',date:'18 August 2026',build:'2026.08.18.6'};
+  const APP_BUILD={version:'V9.4.3',label:'V9.4.3 PWA',date:'18 August 2026',build:'2026.08.18.7'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -1630,7 +1630,7 @@ window.activateAppView=function(id,tab){
 <script>
 // V8.4 guided-plan layer -------------------------------------------------
 (()=>{
-  const V84_BUILD={version:'V9.4.2',label:'V9.4.2 PWA',date:'18 August 2026',build:'2026.08.18.6'};
+  const V84_BUILD={version:'V9.4.3',label:'V9.4.3 PWA',date:'18 August 2026',build:'2026.08.18.7'};
   const INTERESTS=[
     ['ADHD','Attention & ADHD','Focus, organization, impulsivity, restlessness'],
     ['Autism','Autism & neurodivergence','Social communication, sensory or masking traits'],
@@ -1707,7 +1707,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V9.4.2',label:'V9.4.2 PWA',date:'18 August 2026',build:'2026.08.18.6'};
+  const V85_BUILD={version:'V9.4.3',label:'V9.4.3 PWA',date:'18 August 2026',build:'2026.08.18.7'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -2069,7 +2069,7 @@ body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!impo
 
 <script id="v93-reporting-and-next-tests">
 (()=>{
-  const V93_BUILD={label:'V9.4.2 PWA',build:'2026.08.18.6'};
+  const V93_BUILD={label:'V9.4.3 PWA',build:'2026.08.18.7'};
   function activate93(id,tab){current.id=null;document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));window.scrollTo(0,0);}
   function isComplete93(t){try{const n=countFor(t);return !!n && answeredCount(t)===n}catch(e){console.error('Completion check failed',t?.id,e);return false}}
   function completedTests93(){const out=[];for(const t of TESTS){if(isComplete93(t))out.push(t)}return out}
@@ -2163,5 +2163,37 @@ body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!impo
   window.completeCurrentTest=function(){const finished=tById(current.id);oldComplete93();if(!finished)return;setTimeout(()=>{const main=document.querySelector('#testView .v84-complete');if(!main)return;const anchor=main.querySelector('.v84-scorebox')||main.querySelector('p.sub');if(anchor){anchor.insertAdjacentHTML('afterend',`<section style="text-align:left">${guidanceHTML93(finished)}<div class="v93-guidance"><h3>Want a more complete picture?</h3><p>Taking a few complementary assessments can add useful context. More tests do not automatically mean a more accurate diagnosis.</p>${recHTML93(finished,3)}</div></section>`) }},0)};
 })();
 </script>
+
+<style id="v943-completion-flow-style">
+body.assessment-mode.completion-mode{overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto;background:var(--v84-bg,#f7f8fb)}
+body.assessment-mode.completion-mode .shell{height:auto!important;min-height:100dvh!important;overflow:visible!important}
+body.assessment-mode.completion-mode #testView{height:auto!important;min-height:100dvh!important;overflow:visible!important}
+body.assessment-mode.completion-mode .v84-complete{min-height:100dvh;height:auto!important;overflow:visible!important;justify-content:flex-start;padding-top:calc(86px + env(safe-area-inset-top,0px));padding-bottom:calc(42px + env(safe-area-inset-bottom,0px))}
+.v943-complete-exit{position:fixed;z-index:120;top:calc(12px + env(safe-area-inset-top,0px));left:14px;width:44px;height:44px;border:1px solid var(--v84-line,#dfe4ea);border-radius:50%;background:var(--v84-card,#fff);color:var(--v84-text,#17212b);box-shadow:0 5px 18px rgba(20,30,45,.10);font:700 25px/1 system-ui,-apple-system,sans-serif;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.v943-complete-exit:active{transform:scale(.96)}
+body.v84-dark .v943-complete-exit{background:#172229;border-color:#2A3A43;color:#F2F5F6}
+@media(min-width:900px){.v943-complete-exit{left:106px}}
+</style>
+<script id="v943-completion-flow-fix">
+(()=>{
+  const clearCompletionMode=()=>document.body.classList.remove('completion-mode');
+  window.exitCompletionToHome943=function(){
+    try{saveState()}catch(e){console.warn('Completion save before exit failed',e)}
+    clearCompletionMode();current.id=null;showHome();
+  };
+  const wrapRoute=(name)=>{const fn=window[name];if(typeof fn!=='function'||fn.__v943Wrapped)return;const wrapped=function(...args){clearCompletionMode();return fn.apply(this,args)};wrapped.__v943Wrapped=true;window[name]=wrapped};
+  ['openTest','openResults','showResultsHub','showHome','showDashboard','showDiscussionHub','showDataHub','showSettingsHub'].forEach(wrapRoute);
+  const previousComplete=window.completeCurrentTest;
+  window.completeCurrentTest=function(...args){
+    const out=previousComplete.apply(this,args);
+    document.body.classList.add('assessment-mode','completion-mode');
+    const root=document.getElementById('testView');if(root){root.style.height='auto';root.style.overflow='visible'}
+    window.scrollTo(0,0);
+    const installExit=()=>{const main=document.querySelector('#testView .v84-complete');if(!main)return;if(!main.querySelector('.v943-complete-exit'))main.insertAdjacentHTML('afterbegin','<button class="v943-complete-exit" type="button" aria-label="Return to Home" title="Return to Home" onclick="exitCompletionToHome943()">×</button>');main.style.height='auto';main.style.overflow='visible'};
+    installExit();setTimeout(installExit,0);setTimeout(installExit,50);return out;
+  };
+})();
+</script>
+
 </body>
 </html>
