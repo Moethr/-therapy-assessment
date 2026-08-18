@@ -313,7 +313,7 @@ body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V9.2 PWA · Build 2026.08.17.11 · Answers are stored locally on this device.</div>
+  <div class="footer">V9.2.2 PWA · Build 2026.08.18.1 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -923,7 +923,7 @@ body.v84-dark .fill,body.v84-dark .minifill{background:linear-gradient(90deg,#5D
 body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
 </style>
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.2 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V9.2.2 PWA</div>
 </body></html>`;
 }
 function downloadReportHTML(){download(`therapy-clinician-report-${stamp()}.html`,reportBodyHTML(),"text/html;charset=utf-8")}
@@ -1424,7 +1424,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V9.2',label:'V9.2 PWA',date:'17 August 2026',build:'2026.08.17.11'};
+  const APP_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -1546,7 +1546,7 @@ window.activateAppView=function(id,tab){
 <script>
 // V8.4 guided-plan layer -------------------------------------------------
 (()=>{
-  const V84_BUILD={version:'V9.2',label:'V9.2 PWA',date:'17 August 2026',build:'2026.08.17.11'};
+  const V84_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
   const INTERESTS=[
     ['ADHD','Attention & ADHD','Focus, organization, impulsivity, restlessness'],
     ['Autism','Autism & neurodivergence','Social communication, sensory or masking traits'],
@@ -1592,7 +1592,7 @@ window.activateAppView=function(id,tab){
   window.setV84Pref=function(k,v){prefs()[k]=v;saveState();applyPrefs();showSettingsHub()}
   applyPrefs();
 
-  window.renderQuestion=function(){const t=tById(current.id),items=itemsFor(t),i=current.index,item=items[i],opts=optionsFor(t,i),ans=aFor(t.id),flags=fFor(t.id),unclear=uFor(t.id),notes=nFor(t.id),threshold=screenThreshold(t,i),pct=Math.round((i+1)/items.length*100);document.body.classList.add('assessment-mode');setView('testView');const root=document.getElementById('testView');root.innerHTML=`<div class="v84-topbar"><button onclick="showDashboard()">×</button><div class="v84-top-title"><strong>${escapeHTML(t.short)}</strong><span>${i+1} / ${items.length}</span></div><div class="v84-saved">✓ Saved<br>locally</div></div><main class="v84-assessment-body">${t.variantGroup?`<div class="v84-segment">${variantMembers(t).map(v=>`<button class="btn ${v.id===t.id?'primary':''}" onclick="openTest('${v.id}',0)">${escapeHTML(v.variantLabel||v.short)}</button>`).join('')}</div>`:''}<div class="v84-qprogress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%</span></div><div class="v84-question-label">Question ${i+1}</div>${questionLead(t,i)?`<div class="qlead">${escapeHTML(questionLead(t,i))}</div>`:''}<h1 class="v84-question">${escapeHTML(item.text)}</h1><div class="v84-choice-list">${opts.map((label,idx)=>`<button class="v84-choice ${String(ans[i])===String(idx)?'selected':''} ${threshold!==null&&idx>=threshold?'screenzone':''}" onclick="chooseV84(${idx})">${escapeHTML(label)}</button>`).join('')}</div>${threshold!==null?`<div class="screenhint">The lightly marked response zone preserves the original ASRS screener scoring logic.</div>`:''}<div class="v84-qactions"><button class="v84-tool ${flags[i]?'on':''}" onclick="setFlagV84(${!flags[i]})">☆ Discuss</button><button class="v84-tool ${unclear[i]?'on':''}" onclick="setUnclearV84(${!unclear[i]})">? Unsure</button><button class="v84-tool ${notes[i]?'on':''}" onclick="toggleNoteV84()">✎ Note</button><button class="v84-tool" onclick="toggleInfoV84()">ⓘ Info</button></div><div id="v84Note" class="v84-note-box" style="display:${notes[i]?'block':'none'}"><textarea class="field" placeholder="Optional note or real-life example…" oninput="saveNote(this.value)">${escapeHTML(notes[i]||'')}</textarea></div><div id="v84Info" class="v84-info" style="display:none">${escapeHTML(t.instructions||'')}${t.note?`<br><br><strong>Version note:</strong> ${escapeHTML(t.note)}`:''}${t.suggestion?`<br><br><strong>Suggestion:</strong> ${escapeHTML(t.suggestion)}`:''}</div>${riskAlertForCurrent(t,i,ans[i])}</main><nav class="v84-qnav"><button class="btn" onclick="prevQ()" ${i===0?'disabled':''}>← Previous</button><span>${answeredCount(t)} / ${items.length} answered</span><button class="btn ${i===items.length-1?'primary':''}" onclick="${i===items.length-1?'reviewCurrentTest()':'nextQ()'}">${i===items.length-1?'Review':'Next →'}</button></nav>`}
+  window.renderQuestion=function(){const t=tById(current.id),items=itemsFor(t),i=current.index,item=items[i],opts=optionsFor(t,i),ans=aFor(t.id),flags=fFor(t.id),unclear=uFor(t.id),notes=nFor(t.id),threshold=screenThreshold(t,i),pct=Math.round((i+1)/items.length*100);document.body.classList.add('assessment-mode');setView('testView');const root=document.getElementById('testView');root.innerHTML=`<div class="v84-topbar"><button onclick="showDashboard()">×</button><div class="v84-top-title"><strong>${escapeHTML(t.short)}</strong><span>${i+1} / ${items.length}</span></div><div class="v84-saved">✓ Saved<br>locally</div></div><main class="v84-assessment-body">${t.variantGroup?`<div class="v84-segment">${TESTS.filter(v=>v.variantGroup===t.variantGroup).map(v=>`<button class="btn ${v.id===t.id?'primary':''}" onclick="openTest('${v.id}',0)">${escapeHTML(v.variantLabel||v.short)}</button>`).join('')}</div>`:''}<div class="v84-qprogress"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%</span></div><div class="v84-question-label">Question ${i+1}</div>${questionLead(t,i)?`<div class="qlead">${escapeHTML(questionLead(t,i))}</div>`:''}<h1 class="v84-question">${escapeHTML(item.text)}</h1><div class="v84-choice-list">${opts.map((label,idx)=>`<button class="v84-choice ${String(ans[i])===String(idx)?'selected':''} ${threshold!==null&&idx>=threshold?'screenzone':''}" onclick="chooseV84(${idx})">${escapeHTML(label)}</button>`).join('')}</div>${threshold!==null?`<div class="screenhint">The lightly marked response zone preserves the original ASRS screener scoring logic.</div>`:''}<div class="v84-qactions"><button class="v84-tool ${flags[i]?'on':''}" onclick="setFlagV84(${!flags[i]})">☆ Discuss</button><button class="v84-tool ${unclear[i]?'on':''}" onclick="setUnclearV84(${!unclear[i]})">? Unsure</button><button class="v84-tool ${notes[i]?'on':''}" onclick="toggleNoteV84()">✎ Note</button><button class="v84-tool" onclick="toggleInfoV84()">ⓘ Info</button></div><div id="v84Note" class="v84-note-box" style="display:${notes[i]?'block':'none'}"><textarea class="field" placeholder="Optional note or real-life example…" oninput="saveNote(this.value)">${escapeHTML(notes[i]||'')}</textarea></div><div id="v84Info" class="v84-info" style="display:none">${escapeHTML(t.instructions||'')}${t.note?`<br><br><strong>Version note:</strong> ${escapeHTML(t.note)}`:''}${t.suggestion?`<br><br><strong>Suggestion:</strong> ${escapeHTML(t.suggestion)}`:''}</div>${riskAlertForCurrent(t,i,ans[i])}</main><nav class="v84-qnav"><button class="btn" onclick="prevQ()" ${i===0?'disabled':''}>← Previous</button><span>${answeredCount(t)} / ${items.length} answered</span><button class="btn ${i===items.length-1?'primary':''}" onclick="${i===items.length-1?'reviewCurrentTest()':'nextQ()'}">${i===items.length-1?'Review':'Next →'}</button></nav>`}
   window.chooseV84=function(idx){const t=tById(current.id),i=current.index;aFor(t.id)[i]=idx;state.lastTouched=state.lastTouched||{};state.lastTouched[t.id]=new Date().toISOString();state.lastPositions=state.lastPositions||{};state.lastPositions[t.id]=i;saveState();if(prefs().autoAdvance&&i<countFor(t)-1){setTimeout(()=>{current.index=i+1;renderQuestion();window.scrollTo(0,0)},120)}else renderQuestion()}
   window.setFlagV84=function(v){fFor(current.id)[current.index]=v;saveState();renderQuestion()}
   window.setUnclearV84=function(v){uFor(current.id)[current.index]=v;saveState();renderQuestion()}
@@ -1623,7 +1623,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V9.2',label:'V9.2 PWA',date:'17 August 2026',build:'2026.08.17.11'};
+  const V85_BUILD={version:'V9.2.2',label:'V9.2.2 PWA',date:'18 August 2026',build:'2026.08.18.2'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -1742,9 +1742,8 @@ window.activateAppView=function(id,tab){
 })();
 </script>
 
-<script id="v854-state-guard">
+<script id="v921-routing-guard">
 (()=>{
-  const previousOpenTest=window.openTest;
   function ensureRuntimeState(){
     const defs=blankState();
     ['answers','flags','unclear','notes','assigned','customItems','customOptions','extras','profile','session','lastPositions','lastTouched','preferredVariants','completedAt','assessmentDiscuss'].forEach(k=>{
@@ -1752,20 +1751,171 @@ window.activateAppView=function(id,tab){
     });
     state.session=state.session||{};
   }
-  window.openTest=function(id,index){
+  window.openTest=function(requestedId,index){
     try{
       ensureRuntimeState();
-      saveState();
-      return previousOpenTest(id,index);
-    }catch(err){
-      console.error('Moethr assessment launch error',err);
-      ensureRuntimeState();
-      try{return previousOpenTest(id,index)}catch(err2){
-        console.error('Moethr assessment launch retry failed',err2);
-        alert('Moethr could not open this assessment. Your data is still saved. Please close and reopen the app, then try again.');
+      const id=String(requestedId||'');
+      const t=tById(id);
+      if(!t) throw new Error('Unknown assessment id: '+id);
+      const n=countFor(t);
+      current.id=t.id;
+      if(t.variantGroup) state.preferredVariants[t.variantGroup]=t.id;
+      if(t.mode==='import'&&!n){
+        saveState();
+        document.body.classList.add('assessment-mode');
+        setView('testView');
+        renderImport(t);
+        return;
       }
+      if(!n) throw new Error('Assessment has no available questions: '+t.id);
+      let pos=index;
+      if(pos===undefined||pos===null){
+        pos=state.lastPositions[t.id];
+        if(pos===undefined){
+          const ans=aFor(t.id);
+          pos=Array.from({length:n},(_,i)=>i).find(i=>ans[i]===undefined);
+          if(pos===undefined) pos=0;
+        }
+      }
+      current.index=clamp(Number(pos)||0,0,n-1);
+      state.lastPositions[t.id]=current.index;
+      state.lastTouched[t.id]=new Date().toISOString();
+      saveState();
+      document.body.classList.add('assessment-mode');
+      setView('testView');
+      renderQuestion();
+      if(current.id!==t.id) throw new Error('Assessment routing mismatch: requested '+t.id+' but opened '+current.id);
+    }catch(err){
+      console.error('Moethr assessment routing error',requestedId,err);
+      document.body.classList.remove('assessment-mode');
+      alert('Moethr could not open the selected assessment. Your data is still saved. Please return Home and try again.');
     }
   };
+})();
+</script>
+
+<script id="v922-reliability-guard">
+(()=>{
+  let pendingAdvance=null;
+  let routeEpoch=0;
+
+  function cancelPendingAdvance(){
+    routeEpoch++;
+    if(pendingAdvance!==null){clearTimeout(pendingAdvance);pendingAdvance=null;}
+  }
+  function normalizeState(){
+    const defs=blankState();
+    const keys=['answers','flags','unclear','notes','assigned','customItems','customOptions','extras','profile','session','lastPositions','lastTouched','preferredVariants','completedAt','assessmentDiscuss'];
+    keys.forEach(k=>{if(!state[k]||typeof state[k]!=='object'||Array.isArray(state[k])) state[k]=defs[k]||{};});
+    state.extras.appPrefs=state.extras.appPrefs&&typeof state.extras.appPrefs==='object'?state.extras.appPrefs:{};
+    const p=state.extras.appPrefs;
+    p.planIds=Array.isArray(p.planIds)?p.planIds.filter(id=>!!tById(id)):[];
+    p.interests=Array.isArray(p.interests)?p.interests:[];
+  }
+  function prefAutoAdvance(){
+    normalizeState();
+    const p=state.extras.appPrefs;
+    return p.autoAdvance===undefined?true:!!p.autoAdvance;
+  }
+
+  const renderBase=window.renderQuestion;
+  window.renderQuestion=function(){
+    normalizeState();
+    const t=tById(current&&current.id);
+    if(!t) throw new Error('No valid assessment is selected.');
+    const n=countFor(t);
+    if(!n) throw new Error('Assessment has no available questions: '+t.id);
+    current.index=clamp(Number(current.index)||0,0,n-1);
+    return renderBase();
+  };
+
+  window.openTest=function(requestedId,index){
+    cancelPendingAdvance();
+    try{
+      normalizeState();
+      const id=String(requestedId||'');
+      const t=tById(id);
+      if(!t) throw new Error('Unknown assessment id: '+id);
+      const n=countFor(t);
+      current.id=t.id;
+      if(t.variantGroup) state.preferredVariants[t.variantGroup]=t.id;
+      if(t.mode==='import'&&!n){
+        state.lastTouched[t.id]=new Date().toISOString();
+        saveState();
+        document.body.classList.add('assessment-mode');
+        setView('testView');
+        renderImport(t);
+        return;
+      }
+      if(!n) throw new Error('Assessment has no available questions: '+t.id);
+      let pos=index;
+      if(pos===undefined||pos===null){
+        pos=state.lastPositions[t.id];
+        if(pos===undefined){
+          const ans=aFor(t.id);
+          pos=Array.from({length:n},(_,i)=>i).find(i=>ans[i]===undefined);
+          if(pos===undefined)pos=0;
+        }
+      }
+      current.index=clamp(Number(pos)||0,0,n-1);
+      state.lastPositions[t.id]=current.index;
+      state.lastTouched[t.id]=new Date().toISOString();
+      saveState();
+      document.body.classList.add('assessment-mode');
+      setView('testView');
+      renderQuestion();
+      if(current.id!==t.id)throw new Error('Routing mismatch: requested '+t.id+' but opened '+current.id);
+    }catch(err){
+      console.error('Moethr assessment routing error',requestedId,err);
+      current.id=null;
+      document.body.classList.remove('assessment-mode');
+      alert('Moethr could not open this assessment. Your data is still saved. Please return Home and try again.');
+    }
+  };
+
+  window.chooseV84=function(idx){
+    normalizeState();
+    const t=tById(current&&current.id);
+    if(!t)return;
+    const i=clamp(Number(current.index)||0,0,countFor(t)-1);
+    const opts=optionsFor(t,i);
+    const choice=Number(idx);
+    if(!Number.isInteger(choice)||choice<0||choice>=opts.length)return;
+    aFor(t.id)[i]=choice;
+    state.lastTouched[t.id]=new Date().toISOString();
+    state.lastPositions[t.id]=i;
+    saveState();
+    if(pendingAdvance!==null){clearTimeout(pendingAdvance);pendingAdvance=null;}
+    if(prefAutoAdvance()&&i<countFor(t)-1){
+      const testId=t.id, epoch=routeEpoch;
+      pendingAdvance=setTimeout(()=>{
+        pendingAdvance=null;
+        if(epoch!==routeEpoch||current.id!==testId)return;
+        current.index=i+1;
+        state.lastPositions[testId]=current.index;
+        state.lastTouched[testId]=new Date().toISOString();
+        saveState();
+        renderQuestion();
+        window.scrollTo(0,0);
+      },120);
+    }else renderQuestion();
+  };
+
+  // Cancel delayed question movement whenever the user leaves assessment mode.
+  ['showHome','showDashboard','showResultsHub','showDiscussionHub','showDataHub','showSettingsHub'].forEach(name=>{
+    const fn=window[name];
+    if(typeof fn==='function')window[name]=function(...args){cancelPendingAdvance();return fn.apply(this,args)};
+  });
+
+  // State/file upgrades should never leave an invalid selected assessment or stale plan id behind.
+  normalizeState();
+  saveState();
+
+  // Development-time integrity checks; they only log if a future build corrupts the library.
+  const ids=TESTS.map(t=>t.id);
+  const duplicateIds=ids.filter((id,i)=>ids.indexOf(id)!==i);
+  const malformed=TESTS.filter(t=>!t.id||!t.name||!t.mode||(t.mode==='included'&&(!Array.isArray(t.questions)||t.questions.length!==t.count)));
+  if(duplicateIds.length||malformed.length)console.error('Moethr library integrity check failed',{duplicateIds,malformed:malformed.map(t=>t.id)});
 })();
 </script>
 
