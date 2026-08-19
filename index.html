@@ -432,7 +432,7 @@ body.v84-dark .v102-spark path{stroke:var(--theme-accent)!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V10.3.0 PWA · Build 2026.08.18.13 · Answers are stored locally on this device.</div>
+  <div class="footer">V10.3.1 PWA · Build 2026.08.18.14 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1133,7 +1133,7 @@ body.v84-dark .fill,body.v84-dark .minifill{background:linear-gradient(90deg,#5D
 body.v84-dark .v8-eyebrow,body.v84-dark .kicker{color:#91B7C9!important}
 </style>
 </head><body>${body}
-<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V10.3.0 PWA</div>
+<div id="pwaVersionBadge" aria-label="App version" style="position:fixed;right:8px;bottom:8px;z-index:30;background:#fff;border:1px solid #d8dce6;border-radius:999px;padding:4px 7px;font:600 10px/1 system-ui;color:#687080;pointer-events:none">V10.3.1 PWA</div>
 
 
 </body></html>`;
@@ -1636,7 +1636,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V10.3.0',label:'V10.3.0 PWA',date:'18 August 2026',build:'2026.08.18.13'};
+  const APP_BUILD={version:'V10.3.1',label:'V10.3.1 PWA',date:'18 August 2026',build:'2026.08.18.14'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -1758,7 +1758,7 @@ window.activateAppView=function(id,tab){
 <script>
 // V8.4 guided-plan layer -------------------------------------------------
 (()=>{
-  const V84_BUILD={version:'V10.3.0',label:'V10.3.0 PWA',date:'18 August 2026',build:'2026.08.18.13'};
+  const V84_BUILD={version:'V10.3.1',label:'V10.3.1 PWA',date:'18 August 2026',build:'2026.08.18.14'};
   const INTERESTS=[
     ['ADHD','Attention & ADHD','Focus, organization, impulsivity, restlessness'],
     ['Autism','Autism & neurodivergence','Social communication, sensory or masking traits'],
@@ -1835,7 +1835,7 @@ window.activateAppView=function(id,tab){
 
 <script id="v85-refinement-script">
 (()=>{
-  const V85_BUILD={version:'V10.3.0',label:'V10.3.0 PWA',date:'18 August 2026',build:'2026.08.18.13'};
+  const V85_BUILD={version:'V10.3.1',label:'V10.3.1 PWA',date:'18 August 2026',build:'2026.08.18.14'};
   const ICONS85={
     home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg>',
     assessments:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -2197,7 +2197,7 @@ body.v84-dark .v93-guidance,body.v84-dark .v93-next-test{background:#172229!impo
 
 <script id="v93-reporting-and-next-tests">
 (()=>{
-  const V93_BUILD={label:'V10.3.0 PWA',build:'2026.08.18.13'};
+  const V93_BUILD={label:'V10.3.1 PWA',build:'2026.08.18.14'};
   function activate93(id,tab){current.id=null;document.body.classList.remove('assessment-mode');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const el=document.getElementById(id);if(el)el.classList.add('active');document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));window.scrollTo(0,0);}
   function isComplete93(t){try{const n=countFor(t);return !!n && answeredCount(t)===n}catch(e){console.error('Completion check failed',t?.id,e);return false}}
   function completedTests93(){const out=[];for(const t of TESTS){if(isComplete93(t))out.push(t)}return out}
@@ -2346,7 +2346,7 @@ body.v84-dark .v10-history-stat,body.v84-dark .v10-history-group{background:#172
   'use strict';
   const V10_SCHEMA_VERSION=10;
   const V10_APP_VERSION='10.2.0';
-  const V10_BUILD='2026.08.18.13';
+  const V10_BUILD='2026.08.18.14';
   const V10_SCORING_VERSION='2026-08-18.1';
   const V10_ROLLBACK_KEY=STORE_KEY+'__pre_v10_rollback';
   const V10_IMPORT_ROLLBACK_KEY=STORE_KEY+'__pre_import_rollback';
@@ -2696,8 +2696,8 @@ body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:f
 (()=>{
   'use strict';
 
-  const V101_VERSION='V10.3.0 PWA';
-  const V101_BUILD='2026.08.18.13';
+  const V101_VERSION='V10.3.1 PWA';
+  const V101_BUILD='2026.08.18.14';
   const SETTINGS_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1A7.6 7.6 0 0 0 15 6l-.4-2.6h-4L10 6a7.6 7.6 0 0 0-1.5 1L6.1 6 4 9.4 6 11a7 7 0 0 0 0 2l-2 1.6L6.1 18l2.4-1a7.6 7.6 0 0 0 1.5 1l.5 2.6h4L15 18a7.6 7.6 0 0 0 1.5-1l2.4 1 2.1-3.4-2-1.6a7 7 0 0 0 .1-1Z"></path></svg>';
   const RETAKE_LABEL_IDS=new Set([
     'wurs25','raads','aq','catq','eq40','ace','lec5','mss','fmps',
@@ -3186,7 +3186,7 @@ body.v84-dark .v102-overview-hero{background:linear-gradient(145deg,#1d2530,#202
 <script id="v102-insights-trends-script">
 (()=>{
 'use strict';
-const V102_VERSION='V10.3.0 PWA',V102_BUILD='2026.08.18.13';
+const V102_VERSION='V10.3.1 PWA',V102_BUILD='2026.08.18.14';
 const SETTINGS_SVG_102='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1A7.6 7.6 0 0 0 15 6l-.4-2.6h-4L10 6a7.6 7.6 0 0 0-1.5 1L6.1 6 4 9.4 6 11a7 7 0 0 0 0 2l-2 1.6L6.1 18l2.4-1a7.6 7.6 0 0 0 1.5 1l.5 2.6h4L15 18a7.6 7.6 0 0 0 1.5-1l2.4 1 2.1-3.4-2-1.6a7 7 0 0 0 .1-1Z"></path></svg>';
 const META102={
  asrs6:{domain:'Attention',tracking:'current',direction:'higher-more',primary:'Shaded-box count'},wurs25:{domain:'Attention',tracking:'history',direction:'descriptive',primary:'Total'},
@@ -3314,7 +3314,7 @@ setTimeout(()=>{if(document.getElementById('reportView')?.classList.contains('ac
   new MutationObserver(syncThemeRoot1022).observe(document.body,{attributes:true,attributeFilter:['class']});
   window.addEventListener('pageshow',syncThemeRoot1022);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncThemeRoot1022()});
-  window.__MOETHR_THEME_TEST__={sync:syncThemeRoot1022,version:'V10.3.0 PWA',build:'2026.08.18.13'};
+  window.__MOETHR_THEME_TEST__={sync:syncThemeRoot1022,version:'V10.3.1 PWA',build:'2026.08.18.14'};
 })();
 </script>
 <style id="v103-wellness-styles">
@@ -3364,7 +3364,7 @@ setTimeout(()=>{if(document.getElementById('reportView')?.classList.contains('ac
 <script id="v103-daily-wellness">
 (function(){
 'use strict';
-const V103_VERSION='V10.3.0 PWA',V103_BUILD='2026.08.18.13',WELLNESS_SCHEMA=1;
+const V103_VERSION='V10.3.1 PWA',V103_BUILD='2026.08.18.14',WELLNESS_SCHEMA=1;
 const METRICS103={
   mood:{label:'Mood',low:'Very low',mid:'Okay / neutral',high:'Very good',higher:'better'},
   anxiety:{label:'Anxiety',low:'None',mid:'Noticeable',high:'Extreme',higher:'worse'},
@@ -3399,16 +3399,16 @@ function activateWellness103(){document.body.classList.remove('assessment-mode',
 function leaveWellness103(){draft103=null;nav103(true);showHome()}
 function resolvedCount103(){if(!draft103)return 0;return Object.keys(METRICS103).filter(k=>draft103.ratings[k]!==undefined).length}
 function metricCard103(k,m){const v=draft103.ratings[k],rated=Number.isFinite(v),skipped=v===null;return `<section class="v103-metric" data-metric="${k}"><div class="v103-metric-head"><div><div class="v103-metric-title">${m.label}</div><div class="muted" style="font-size:12px;margin-top:3px">${m.higher==='better'?'Higher = better self-rating':'Higher = more self-rated '+m.label.toLowerCase()}</div></div><div class="v103-value" id="wv-${k}">${rated?v:'—'}${rated?'<small>/10</small>':''}</div></div><div class="v103-slider-row"><button class="v103-step" onclick="wellStep103('${k}',-1)" aria-label="Decrease ${m.label}">−</button><input class="v103-range" id="wr-${k}" type="range" min="0" max="10" step="1" value="${rated?v:5}" oninput="wellRate103('${k}',this.value)" aria-label="${m.label}, 0 to 10"><button class="v103-step" onclick="wellStep103('${k}',1)" aria-label="Increase ${m.label}">+</button></div><div class="v103-anchor-row"><span>0 · ${m.low}</span><span>5 · ${m.mid}</span><span>10 · ${m.high}</span></div><button class="v103-skip ${skipped?'active':''}" onclick="wellSkip103('${k}')">${skipped?'Skipped ✓':'Skip this rating'}</button></section>`}
-function renderCheckin103(editId=null){activateWellness103();const existing=editId?ensure103().entries[editId]:null;if(!draft103||draft103.editId!==editId){draft103={id:existing?.id||uid103(),editId:existing?.id||null,ratings:{},tags:new Set(existing?.tags||[]),note:existing?.note||''};Object.keys(METRICS103).forEach(k=>{if(existing)draft103.ratings[k]=existing.ratings?.[k]??null})}const v=ensureView103();const done=resolvedCount103();v.innerHTML=`<div class="v103-wellness-view v103-checkin-shell"><div class="v103-checkin-top"><button class="v103-close" onclick="cancelWellness103()" aria-label="Close without saving">×</button><div style="min-width:0"><div class="v8-eyebrow">Personal wellness tracking</div><h1 style="font-size:25px;margin:2px 0 0">${existing?'Edit check-in':'How are you doing?'}</h1></div></div><p class="muted">A quick subjective check-in, not a validated clinical questionnaire. Rate each area or explicitly skip it.</p><div class="v103-progress"><span id="wp103" style="width:${done/7*100}%"></span></div><div id="wc103">${Object.entries(METRICS103).map(([k,m])=>metricCard103(k,m)).join('')}</div><section class="v103-context"><h2 style="font-size:18px">Anything different recently?</h2><p class="muted" style="font-size:13px">Optional context only. Moethr won't assume these caused any change.</p><div class="v103-tags">${TAGS103.map(t=>`<button class="v103-tag ${draft103.tags.has(t)?'active':''}" onclick='wellTag103(${JSON.stringify(t)})'>${t}</button>`).join('')}</div><textarea class="v103-note" maxlength="1200" placeholder="Optional note…" oninput="draftWellNote103(this.value)">${esc103(draft103.note)}</textarea></section><div class="v103-savebar"><div class="muted" id="wcount103" style="font-size:12px;text-align:center;margin-bottom:7px">${done} of 7 rated or skipped</div><button class="btn primary" id="wsave103" ${done===7?'':'disabled'} onclick="commitWellness103()">${existing?'Save changes':'Save check-in'}</button></div></div>`}
+function renderCheckin103(editId=null){activateWellness103();const existing=editId?ensure103().entries[editId]:null;if(!draft103||draft103.editId!==editId){draft103={id:existing?.id||uid103(),editId:existing?.id||null,ratings:{},tags:new Set(existing?.tags||[]),note:existing?.note||'',dirty:false};Object.keys(METRICS103).forEach(k=>{draft103.ratings[k]=existing?(existing.ratings?.[k]??null):5})}const v=ensureView103();const done=resolvedCount103();v.innerHTML=`<div class="v103-wellness-view v103-checkin-shell"><div class="v103-checkin-top"><button class="v103-close" onclick="cancelWellness103()" aria-label="Close without saving">×</button><div style="min-width:0"><div class="v8-eyebrow">Personal wellness tracking</div><h1 style="font-size:25px;margin:2px 0 0">${existing?'Edit check-in':'How are you doing?'}</h1></div></div><p class="muted">A quick subjective check-in, not a validated clinical questionnaire. Each rating starts at <strong>5</strong>. Leave it at 5 if that fits, adjust it, or tap Skip.</p><div class="v103-progress"><span id="wp103" style="width:${done/7*100}%"></span></div><div id="wc103">${Object.entries(METRICS103).map(([k,m])=>metricCard103(k,m)).join('')}</div><section class="v103-context"><h2 style="font-size:18px">Anything different recently?</h2><p class="muted" style="font-size:13px">Optional context only. Moethr won't assume these caused any change.</p><div class="v103-tags">${TAGS103.map(t=>`<button class="v103-tag ${draft103.tags.has(t)?'active':''}" onclick='wellTag103(${JSON.stringify(t)})'>${t}</button>`).join('')}</div><textarea class="v103-note" maxlength="1200" placeholder="Optional note…" oninput="draftWellNote103(this.value)">${esc103(draft103.note)}</textarea></section><div class="v103-savebar"><div class="muted" id="wcount103" style="font-size:12px;text-align:center;margin-bottom:7px">${done} of 7 rated or skipped</div><button class="btn primary" id="wsave103" ${done===7?'':'disabled'} onclick="commitWellness103()">${existing?'Save changes':'Save check-in'}</button></div></div>`}
 window.startWellnessCheckin103=()=>{draft103=null;renderCheckin103(null)};
 window.editWellness103=id=>{draft103=null;renderCheckin103(id)};
-window.cancelWellness103=()=>{if(draft103&&resolvedCount103()>0&&!draft103.editId&&!confirm('Discard this unsaved check-in?'))return;leaveWellness103()};
+window.cancelWellness103=()=>{if(draft103&&draft103.dirty&&!draft103.editId&&!confirm('Discard this unsaved check-in?'))return;leaveWellness103()};
 function refreshMetric103(k){const v=draft103.ratings[k],el=document.getElementById('wv-'+k),skip=document.querySelector(`[data-metric="${k}"] .v103-skip`),range=document.getElementById('wr-'+k);if(el)el.innerHTML=Number.isFinite(v)?`${v}<small>/10</small>`:'—';if(range&&Number.isFinite(v))range.value=v;if(skip){skip.classList.toggle('active',v===null);skip.textContent=v===null?'Skipped ✓':'Skip this rating'}const done=resolvedCount103(),bar=document.getElementById('wp103'),ct=document.getElementById('wcount103'),btn=document.getElementById('wsave103');if(bar)bar.style.width=(done/7*100)+'%';if(ct)ct.textContent=`${done} of 7 rated or skipped`;if(btn)btn.disabled=done!==7}
-window.wellRate103=(k,val)=>{if(!draft103||!METRICS103[k])return;draft103.ratings[k]=Math.max(0,Math.min(10,Number(val)));refreshMetric103(k)};
-window.wellStep103=(k,d)=>{if(!draft103||!METRICS103[k])return;const cur=Number.isFinite(draft103.ratings[k])?draft103.ratings[k]:5;draft103.ratings[k]=Math.max(0,Math.min(10,cur+d));refreshMetric103(k)};
-window.wellSkip103=k=>{if(!draft103||!METRICS103[k])return;draft103.ratings[k]=null;refreshMetric103(k)};
-window.wellTag103=t=>{if(!draft103)return;draft103.tags.has(t)?draft103.tags.delete(t):draft103.tags.add(t);document.querySelectorAll('.v103-tag').forEach(b=>{if(b.textContent===t)b.classList.toggle('active',draft103.tags.has(t))})};
-window.draftWellNote103=v=>{if(draft103)draft103.note=v};
+window.wellRate103=(k,val)=>{if(!draft103||!METRICS103[k])return;draft103.ratings[k]=Math.max(0,Math.min(10,Number(val)));draft103.dirty=true;refreshMetric103(k)};
+window.wellStep103=(k,d)=>{if(!draft103||!METRICS103[k])return;const cur=Number.isFinite(draft103.ratings[k])?draft103.ratings[k]:5;draft103.ratings[k]=Math.max(0,Math.min(10,cur+d));draft103.dirty=true;refreshMetric103(k)};
+window.wellSkip103=k=>{if(!draft103||!METRICS103[k])return;draft103.ratings[k]=null;draft103.dirty=true;refreshMetric103(k)};
+window.wellTag103=t=>{if(!draft103)return;draft103.dirty=true;draft103.tags.has(t)?draft103.tags.delete(t):draft103.tags.add(t);document.querySelectorAll('.v103-tag').forEach(b=>{if(b.textContent===t)b.classList.toggle('active',draft103.tags.has(t))})};
+window.draftWellNote103=v=>{if(draft103){draft103.note=v;draft103.dirty=true}};
 window.commitWellness103=()=>{if(!draft103||resolvedCount103()!==7)return;const w=ensure103(),now=new Date().toISOString(),old=draft103.editId?w.entries[draft103.editId]:null;const entry={id:draft103.id,createdAt:old?.createdAt||now,localDate:old?.localDate||dateKey103(),timezone:old?.timezone||tz103(),ratings:Object.fromEntries(Object.keys(METRICS103).map(k=>[k,draft103.ratings[k]??null])),note:String(draft103.note||'').trim(),tags:[...draft103.tags],revisionCount:old?(Number(old.revisionCount||0)+1):0,revisedAt:old?now:null};w.entries[entry.id]=entry;if(!w.order.includes(entry.id))w.order.push(entry.id);if(!save103()){alert('Moethr could not verify this save. Your check-in has not been intentionally cleared; please try again.');return}draft103=null;showSaved103(entry)};
 function ratingRows103(e){return Object.entries(METRICS103).filter(([k])=>Number.isFinite(e.ratings?.[k])).map(([k,m])=>`<div class="v103-saved-row"><span>${m.label}</span><strong>${e.ratings[k]}/10</strong></div>`).join('')}
 function showSaved103(e){activateWellness103();ensureView103().innerHTML=`<div class="v103-wellness-view v103-checkin-shell v103-saved"><div class="v103-saved-check">✓</div><div class="v8-eyebrow">Check-in saved</div><h1>${fmtTime103(e.createdAt)}</h1><p class="muted">Your ratings are stored locally on this device.</p><div class="v103-saved-list">${ratingRows103(e)}</div><div class="v103-wellness-actions" style="justify-content:center"><button class="btn primary" onclick="showWellnessHub103('trends')">View trends</button><button class="btn" onclick="leaveWellness103()">Home</button></div></div>`}
