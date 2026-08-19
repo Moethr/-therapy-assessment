@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Moethr",
   "short_name": "Moethr",
-  "description": "Moethr — a private, on-device wellness and therapy assessment workbook with assessment history.",
+  "description": "Moethr — a private, on-device wellness and therapy assessment workbook with assessment history, daily wellness, trends, and transparent smart insights.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
