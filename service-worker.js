@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moethr-v10.4.1-2026.08.19.2';
+const CACHE_NAME = 'moethr-v10.5.0-2026.08.19.3';
 const SCOPE = self.registration.scope;
 const url = path => new URL(path, SCOPE).toString();
 const APP_SHELL = [
