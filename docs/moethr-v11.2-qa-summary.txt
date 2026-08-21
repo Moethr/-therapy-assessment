@@ -1,0 +1,35 @@
+Moethr V11.2.0 Frozen Prototype — Stabilization QA
+Build: 2026.08.21.1
+
+Source: user-uploaded index(1).html
+Output: moethr-v11.2-frozen-prototype.html
+SHA-256: 6f1a2cd81f92db1a43f5c96d11bff26c4f4a72dbb395d1b22b93b19188d31f7b
+
+FIXES APPLIED
+- DERS-36 automated subscale scoring removed; verified overall reverse-scored total retained.
+- Verified save now requires exact read-back equality; failed writes return false and attempt rollback.
+- Save UI can display Save failed rather than always claiming success.
+- Completed-attempt archiving now fails closed and restores in-memory state on persistence failure.
+- Completion now verifies current storage and a History snapshot before showing completion.
+- Both retake/update implementations now require verified archival before clearing current data, and restore prior state if the new blank retake cannot be saved.
+- Legacy backup restore now begins from a clean state rather than merging into unrelated current data.
+- Failed backup import attempts automatic restoration from the pre-import rollback snapshot.
+- Failed V10 schema migration restores the pre-migration in-memory snapshot.
+- Clinician/full report now uses the latest successfully archived completed result; incomplete retakes do not replace it.
+- DASS-21 and PSS-10 retired from public administration; exact question text removed from the HTML. Historical backup/history data remains preservable.
+- Retired assessments removed from active library, trends, completed-result and history UI paths.
+- Active plans/assigned flags are cleaned of retired assessment IDs.
+
+STATIC / LOGIC QA
+- 27 inline scripts parsed with node --check: PASS
+- Duplicate TEST IDs: 0
+- Included question-count mismatches: 0
+- DASS bundled question text present: NO
+- PSS bundled question text present: NO
+- DERS-36 legacy subscale map present: NO
+- 34 included scoring engines smoke-tested with minimum and maximum answer patterns: 0 runtime errors
+- Retired DASS/PSS excluded from scoring smoke set: PASS
+- DERS-36 smoke output contains only Total (36–180): PASS
+
+ENVIRONMENT LIMITATION
+- Full headless browser navigation was attempted, but this execution environment blocks localhost/file navigation with ERR_BLOCKED_BY_ADMINISTRATOR. Therefore interactive browser/service-worker QA was not completed here. Syntax, data-integrity, source-contract, and deterministic scoring smoke tests passed.
