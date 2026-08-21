@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Moethr",
   "short_name": "Moethr",
-  "description": "Moethr \u2014 a private, on-device therapy assessment and wellness workbook with source-cited personal formulation, therapy assessments, Daily Wellness, history, and schema analysis.",
+  "description": "Moethr \u2014 a private, on-device therapy assessment and wellness workbook with evidence-linked personal formulation, therapy assessments, Daily Wellness, history, and schema analysis.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
