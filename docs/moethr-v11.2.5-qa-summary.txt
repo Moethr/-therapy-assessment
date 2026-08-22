@@ -1,0 +1,29 @@
+Moethr V11.2.5 — Stabilization QA Summary
+Build: 2026.08.22.5
+
+Purpose
+- Fix desktop/laptop primary navigation regression while preserving the working iPhone PWA behavior.
+- Preserve V11.2.4 PWA cache/update protections.
+
+Fixes in V11.2.5
+- Restored the four primary navigation tabs on desktop/laptop: Home, Assessments, Results, Discussion.
+- Removed the conflicting legacy desktop side-rail geometry from the final active CSS contract.
+- Desktop now uses the same fixed bottom navigation model as mobile for consistency.
+- Removed stale desktop left-padding behavior that could reserve space for a navigation rail that was no longer visible.
+- Preserved assessment-mode/onboarding/utility-mode rules that intentionally hide primary navigation.
+- Bumped app version/build to V11.2.5 / 2026.08.22.5.
+- Bumped service-worker cache generation to moethr-v11.2.5-2026.08.22.5.
+
+Static validation performed
+- Parsed latest V11.2.4 source as the base for the patch.
+- Confirmed the regression source: an older @media(min-width:900px) side-rail rule was later overridden by V10.7.1/V11 navigation rules with !important declarations, collapsing desktop navigation geometry.
+- Added one final desktop navigation contract after all earlier style blocks so it wins the cascade deterministically.
+- Verified 27 inline JavaScript blocks with `node --check`: 27 passed, 0 failed.
+- Confirmed final desktop navigation patch occurs after the V10.7.1/V11 navigation style blocks.
+- Confirmed service-worker cache version updated to V11.2.5.
+
+Known environment limitation
+- This execution environment cannot run a real Safari/iOS/macOS browser session, so visual browser QA cannot be honestly marked as executed here. The fix was made at the conflicting CSS source and statically validated.
+
+Release status
+- Candidate frozen prototype. Do not create the final release tag until the deployed laptop Safari view shows the four primary tabs and the already-working iPhone behavior remains intact.
