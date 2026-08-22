@@ -455,7 +455,7 @@ body.v84-dark .v102-spark path{stroke:var(--theme-accent)!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V11.2.1 · Frozen Prototype · Build 2026.08.21.2 · Answers are stored locally on this device.</div>
+  <div class="footer">V11.2.2 · Frozen Prototype · Build 2026.08.22.1 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1663,7 +1663,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V11.2.1',label:'V11.2.1',date:'21 August 2026',build:'2026.08.21.2'};
+  const APP_BUILD={version:'V11.2.2',label:'V11.2.2',date:'21 August 2026',build:'2026.08.22.1'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -2881,8 +2881,28 @@ body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:f
     if(snap.lastTouched!==undefined)state.lastTouched[id]=snap.lastTouched;else delete state.lastTouched[id];
     if(snap.activeAttempt)state.activeAttempts[id]=clone101(snap.activeAttempt);else delete state.activeAttempts[id];
   }
+  function meaningfulProgress101(t){
+    if(!t)return false;
+    // ASSIST is a dedicated structured assessment whose in-progress responses live
+    // in state.extras.assist rather than state.answers. Treat any touched ASSIST
+    // section as real progress so generic empty-draft cleanup/retake restoration
+    // never discards it after a reload or PWA background termination.
+    if(t.id==='assist'){
+      const d=state.extras?.assist;
+      if(!d||typeof d!=='object')return false;
+      if(d.touched)return true;
+      if(d.injection!==null&&d.injection!==undefined&&d.injection!=='')return true;
+      if(d.lifetime&&Object.values(d.lifetime).some(Boolean))return true;
+      for(let q=2;q<=7;q++){
+        const row=d['q'+q];
+        if(row&&typeof row==='object'&&Object.values(row).some(v=>v!==undefined&&v!==null&&v!==''))return true;
+      }
+      return false;
+    }
+    return answeredCount(t)>0;
+  }
   function cleanupTransientOpen101(id){
-    const t=tById(id);if(!t||answeredCount(t)>0||complete101(t))return;
+    const t=tById(id);if(!t||meaningfulProgress101(t)||complete101(t))return;
     // Rendering the questionnaire calls the legacy aFor/fFor/uFor/nFor helpers,
     // which create empty containers. Remove those again so merely looking at a
     // questionnaire does not leave a saved draft behind.
@@ -2891,7 +2911,7 @@ body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:f
     persist101();
   }
   function cleanupEmptyDraft101(id){
-    const t=tById(id);if(!t||answeredCount(t)>0||complete101(t))return false;
+    const t=tById(id);if(!t||meaningfulProgress101(t)||complete101(t))return false;
     const pending=pendingMap101()[id];
     if(pending?.snapshot){
       restoreSnapshot101(id,pending.snapshot);delete pendingMap101()[id];persist101();return true;
@@ -2901,7 +2921,7 @@ body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:f
     persist101();return true;
   }
   function cleanupAllEmpty101(){
-    TESTS.forEach(t=>{if(answeredCount(t)===0&&!complete101(t))cleanupEmptyDraft101(t.id)});
+    TESTS.forEach(t=>{if(!meaningfulProgress101(t)&&!complete101(t))cleanupEmptyDraft101(t.id)});
   }
   function beginAnsweredAttempt101(t){
     if(!t)return;
@@ -2914,19 +2934,19 @@ body.v84-dark .v101-update-row{background:#202732}.v101-update-row-top{display:f
     const map=pendingMap101();let changed=false;
     Object.keys(map).forEach(id=>{
       const t=tById(id);
-      if(t&&answeredCount(t)===0&&map[id]?.snapshot){restoreSnapshot101(id,map[id].snapshot);delete map[id];changed=true}
+      if(t&&!meaningfulProgress101(t)&&map[id]?.snapshot){restoreSnapshot101(id,map[id].snapshot);delete map[id];changed=true}
     });
     if(changed)persist101();
   }
 
   const baseOpenTest101=window.openTest;
   window.openTest=function(id,index){
-    const t=tById(String(id||''));const hadAnswers=t?answeredCount(t)>0:false;
+    const t=tById(String(id||''));const hadAnswers=t?meaningfulProgress101(t):false;
     const out=baseOpenTest101.apply(this,arguments);
     // The legacy renderer is synchronous, so the temporary containers/attempt
     // it creates can be removed immediately after rendering. A zero-answer
     // visit therefore does not remain in the persisted state even briefly.
-    if(t&&!hadAnswers&&answeredCount(t)===0)cleanupTransientOpen101(t.id);
+    if(t&&!hadAnswers&&!meaningfulProgress101(t))cleanupTransientOpen101(t.id);
     return out;
   };
   const baseChoose101=window.chooseV84;
@@ -3958,8 +3978,8 @@ window.showDataHub=function(){document.body.classList.add('v107-utility-mode');c
 window.showWellnessHub103=function(mode='summary'){savePrimaryScroll107();const out=baseWellness107.apply(this,arguments);setTimeout(()=>{const root=document.getElementById('reportView');root?.querySelector('.v103-tabs')?.remove();const header=root?.querySelector('.v83-mobile-header');if(mode==='summary'){const actions=root?.querySelector('.v103-wellness-actions');if(actions){[...actions.querySelectorAll('.btn')].slice(1).forEach(b=>b.remove())}if(!root?.querySelector('[data-v107-wellness-nav]')){const nav=document.createElement('section');nav.className='v107-section';nav.dataset.v107WellnessNav='1';nav.innerHTML=`<div class="v107-list"><button class="v107-row" onclick="showWellnessHub103('trends')"><div><h3>Wellness trends</h3><p>View changes across your personal 0–10 ratings.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showWellnessHub103('history')"><div><h3>Check-in history</h3><p>Review, edit, or delete saved Daily Wellness entries.</p></div><span class="v107-chevron">›</span></button></div>`;root?.querySelector('.v83-screen')?.appendChild(nav)}}else if(header&&!header.querySelector('.v107-back')){const b=document.createElement('button');b.className='v107-back';b.textContent='‹';b.setAttribute('aria-label','Back to Daily Wellness');b.onclick=()=>showWellnessHub103('summary');header.insertBefore(b,header.firstChild)}window.scrollTo(0,0);animate107()},0);return out}
 window.showSchemaAnalysis105=function(tab='overview',focus=null){savePrimaryScroll107();const out=baseSchema107.apply(this,arguments);setTimeout(()=>{const root=document.getElementById('reportView'),screen=root?.querySelector('.v105-schema-screen');root?.querySelector('.v105-tabs')?.remove();const header=root?.querySelector('.v83-mobile-header');const close=header?.querySelector('.v85-settings-btn');if(close){close.textContent='×';close.onclick=tab==='overview'?showResultsHub:()=>showSchemaAnalysis105('overview');close.setAttribute('aria-label',tab==='overview'?'Back to Results':'Back to Schema Analysis')}if(tab==='overview'&&screen&&!screen.querySelector('[data-v107-schema-nav]')){const nav=document.createElement('section');nav.className='v107-section';nav.dataset.v107SchemaNav='1';nav.innerHTML=`<div class="v107-list"><button class="v107-row" onclick="showSchemaAnalysis105('schemas')"><div><h3>Explore all schemas</h3><p>Review the 18 schema-therapy patterns and your evidence.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showSchemaAnalysis105('patterns')"><div><h3>Patterns & maintaining cycles</h3><p>Explore possible interactions between schema signals you confirm.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showSchemaAnalysis105('evidence')"><div><h3>Evidence</h3><p>See exactly which sources contribute to the formulation.</p></div><span class="v107-chevron">›</span></button></div>`;screen.appendChild(nav)}animate107()},0);return out}
 installNav107();
-const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.1 · Frozen Prototype · Build 2026.08.21.2 · Answers are stored locally on this device.';
-const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.1';
+const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.2 · Frozen Prototype · Build 2026.08.22.1 · Answers are stored locally on this device.';
+const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.2';
 window.__MOETHR_V107_TEST__={version:V107_VERSION,build:V107_BUILD,resultsHTML:resultsLanding107,patchLibrary:patchLibrary107,overall:overall107};
 })();
 </script>
@@ -3988,7 +4008,7 @@ body.v1071-plan-switch #homeView.v107-nav-enter{animation:none!important}#homeVi
 </style>
 <script id="v1071-polish-script">
 (()=>{'use strict';
-const V1071_VERSION='V11.2.1',V1071_BUILD='2026.08.21.2';let search1071=(typeof filters!=='undefined'&&filters.search)||'';
+const V1071_VERSION='V11.2.2',V1071_BUILD='2026.08.22.1';let search1071=(typeof filters!=='undefined'&&filters.search)||'';
 function classifyCards1071(root){root?.querySelectorAll('.v83-assessment').forEach(card=>{const txt=(card.textContent||'').toLowerCase();card.classList.toggle('v1071-completed',/\bdone\b|\bresult\b/.test(txt));card.classList.toggle('v1071-not-started',/not started/.test(txt))})}
 function applyClientSearch1071(q){const root=document.getElementById('dashboardView');if(!root)return;const needle=String(q||'').trim().toLowerCase();let totalVisible=0;root.querySelectorAll('.v83-library-section').forEach(section=>{let visible=0;section.querySelectorAll('.v83-assessment').forEach(card=>{const show=!needle||(card.textContent||'').toLowerCase().includes(needle);card.hidden=!show;if(show){visible++;totalVisible++}});section.hidden=visible===0;const count=section.querySelector('.v83-count');if(count)count.textContent=String(visible)});let empty=root.querySelector('.v1071-search-empty');if(!totalVisible&&needle){if(!empty){empty=document.createElement('div');empty.className='v1071-search-empty';empty.textContent='No assessments match your search.';root.querySelector('.v83-screen')?.appendChild(empty)}empty.hidden=false}else if(empty)empty.hidden=true}
 function polishDashboard1071(){const root=document.getElementById('dashboardView');if(!root)return;root.querySelectorAll('.v83-library-title>span').forEach(x=>x.remove());const input=root.querySelector('.v83-search');if(input){input.removeAttribute('oninput');input.value=search1071;input.oninput=e=>{search1071=e.target.value;filters.search=search1071;applyClientSearch1071(search1071)}}classifyCards1071(root);applyClientSearch1071(search1071)}
@@ -4021,7 +4041,7 @@ body.assessment-mode.assist-mode #testView{height:auto!important;min-height:100d
 </style>
 <script id="v11-runtime">
 (()=>{'use strict';
-const VERSION='V11.1.0 PWA',BUILD='2026.08.21.2';
+const VERSION='V11.1.0 PWA',BUILD='2026.08.22.1';
 const test=id=>TESTS.find(t=>t.id===id)||null;
 /* Approved user-supplied missing questionnaires */
 function installMissing(){
@@ -4053,11 +4073,18 @@ function migrateAssistCurrent(d){
 function ad(){state.extras=state.extras||{};let d=state.extras.assist;if(!d||typeof d!=='object')d=state.extras.assist={lifetime:{},q2:{},q3:{},q4:{},q5:{},q6:{},q7:{},injection:null,touched:false,scoringSchema:ASSIST_SCHEMA};const legacy=d.scoringSchema!==ASSIST_SCHEMA;const out=migrateAssistCurrent(d);if(legacy){try{saveState()}catch(_){}}return out}function sel(){const d=ad();return SUBS.filter(([k])=>d.lifetime[k]).map(([k])=>k)}function ansAssist(){const d=ad(),s=sel();let n=d.touched?1:0;for(let q=2;q<=7;q++)n+=!s.length||s.every(k=>d['q'+q]?.[k]!==undefined&&d['q'+q]?.[k]!==null&&d['q'+q]?.[k]!=='' )?1:0;if(d.injection!==null&&d.injection!=='')n++;return n}function assistRisk(k,v){if(k==='alcohol')return v<=10?'Low risk':v<=26?'Moderate risk':'High risk';return v<=3?'Low risk':v<=26?'Moderate risk':'High risk'}
 function scoreAssist(){const d=ad(),o={};sel().forEach(k=>{let v=0;for(let q=2;q<=7;q++){if(k==='tobacco'&&q===5)continue;v+=Number(d['q'+q]?.[k]||0)}const name=(SUBS.find(x=>x[0]===k)?.[1]||k);o[name+' involvement']=v;o[name+' risk']=assistRisk(k,v)});if(d.injection!==null){o['Injection-use response']=Number(d.injection);o['Injection-use timing']=Number(d.injection)===2?'In the past 3 months':Number(d.injection)===1?'Previously, but not in the past 3 months':'Never'}return {complete:ansAssist()===8,answered:ansAssist(),total:8,scores:o,note:'WHO ASSIST v3.1 weighted scoring; Q5 excluded from tobacco involvement score; Q8 reported separately.'}}
 const baseCount=window.countFor||countFor,baseAns=window.answeredCount||answeredCount,baseScore=window.scoreTest||scoreTest;window.countFor=t=>t?.id==='assist'?8:baseCount(t);window.answeredCount=t=>t?.id==='assist'?ansAssist():baseAns(t);window.scoreTest=t=>t?.id==='assist'?scoreAssist():baseScore(t);
-window.assistNone=v=>{const y=window.scrollY||0,d=ad();if(v){SUBS.forEach(([k])=>{d.lifetime[k]=false;for(let q=2;q<=7;q++)delete d['q'+q]?.[k]});d.touched=true}else if(!sel().length)d.touched=false;saveState();renderAssist(true,y)};window.toggleAssist=(k,v)=>{const y=window.scrollY||0;ad().lifetime[k]=!!v;ad().touched=true;if(!v)for(let q=2;q<=7;q++)delete ad()['q'+q]?.[k];saveState();renderAssist(true,y)};window.assistValue=(q,k,v)=>{ad()['q'+q][k]=v===''?'':Number(v);ad().touched=true;saveState();updateAssistProgress()};window.assistInject=v=>{ad().injection=v===''?null:Number(v);ad().touched=true;saveState();updateAssistProgress()};
+function markAssistProgress(){
+  state.session=state.session&&typeof state.session==='object'?state.session:{};
+  if(state.session.pendingRetakes&&typeof state.session.pendingRetakes==='object')delete state.session.pendingRetakes.assist;
+  state.activeAttempts=state.activeAttempts&&typeof state.activeAttempts==='object'?state.activeAttempts:{};
+  if(!state.activeAttempts.assist)state.activeAttempts.assist={id:'assist-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),startedAt:new Date().toISOString(),origin:'first-assist-response'};
+}
+function persistAssist(){markAssistProgress();if(saveState()===false){alert('Moethr could not verify this ASSIST response in local storage. Keep the app open and try the selection again.');return false}return true}
+window.assistNone=v=>{const y=window.scrollY||0,d=ad();if(v){SUBS.forEach(([k])=>{d.lifetime[k]=false;for(let q=2;q<=7;q++)delete d['q'+q]?.[k]});d.touched=true}else if(!sel().length)d.touched=false;if(!persistAssist())return;renderAssist(true,y)};window.toggleAssist=(k,v)=>{const y=window.scrollY||0;ad().lifetime[k]=!!v;ad().touched=true;if(!v)for(let q=2;q<=7;q++)delete ad()['q'+q]?.[k];if(!persistAssist())return;renderAssist(true,y)};window.assistValue=(q,k,v)=>{ad()['q'+q][k]=v===''?'':Number(v);ad().touched=true;if(!persistAssist())return;updateAssistProgress()};window.assistInject=v=>{ad().injection=v===''?null:Number(v);ad().touched=true;if(!persistAssist())return;updateAssistProgress()};
 function arow(q,opts){const d=ad(),s=sel();if(!s.length)return '<div class="sub">No lifetime substances selected — this section is not applicable.</div>';return s.map(k=>`<label class="v11-assist-row"><span>${escapeHTML(SUBS.find(x=>x[0]===k)[1])}</span><select class="field" onchange="assistValue(${q},'${k}',this.value)"><option value="">Choose…</option>${opts.map(([v,l])=>`<option value="${v}" ${String(d['q'+q][k])===String(v)?'selected':''}>${escapeHTML(l)}</option>`).join('')}</select></label>`).join('')}
 function assistMissing(){const d=ad(),s=sel(),miss=[];if(!d.touched)miss.push('Lifetime use');for(let q=2;q<=7;q++){if(s.length&&!s.every(k=>d['q'+q]?.[k]!==undefined&&d['q'+q]?.[k]!==null&&d['q'+q]?.[k]!==''))miss.push('Section '+q)}if(d.injection===null||d.injection==='')miss.push('Section 8');return miss}function assistStatusText(){const n=ansAssist(),m=assistMissing();return n===8?'Ready to finish':n+'/8 complete'+(m.length?' · Missing '+m.join(', '):'')}function updateAssistProgress(){const n=ansAssist(),missing=assistMissing();const box=document.getElementById('v11AssistProgress');if(box){const strong=box.querySelector('strong');if(strong)strong.textContent=n+' / 8 core sections complete';const note=box.querySelector('[data-assist-missing]');if(note)note.textContent=missing.length?'Still needed: '+missing.join(', '):'All required sections are complete.';const old=box.querySelector('[data-assist-save]');if(n===8&&!old){const b=document.createElement('button');b.className='btn primary';b.dataset.assistSave='1';b.textContent='Finish assessment';b.onclick=finishAssist;box.appendChild(b)}else if(n!==8&&old)old.remove()}const sticky=document.getElementById('v11AssistFinish');if(sticky){const btn=sticky.querySelector('button');const txt=sticky.querySelector('span');if(btn)btn.disabled=n!==8;if(txt)txt.textContent=assistStatusText()}}
 function renderAssist(preserveScroll=false,restoreY=0){const d=ad(),root=document.getElementById('testView');document.body.classList.add('assessment-mode','assist-mode');document.body.classList.remove('completion-mode');root.innerHTML=`<div class="v83-screen v11-assist-screen"><header class="v83-mobile-header v11-assist-header"><button class="v107-back" onclick="showDashboard()" aria-label="Back to assessments">‹</button><div><div class="v8-eyebrow">Substance use</div><h1>ASSIST</h1><div class="sub">Substance-specific profile</div></div><span class="v11-header-spacer" aria-hidden="true"></span></header><section class="v83-settings-card"><h2>1. Lifetime use</h2><div class="v11-assist-checks">${SUBS.map(([k,l])=>`<label><input type="checkbox" ${d.lifetime[k]?'checked':''} onchange="toggleAssist('${k}',this.checked)"> ${escapeHTML(l)}</label>`).join('')}<label><input type="checkbox" ${d.touched&&!sel().length?'checked':''} onchange="assistNone(this.checked)"> None of these</label></div><p class="sub">Choose every substance you have ever used, or choose “None of these” so Section 1 can be completed without selecting a substance.</p></section><section class="v83-settings-card"><h2>2. Use in the past 3 months</h2>${arow(2,[[0,'Never'],[2,'Once or twice'],[3,'Monthly'],[4,'Weekly'],[6,'Daily or almost daily']])}</section><section class="v83-settings-card"><h2>3. Strong desire or urge</h2>${arow(3,[[0,'Never'],[3,'Once or twice'],[4,'Monthly'],[5,'Weekly'],[6,'Daily or almost daily']])}</section><section class="v83-settings-card"><h2>4. Problems related to use</h2>${arow(4,[[0,'Never'],[4,'Once or twice'],[5,'Monthly'],[6,'Weekly'],[7,'Daily or almost daily']])}</section><section class="v83-settings-card"><h2>5. Failed expectations because of use</h2>${arow(5,[[0,'Never'],[5,'Once or twice'],[6,'Monthly'],[7,'Weekly'],[8,'Daily or almost daily']])}</section><section class="v83-settings-card"><h2>6. Someone expressed concern</h2>${arow(6,[[0,'No, never'],[3,'Yes, but not in the past 3 months'],[6,'Yes, in the past 3 months']])}</section><section class="v83-settings-card"><h2>7. Tried to cut down or stop and failed</h2>${arow(7,[[0,'No, never'],[3,'Yes, but not in the past 3 months'],[6,'Yes, in the past 3 months']])}</section><section class="v83-settings-card"><h2>8. Non-medical injection use</h2><select class="field" onchange="assistInject(this.value)"><option value="">Choose…</option><option value="0" ${String(d.injection)==='0'?'selected':''}>No, never</option><option value="2" ${String(d.injection)==='2'?'selected':''}>Yes, in the past 3 months</option><option value="1" ${String(d.injection)==='1'?'selected':''}>Yes, but not in the past 3 months</option></select></section><section class="v83-settings-card" id="v11AssistProgress"><strong>${ansAssist()} / 8 core sections complete</strong><p class="sub" data-assist-missing>${assistMissing().length?'Still needed: '+assistMissing().join(', '):'All required sections are complete.'}</p><p class="sub">ASSIST scores stay separate by substance. Moethr never creates one combined substance score.</p>${ansAssist()===8?'<button class="btn primary" data-assist-save="1" onclick="finishAssist()">Finish assessment</button>':''}</section><div class="v11-assist-finishbar" id="v11AssistFinish"><span>${assistStatusText()}</span><button class="btn primary" ${ansAssist()===8?'':'disabled'} onclick="finishAssist()">Finish</button></div></div>`;requestAnimationFrame(()=>window.scrollTo(0,preserveScroll?restoreY:0))}
-window.finishAssist=()=>{if(ansAssist()!==8){updateAssistProgress();const m=assistMissing();alert('Please complete the remaining ASSIST sections: '+m.join(', '));return false}const t=test('assist');state.completedAt=state.completedAt||{};state.completedAt.assist=new Date().toISOString();saveState();try{window.__MOETHR_V10_TEST__?.archive?.(t,'assist-v11-complete')}catch(_){}document.body.classList.remove('assist-mode');openResults('assist');return true};const oldOpen=window.openTest;window.openTest=function(id,i){if(id==='assist'){current.id=id;setView('testView');renderAssist();return}return oldOpen.apply(this,arguments)};
+window.finishAssist=()=>{if(ansAssist()!==8){updateAssistProgress();const m=assistMissing();alert('Please complete the remaining ASSIST sections: '+m.join(', '));return false}const t=test('assist');const before=JSON.parse(JSON.stringify(state));state.completedAt=state.completedAt||{};state.completedAt.assist=new Date().toISOString();if(saveState()===false){state=before;alert('Moethr could not verify the completed ASSIST responses in local storage, so completion was stopped. Your responses remain on screen.');return false}let archived=null;try{archived=window.__MOETHR_V10_TEST__?.archive?.(t,'assist-v11-complete')}catch(e){console.error('ASSIST archive failed',e)}if(!archived){state=before;saveState();alert('Moethr could not verify the completed ASSIST result in History, so completion was cancelled and your responses were kept.');return false}document.body.classList.remove('assist-mode');openResults('assist');return true};const oldOpen=window.openTest;window.openTest=function(id,i){if(id==='assist'){current.id=id;setView('testView');renderAssist();return}return oldOpen.apply(this,arguments)};
 /* Persistent plan tabs: no Home rerender, no scroll restore, no animation */
 function planIds(){return state?.extras?.appPrefs?.planIds||[]}function planStats(){const tests=planIds().map(test).filter(Boolean);let total=0,answered=0,done=0;tests.forEach(t=>{const n=countFor(t),h=window.__MOETHR_V10_TEST__?.history?.(t.id)||[];total+=n;if(h.length||answeredCount(t)===n){done++;answered+=n}else answered+=Math.min(answeredCount(t),n)});return{tests,total,answered,done,pct:total?Math.round(answered/total*100):0}}function updates(){const ids=[...new Set((window.__MOETHR_V10_TEST__?.history?.()||[]).map(a=>a.assessmentId))];return ids.map(test).filter(Boolean)}function action(t){const m=window.__MOETHR_V104_TEST__?.metaFor?.(t);return ['trait','history'].includes(m?.time)?'Take again':'Update assessment'}function mountPlan(){const p=document.querySelector('#homeView .v85-plan');if(!p)return;const s=planStats(),u=updates();p.style.minHeight='';p.classList.remove('v1071-plan-crossfade');p.innerHTML=`<div class="v101-plan-tabs"><button id="v11pbtn" class="active" onclick="setHomePlanTab101('plan')">My Plan</button><button id="v11ubtn" onclick="setHomePlanTab101('updates')">Retake / Update${u.length?` · ${u.length}`:''}</button></div><div id="v11pp" class="v11-plan-panel"><div class="v85-plan-top"><div><div class="v8-eyebrow">My plan</div><h2>${s.done} of ${s.tests.length} assessments completed</h2></div><strong>${s.pct}%</strong></div><div class="track" style="margin-top:10px"><div class="fill" style="width:${s.pct}%"></div></div><div class="v85-plan-meta">${s.answered} of ${s.total} selected questions answered</div><div class="v101-plan-linkrow"><button class="v101-plan-link" onclick="renderOnboarding()">Edit plan</button></div></div><div id="v11up" class="v11-plan-panel" hidden><p class="v101-update-intro">Create a new snapshot without replacing previous results.</p><div class="v101-update-list">${u.length?u.map(t=>`<div class="v101-update-row"><div><h3>${escapeHTML(t.name)}</h3><div class="sub">${(window.__MOETHR_V10_TEST__?.history?.(t.id)||[]).length} saved result(s)</div></div><div class="v101-update-actions"><button class="btn primary" onclick="retakeAssessmentV10('${t.id}')">${action(t)}</button><button class="btn" onclick="showAssessmentHistoryV10('${t.id}')">History</button></div></div>`).join(''):'<div class="sub">No completed assessments yet.</div>'}</div></div>`}window.setHomePlanTab101=tab=>{const upd=tab==='updates',p=document.getElementById('v11pp'),u=document.getElementById('v11up');if(!p||!u){mountPlan();return setHomePlanTab101(tab)}p.hidden=upd;u.hidden=!upd;document.getElementById('v11pbtn')?.classList.toggle('active',!upd);document.getElementById('v11ubtn')?.classList.toggle('active',upd)};
 /* Evidence-linked formulation engine (legacy V11 layer; V11.1 overrides Overall Results) */
@@ -4079,7 +4106,7 @@ setTimeout(()=>{if(document.getElementById('dashboardView')?.classList.contains(
 <script id="v111-evidence-engine">
 (()=>{
 'use strict';
-const V111_VERSION='V11.1.0 PWA',V111_BUILD='2026.08.21.2';
+const V111_VERSION='V11.1.0 PWA',V111_BUILD='2026.08.22.1';
 const SCI_V111={
   standards:{title:'Standards for Educational and Psychological Testing',org:'AERA / APA / NCME',year:2014,url:'https://www.testingstandards.net/open-access-files.html',supports:'Use test scores only for interpretations supported by validity evidence; disclose limitations and consider appropriate use.'},
   apa_assessment:{title:'Ethical Principles of Psychologists and Code of Conduct — Standards 9.02 & 9.06',org:'American Psychological Association',year:2017,url:'https://www.apa.org/ethics/code',supports:'Assessment interpretation should be appropriate to the evidence and should consider significant personal, situational, linguistic and cultural limitations, including automated interpretation.'},
@@ -4137,7 +4164,7 @@ try{migrateScoreHistory111();const d=state?.extras?.assist;if(d&&d.scoringSchema
 
 const baseShow111=window.showResultsHub;window.showResultsHub=function(){const out=baseShow111.apply(this,arguments),r=document.getElementById('reportView');if(r)r.innerHTML=render111();document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab==='results'));return out};
 const oldNar111=window.resultNarrative||resultNarrative;window.resultNarrative=function(t){if(t?.id==='assist'&&answeredCount(t)===8){const sc=scoreTest(t).scores,rows=Object.entries(sc).filter(([k])=>/ involvement$/.test(k)).map(([k,v])=>{const name=k.replace(' involvement','');return`${name}: ${v} (${sc[name+' risk']||'risk not available'})`});const high=Object.values(sc).some(v=>v==='High risk'),moderate=Object.values(sc).some(v=>v==='Moderate risk');return{label:high?'High-risk ASSIST range present':moderate?'Moderate-risk ASSIST range present':'Low-risk ASSIST range on scored substances',level:(high||moderate)?'attn':'good',paragraph:`WHO ASSIST v3.1 substance-specific scoring: ${rows.join(' · ')||'no substance-specific score'}. Question 5 is excluded from the tobacco score; alcohol uses a different low-risk boundary; injection use is reported separately. Screening results guide further assessment or intervention and do not establish a substance-use disorder.`}}return oldNar111(t)};
-const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.1 · Frozen Prototype · Build 2026.08.21.2 · Answers are stored locally on this device.';const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.1';
+const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.2 · Frozen Prototype · Build 2026.08.22.1 · Answers are stored locally on this device.';const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.2';
 window.__MOETHR_V111_TEST__={version:V111_VERSION,build:V111_BUILD,sources:SCI_V111,evidence:pilotEvidence111,render:render111,text:text111,migrateHistory:migrateScoreHistory111,scoreHelpers:{asq:asqScores111,ecr:ecrScores111,assist:assistScoresFromExtra111},synthesize:{anxiety:anxietySynthesis111,functioning:functionSynthesis111,wellbeing:wellbeingSynthesis111}};
 })();
 </script>
@@ -4146,8 +4173,8 @@ window.__MOETHR_V111_TEST__={version:V111_VERSION,build:V111_BUILD,sources:SCI_V
 <script id="v112-freeze-stabilization">
 (()=>{
 'use strict';
-const V112_VERSION='V11.2.1';
-const V112_BUILD='2026.08.21.2';
+const V112_VERSION='V11.2.2';
+const V112_BUILD='2026.08.22.1';
 const RETIRED_PUBLIC_IDS=new Set(['dass','pss10']);
 const isRetired112=t=>!!t&&(t.mode==='retired'||RETIRED_PUBLIC_IDS.has(t.id));
 const activeTests112=()=>TESTS.filter(t=>!isRetired112(t));
