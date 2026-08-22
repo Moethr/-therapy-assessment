@@ -1,0 +1,33 @@
+Moethr V11.2.4 — PWA Update Reliability QA
+Date: 2026-08-22
+Build: 2026.08.22.4
+
+Purpose
+- Fix installed-PWA builds remaining pinned to older cached HTML after GitHub deployment.
+- Preserve offline startup while making online navigation prefer the latest deployed app.
+
+Changes
+1. index.html registers a cache-busted worker URL:
+   ./service-worker.js?v=2026.08.22.4
+2. Service-worker cache name bumped to:
+   moethr-v11.2.4-2026.08.22.4
+3. Install fetches fresh core shell files with cache:no-store.
+4. Optional icon failures no longer abort service-worker installation.
+5. Activation deletes prior Moethr caches and claims clients immediately.
+6. Navigation/index.html uses network-first with cache:no-store; cached index is offline fallback only.
+7. manifest.webmanifest uses network-first.
+8. Static assets remain cache-first with background refresh.
+9. controllerchange reload is guarded to run once for this build.
+
+Static QA
+- service-worker.js: node --check PASS
+- index.html inline JavaScript blocks: 27 checked, 0 syntax errors
+- version/build in repaired index: V11.2.4 / 2026.08.22.4
+
+Manual deployment QA still required on the installed iOS PWA
+- Upload index.html and service-worker.js together.
+- Confirm browser version updates to V11.2.4.
+- Confirm installed PWA updates to V11.2.4.
+- Kill/reopen PWA and confirm V11.2.4 remains active.
+- Test offline reopen after one successful online launch.
+- Re-test AUDIT draft persistence and plan-tab switching.
