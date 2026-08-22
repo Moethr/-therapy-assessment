@@ -408,6 +408,7 @@ body.v84-dark .v102-spark path{stroke:var(--theme-accent)!important}
 @media(max-width:430px){.v111-claim-head{padding:14px 13px 10px}.v111-detail summary{padding:11px 13px}.v111-detail-body{padding:0 13px 13px}.v111-section-head{align-items:flex-start;flex-direction:column;gap:2px}}
 </style>
 
+
 </head>
 <body>
 <div class="shell">
@@ -455,7 +456,7 @@ body.v84-dark .v102-spark path{stroke:var(--theme-accent)!important}
     <button data-tab="settings" onclick="showSettingsHub()"><span>⚙</span><small>Settings</small></button>
   </nav>
 
-  <div class="footer">V11.2.4 · Frozen Prototype · Build 2026.08.22.4 · Answers are stored locally on this device.</div>
+  <div class="footer">V11.2.5 · Frozen Prototype · Build 2026.08.22.5 · Answers are stored locally on this device.</div>
 </div>
 
 <script>
@@ -1663,7 +1664,7 @@ body:not(.assessment-mode) .shell{padding-top:calc(8px + env(safe-area-inset-top
 
 
   // V8.2 app shell -------------------------------------------------------
-  const APP_BUILD={version:'V11.2.4',label:'V11.2.4',date:'22 August 2026',build:'2026.08.22.4'};
+  const APP_BUILD={version:'V11.2.5',label:'V11.2.5',date:'22 August 2026',build:'2026.08.22.5'};
   function setAppTab(tab){
     document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -2196,12 +2197,12 @@ function showUpdateToast(reg){
 if('serviceWorker' in navigator && location.protocol!=='file:'){
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./service-worker.js?v=2026.08.22.4',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./service-worker.js?v=2026.08.22.5',{updateViaCache:'none'});
       reg.update().catch(()=>{});
       setInterval(()=>reg.update().catch(()=>{}),60*60*1000);
       if(reg.waiting)showUpdateToast(reg);
       reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)showUpdateToast(reg)})});
-      navigator.serviceWorker.addEventListener('controllerchange',()=>{if(sessionStorage.getItem('moethr-sw-reloaded')!=='2026.08.22.4'){sessionStorage.setItem('moethr-sw-reloaded','2026.08.22.4');location.reload()}});
+      navigator.serviceWorker.addEventListener('controllerchange',()=>{if(sessionStorage.getItem('moethr-sw-reloaded')!=='2026.08.22.5'){sessionStorage.setItem('moethr-sw-reloaded','2026.08.22.5');location.reload()}});
     }catch(e){console.warn('Service worker registration failed',e)}
   });
 }
@@ -3987,8 +3988,8 @@ window.showDataHub=function(){document.body.classList.add('v107-utility-mode');c
 window.showWellnessHub103=function(mode='summary'){savePrimaryScroll107();const out=baseWellness107.apply(this,arguments);setTimeout(()=>{const root=document.getElementById('reportView');root?.querySelector('.v103-tabs')?.remove();const header=root?.querySelector('.v83-mobile-header');if(mode==='summary'){const actions=root?.querySelector('.v103-wellness-actions');if(actions){[...actions.querySelectorAll('.btn')].slice(1).forEach(b=>b.remove())}if(!root?.querySelector('[data-v107-wellness-nav]')){const nav=document.createElement('section');nav.className='v107-section';nav.dataset.v107WellnessNav='1';nav.innerHTML=`<div class="v107-list"><button class="v107-row" onclick="showWellnessHub103('trends')"><div><h3>Wellness trends</h3><p>View changes across your personal 0–10 ratings.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showWellnessHub103('history')"><div><h3>Check-in history</h3><p>Review, edit, or delete saved Daily Wellness entries.</p></div><span class="v107-chevron">›</span></button></div>`;root?.querySelector('.v83-screen')?.appendChild(nav)}}else if(header&&!header.querySelector('.v107-back')){const b=document.createElement('button');b.className='v107-back';b.textContent='‹';b.setAttribute('aria-label','Back to Daily Wellness');b.onclick=()=>showWellnessHub103('summary');header.insertBefore(b,header.firstChild)}window.scrollTo(0,0);animate107()},0);return out}
 window.showSchemaAnalysis105=function(tab='overview',focus=null){savePrimaryScroll107();const out=baseSchema107.apply(this,arguments);setTimeout(()=>{const root=document.getElementById('reportView'),screen=root?.querySelector('.v105-schema-screen');root?.querySelector('.v105-tabs')?.remove();const header=root?.querySelector('.v83-mobile-header');const close=header?.querySelector('.v85-settings-btn');if(close){close.textContent='×';close.onclick=tab==='overview'?showResultsHub:()=>showSchemaAnalysis105('overview');close.setAttribute('aria-label',tab==='overview'?'Back to Results':'Back to Schema Analysis')}if(tab==='overview'&&screen&&!screen.querySelector('[data-v107-schema-nav]')){const nav=document.createElement('section');nav.className='v107-section';nav.dataset.v107SchemaNav='1';nav.innerHTML=`<div class="v107-list"><button class="v107-row" onclick="showSchemaAnalysis105('schemas')"><div><h3>Explore all schemas</h3><p>Review the 18 schema-therapy patterns and your evidence.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showSchemaAnalysis105('patterns')"><div><h3>Patterns & maintaining cycles</h3><p>Explore possible interactions between schema signals you confirm.</p></div><span class="v107-chevron">›</span></button><button class="v107-row" onclick="showSchemaAnalysis105('evidence')"><div><h3>Evidence</h3><p>See exactly which sources contribute to the formulation.</p></div><span class="v107-chevron">›</span></button></div>`;screen.appendChild(nav)}animate107()},0);return out}
 installNav107();
-const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.4 · Frozen Prototype · Build 2026.08.22.4 · Answers are stored locally on this device.';
-const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.4';
+const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.5 · Frozen Prototype · Build 2026.08.22.5 · Answers are stored locally on this device.';
+const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.5';
 window.__MOETHR_V107_TEST__={version:V107_VERSION,build:V107_BUILD,resultsHTML:resultsLanding107,patchLibrary:patchLibrary107,overall:overall107};
 })();
 </script>
@@ -4017,7 +4018,7 @@ body.v1071-plan-switch #homeView.v107-nav-enter{animation:none!important}#homeVi
 </style>
 <script id="v1071-polish-script">
 (()=>{'use strict';
-const V1071_VERSION='V11.2.4',V1071_BUILD='2026.08.22.4';let search1071=(typeof filters!=='undefined'&&filters.search)||'';
+const V1071_VERSION='V11.2.5',V1071_BUILD='2026.08.22.5';let search1071=(typeof filters!=='undefined'&&filters.search)||'';
 function classifyCards1071(root){root?.querySelectorAll('.v83-assessment').forEach(card=>{const txt=(card.textContent||'').toLowerCase();card.classList.toggle('v1071-completed',/\bdone\b|\bresult\b/.test(txt));card.classList.toggle('v1071-not-started',/not started/.test(txt))})}
 function applyClientSearch1071(q){const root=document.getElementById('dashboardView');if(!root)return;const needle=String(q||'').trim().toLowerCase();let totalVisible=0;root.querySelectorAll('.v83-library-section').forEach(section=>{let visible=0;section.querySelectorAll('.v83-assessment').forEach(card=>{const show=!needle||(card.textContent||'').toLowerCase().includes(needle);card.hidden=!show;if(show){visible++;totalVisible++}});section.hidden=visible===0;const count=section.querySelector('.v83-count');if(count)count.textContent=String(visible)});let empty=root.querySelector('.v1071-search-empty');if(!totalVisible&&needle){if(!empty){empty=document.createElement('div');empty.className='v1071-search-empty';empty.textContent='No assessments match your search.';root.querySelector('.v83-screen')?.appendChild(empty)}empty.hidden=false}else if(empty)empty.hidden=true}
 function polishDashboard1071(){const root=document.getElementById('dashboardView');if(!root)return;root.querySelectorAll('.v83-library-title>span').forEach(x=>x.remove());const input=root.querySelector('.v83-search');if(input){input.removeAttribute('oninput');input.value=search1071;input.oninput=e=>{search1071=e.target.value;filters.search=search1071;applyClientSearch1071(search1071)}}classifyCards1071(root);applyClientSearch1071(search1071)}
@@ -4173,7 +4174,7 @@ try{migrateScoreHistory111();const d=state?.extras?.assist;if(d&&d.scoringSchema
 
 const baseShow111=window.showResultsHub;window.showResultsHub=function(){const out=baseShow111.apply(this,arguments),r=document.getElementById('reportView');if(r)r.innerHTML=render111();document.querySelectorAll('#appBottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab==='results'));return out};
 const oldNar111=window.resultNarrative||resultNarrative;window.resultNarrative=function(t){if(t?.id==='assist'&&answeredCount(t)===8){const sc=scoreTest(t).scores,rows=Object.entries(sc).filter(([k])=>/ involvement$/.test(k)).map(([k,v])=>{const name=k.replace(' involvement','');return`${name}: ${v} (${sc[name+' risk']||'risk not available'})`});const high=Object.values(sc).some(v=>v==='High risk'),moderate=Object.values(sc).some(v=>v==='Moderate risk');return{label:high?'High-risk ASSIST range present':moderate?'Moderate-risk ASSIST range present':'Low-risk ASSIST range on scored substances',level:(high||moderate)?'attn':'good',paragraph:`WHO ASSIST v3.1 substance-specific scoring: ${rows.join(' · ')||'no substance-specific score'}. Question 5 is excluded from the tobacco score; alcohol uses a different low-risk boundary; injection use is reported separately. Screening results guide further assessment or intervention and do not establish a substance-use disorder.`}}return oldNar111(t)};
-const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.4 · Frozen Prototype · Build 2026.08.22.4 · Answers are stored locally on this device.';const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.4';
+const footer=document.querySelector('.footer');if(footer)footer.textContent='V11.2.5 · Frozen Prototype · Build 2026.08.22.5 · Answers are stored locally on this device.';const badge=document.getElementById('pwaVersionBadge');if(badge)badge.textContent='V11.2.5';
 window.__MOETHR_V111_TEST__={version:V111_VERSION,build:V111_BUILD,sources:SCI_V111,evidence:pilotEvidence111,render:render111,text:text111,migrateHistory:migrateScoreHistory111,scoreHelpers:{asq:asqScores111,ecr:ecrScores111,assist:assistScoresFromExtra111},synthesize:{anxiety:anxietySynthesis111,functioning:functionSynthesis111,wellbeing:wellbeingSynthesis111}};
 })();
 </script>
@@ -4182,8 +4183,8 @@ window.__MOETHR_V111_TEST__={version:V111_VERSION,build:V111_BUILD,sources:SCI_V
 <script id="v112-freeze-stabilization">
 (()=>{
 'use strict';
-const V112_VERSION='V11.2.4';
-const V112_BUILD='2026.08.22.4';
+const V112_VERSION='V11.2.5';
+const V112_BUILD='2026.08.22.5';
 const RETIRED_PUBLIC_IDS=new Set(['dass','pss10']);
 const isRetired112=t=>!!t&&(t.mode==='retired'||RETIRED_PUBLIC_IDS.has(t.id));
 const activeTests112=()=>TESTS.filter(t=>!isRetired112(t));
@@ -4329,5 +4330,15 @@ const qa112=validateRuntime112();if(!qa112.ok)console.error('V11.2 integrity err
 })();
 </script>
 
+
+<style id="v1125-desktop-nav-fix">
+/* V11.2.5: final desktop navigation contract. Keep the same four primary tabs visible on desktop. */
+@media (min-width:900px){
+  body:not(.assessment-mode):not(.onboarding-mode):not(.v107-utility-mode){padding-left:0!important;padding-bottom:calc(var(--v1071-nav-h,58px) + env(safe-area-inset-bottom,0px))!important}
+  .app-bottom-nav{display:grid!important;position:fixed!important;z-index:80!important;left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;width:min(760px,100%)!important;height:calc(var(--v1071-nav-h,58px) + env(safe-area-inset-bottom,0px))!important;padding:4px 12px env(safe-area-inset-bottom,0px)!important;grid-template-columns:repeat(4,1fr)!important;grid-template-rows:1fr!important;align-content:stretch!important;border-right:0!important;border-top:1px solid var(--theme-border,#d9e1e2)!important;box-shadow:0 -3px 14px rgba(20,35,46,.055)!important}
+  .app-bottom-nav button{height:auto!important;min-height:0!important}
+  .v84-qnav{left:0!important}
+}
+</style>
 </body>
 </html>
